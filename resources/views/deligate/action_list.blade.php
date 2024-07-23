@@ -45,7 +45,41 @@
          </table>
           </div>
           <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-             Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+            <form id="action-form">
+              <div class="row">
+                {{-- <div class="offset-10 col-md-1 mr-5">
+                  <br>
+                <button type="button" class="btn btn-outline-success btn-xs add-action"><i class="fa fa-plus"></i></button>
+                </div> --}}
+                
+              </div>
+              <div class="form-group row first-div">
+                <div class="col-md-12">
+                  <label class="form-label fw-bold">Action Point</label>
+                  <textarea class="form-control" name="letter_action" id="letter_action" rows="4"></textarea>
+                  <label class="text text-danger letter_action fw-bold"></label>
+                </div>
+                <div class="col-md-12">
+                  <label>Departments</label>
+                  <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
+                    <option value="">SELECT DEPARTMENT</option>
+                    @foreach ($departments as $value)
+                    <option value="{{$value['id']}}">{{$value['department_name']}}</option>
+                    @endforeach
+                  </select>
+                  <label class="text text-danger departments0"></label>
+                </div>
+                <div class="col-md-2">
+                  &nbsp;
+                </div>
+              </div>
+          
+            
+              <div class="form-group row button-div">
+                <input type="hidden" id="letter" name="letter" value="{{$letter_id}}">
+                <button type="button" class="btn btn-primary save-btn ml-1" data-url="{{ route('store_action') }}" data-form="#action-form" data-message="That you want to direct action to this letter!" id="save-action-btn">SAVE</button>
+              </div>
+            </form>
           </div>
           <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
              Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
