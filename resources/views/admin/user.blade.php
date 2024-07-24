@@ -59,7 +59,7 @@
 
  <!-- Modal addCorrespondenceModalTitle-->
 <div class="modal fade" id="addCorrespondenceModal" tabindex="-1" role="dialog" aria-labelledby="addCorrespondenceModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCorrespondenceModalTitle">Add New User</h5>
@@ -73,26 +73,26 @@
                         <form id="uploadForm" class="form-horizontal">
                             @csrf <!-- CSRF token for Laravel -->		
                             <div class="row">	
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label>User Name</label>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" id="u_name" name="u_name">                   
                                 </div>
                             </div>
                             <div class="row mt-2">	
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label>Govt. Email</label>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" id="email" name="email">                   
                                 </div>
                             </div>
                             <div class="row mt-2">	
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label>Department</label>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-9">
                                     <select class="form-control" id="dept_id">
                                         <option>Select Department</option>
                                         @foreach ($departments as $dept)
@@ -102,10 +102,10 @@
                                 </div>
                             </div>
                             <div class="row mt-2">	
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label>Role</label>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-9">
                                     <select class="form-control" id="dept_id">
                                         <option>Select Role</option>
                                         @foreach ($roles as $role)
@@ -115,7 +115,7 @@
                                 </div>
                             </div>
                             <div class="row mt-5">
-                                <div class=" text-center col-sm-4" id="col3">
+                                <div class=" text-center col-md-12">
                                     <button type="button" class="btn btn-primary save-btn btn-sm " data-url="{{ route('store_correspondence') }}" data-form="#uploadForm"
                                       id="uploadBtn" data-message="Do you want to upload?" style="background-color: #173f5f;color: white;">Submit</button>
                                     <!-- <input type="button" class="btn btn-primary btn-sm " value="Submit" name="Submit"  id="uploadBtn"> -->
@@ -126,10 +126,10 @@
                     </div>
                 </div>       
             </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
