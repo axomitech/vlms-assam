@@ -2,6 +2,21 @@
 
 @section('content')
 <div class="row">
+  <div class="col-md-12">
+    <form id="finalize-form" hidden>
+      <input type="hidden" name="finalize_letter" id="finalize_letter" value="{{$letter_id}}">
+    </form>
+    &nbsp;
+    @if (!$finalizeStatus)
+    @if (count($actions) > 0)
+
+    <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to finalize these actions!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">FINALIZE</button></div> 
+      
+    @endif
+    @endif
+  </div>
+</div>
+<div class="row">
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs">
       <div class="card-header">
@@ -10,49 +25,51 @@
             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Actions</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false" disabled>Forward</a>
+            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false" disabled>Add Action</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
           </li>
-          {{-- <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-four-settings-tab" data-toggle="pill" href="#custom-tabs-four-settings" role="tab" aria-controls="custom-tabs-four-settings" aria-selected="false">Settings</a>
-          </li> --}}
         </ul>
       </div>
       <div class="card-body">
         <div class="tab-content" id="custom-tabs-four-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-            <table class="table table-responsive-lg table-bordered" id="letter-table">
-              <thead>
-                  <tr>
-                      <th>Sl No.</th><th>Department</th><th>Description</th><th>Registered Date</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  @php
-                      $i = 1;
-                  @endphp
-                  @foreach ($actions as $value)
-                      <tr>
-                          <td>{{$i}}</td><td>{{$value['department_name']}}</td><td>{{$value['action_description']}}</td><td>{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
-                      </tr>
-                      @php
-                          $i++;
-                      @endphp
-                  @endforeach
-              </tbody>
-         </table>
+            <div style="overflow-x:auto;">
+              <table class="table table-sm table-striped" id="letter-table">
+                <thead>
+                    <tr>
+                        <th>Description</th><th>Registered Date</th><th>Department</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $i = 1;
+                    @endphp
+                    @foreach ($letterActions as $value)
+                        <tr>
+                            <td>{{$i}}. &nbsp;{{$value['action_description']}}</td><td>{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
+                            <td>
+                                <ul class="list-group">
+                                    @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
+                                      <li class="list-group-item">{{$actionDepartments[$i-1][$j]}}</li>
+                                    @endfor
+                                </ul>
+                            </td>
+                            <td>
+
+                              </
+                        </tr>
+                        @php
+                            $i++;
+                        @endphp
+                    @endforeach
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
             <form id="action-form">
-              <div class="row">
-                {{-- <div class="offset-10 col-md-1 mr-5">
-                  <br>
-                <button type="button" class="btn btn-outline-success btn-xs add-action"><i class="fa fa-plus"></i></button>
-                </div> --}}
-                
-              </div>
               <div class="form-group row first-div">
                 <div class="col-md-12">
                   <label class="form-label fw-bold">Action Point</label>
@@ -97,161 +114,7 @@
     </iframe>
   </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header"><b>{{$letterCrn}} </b>&emsp;&emsp;&emsp;&emsp;&emsp;<button type="button" class="btn btn-outline-primary btn-sm offset-7" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">VIEW LETTER</button>
-              <form id="finalize-form" hidden>
-                <input type="hidden" name="finalize_letter" id="finalize_letter" value="{{$letter_id}}">
-              </form>
-              &nbsp;
-              @if (!$finalizeStatus)
-              <button type="button" class="btn btn-outline-primary btn-sm save-btn" data-form="#finalize-form" data-message="That you want to finalize these actions!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">FINALIZE</button></div> 
-              @endif
 
-            <div class="card-body">
-             
-               <div class="collapse" id="collapseExample">
-                <button type="button" class="btn btn-outline-danger btn-sm offset-11 mb-1" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">CLOSE</button>
-                <div class="card card-body" style="height: 50rem;">
-                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 100%;">
-                  </iframe>
-                </div>
-              </div>
-               <br>
-               <div class="row">
-                  <div class="col-md-12">
-                    <div style="overflow:scroll;">
-                      <table class="table table-responsive-lg table-bordered" id="letter-table">
-                        <thead>
-                            <tr>
-                                <th>Sl No.</th><th>Department</th><th>Description</th><th>Registered Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $i = 1;
-                            @endphp
-                            @foreach ($actions as $value)
-                                <tr>
-                                    <td>{{$i}}</td><td>{{$value['department_name']}}</td><td>{{$value['action_description']}}</td><td>{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
-                                </tr>
-                                @php
-                                    $i++;
-                                @endphp
-                            @endforeach
-                        </tbody>
-                   </table>
-                     </div>
-                  </div>
-               </div>
-               
-               <div class="row">
-                  <div class="col-md-5">
-                    
-                  </div>
-               </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-  <div class="col-md-7">
-    <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
-      <div class="box-body">
-          <section class="content">
-              <div class="container-fluid">
-                  <!-- Main row -->
-                  <div class="row">
-                      <div class="col-md-12 bg-danger1">
-                        <form id="action-form">
-                          <div class="row">
-                            {{-- <div class="offset-10 col-md-1 mr-5">
-                              <br>
-                            <button type="button" class="btn btn-outline-success btn-xs add-action"><i class="fa fa-plus"></i></button>
-                            </div> --}}
-                            
-                          </div>
-                          <div class="form-group row first-div">
-                            <div class="col-md-12">
-                              <label class="form-label fw-bold">Action Point</label>
-                              <textarea class="form-control" name="letter_action" id="letter_action" rows="4"></textarea>
-                              <label class="text text-danger letter_action fw-bold"></label>
-                            </div>
-                            <div class="col-md-12">
-                              <label>Departments</label>
-                              <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
-                                <option value="">SELECT DEPARTMENT</option>
-                                @foreach ($departments as $value)
-                                <option value="{{$value['id']}}">{{$value['department_name']}}</option>
-                                @endforeach
-                              </select>
-                              <label class="text text-danger departments0"></label>
-                            </div>
-                            <div class="col-md-2">
-                              &nbsp;
-                            </div>
-                          </div>
-                      
-                        
-                          <div class="form-group row button-div">
-                            <input type="hidden" id="letter" name="letter" value="{{$letter_id}}">
-                            <button type="button" class="btn btn-primary save-btn ml-1" data-url="{{ route('store_action') }}" data-form="#action-form" data-message="That you want to direct action to this letter!" id="save-action-btn">SAVE</button>
-                          </div>
-                        </form>
-                      </div>
-                  </div>
-                  <!-- Main row -->
-              </div><!-- /.container-fluid -->
-          </section>                 
-      </div>
-   </div>
-  </div>
-  <div class="col-md-5">
-    <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
-      <div class="box-body">
-          <section class="content">
-              <div class="container-fluid">
-                  <!-- Main row -->
-                  <div class="row">
-                      <div class="col-md-12 bg-danger1" style="height: 22rem;">
-                        <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 100%;">
-                        </iframe>
-                      </div>
-                  </div>
-                  <!-- Main row -->
-              </div><!-- /.container-fluid -->
-          </section>                 
-      </div>
-   </div>
-  </div>
-</div>
-{{-- <div hidden >
-  <div class="action-clone col-md-12">
-    <div class="row">
-      <div class="col-md-12">
-        <label class="form-label fw-bold">Action Point</label>
-        <textarea class="form-control" name="letter_action[]"></textarea>
-        <label class="text text-danger letter_action fw-bold"></label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <label>Departments</label>
-        <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
-          <option value="">SELECT DEPARTMENT</option>
-          @foreach ($departments as $value)
-          <option value="{{$value['id']}}">{{$value['department_name']}}</option>
-          @endforeach
-        </select>
-      </div>
-      </div>
-      <div class="col-md-2">
-        <button type="button" class="btn btn-outline-danger btn-xs mt-5 remove"><i class="fa fa-minus"></i></button>
-      </div>
-    </div>
-  </div> --}}
-</div>
 @section('scripts')
     <!-- DataTables  & Plugins -->
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -274,9 +137,9 @@ $(function () {
       "buttons": [ "excel", "pdf", "print"],
     }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
     
-    $(".buttons-html5").addClass("btn btn-outline-info ml-1");
+    $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
     $(".buttons-html5").removeClass('btn-secondary');
-    $(".buttons-print").addClass("btn btn-outline-info ml-1");
+    $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
     $(".buttons-print").removeClass('btn-secondary');
   });
   

@@ -30,4 +30,12 @@ class LetterAction extends Model
             ->select('letter_actions.id AS action_id','action_description','letter_actions.created_at as action_date','subject','letter_no','letter_path','action_department_maps.id AS act_dept_id','action_department_maps.department_id AS dept_id','department_name')
             ->get();
     }
+
+    public static function getLetterActions($letterId){
+        return LetterAction::where([
+                'letter_actions.letter_id'=>$letterId
+            ])
+            ->orderBy('letter_actions.id','DESC')->select('letter_actions.id AS action_id','action_description','letter_actions.created_at as action_date')
+            ->get();
+    }
 }
