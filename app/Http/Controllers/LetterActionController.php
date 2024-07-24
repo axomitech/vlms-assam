@@ -52,7 +52,19 @@ class LetterActionController extends Controller
             }
             $i++;
         }
-        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus'));
+        $actions = LetterAction::getDepartmentActions($letter_id);
+        $actionDepartments = [];
+        $letterActions = LetterAction::getLetterActions($letter_id);
+        $i = 0;
+        foreach($letterActions AS $value){
+            $j = 0;
+            foreach($actions AS $value1){
+                $actionDepartments[$i][$j] = $value1['department_name'];
+                $j++;
+            }
+            $i++;
+        }
+        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions'));
     }
 
     public function letterIndex()
@@ -75,8 +87,21 @@ class LetterActionController extends Controller
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $departments = Department::getAllDepartments();
         $actions = LetterAction::getDepartmentActions($letter_id);
-        
-        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus'));
+        $actionDepartments = [];
+        $letterActions = LetterAction::getLetterActions($letter_id);
+        $i = 0;
+        foreach($letterActions AS $value){
+            $j = 0;
+            foreach($actions AS $value1){
+                $actionDepartments[$i][$j] = $value1['department_name'];
+                $j++;
+            }
+            $i++;
+        }
+        // //print_r($letterActions);
+        // print_r($actionDepartments);
+        // die();
+        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions'));
     }
 
     public function finalizeActions(Request $request){
@@ -141,12 +166,13 @@ class LetterActionController extends Controller
                     $departments = $request->departments;
                     $actions = $request->letter_action;
                     $letter = $request->letter;
+                    $actionId = LetterAction::storeLetterAction([
+                        $letter,
+                        $actions,
+                    ]);
                     for($i = 0; $i < count($departments); $i++){
                         
-                        $actionId = LetterAction::storeLetterAction([
-                            $letter,
-                            $actions,
-                        ]);
+                        
                         
                         ActionDepartmentMap::storeDepartmentActions([
                             $actionId,
