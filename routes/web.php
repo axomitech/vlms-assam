@@ -43,5 +43,11 @@ Route::get('/acknowledge_letter/{id}', [App\Http\Controllers\AcknowledgeControll
 Route::post('/acknowledge_letter', [App\Http\Controllers\AcknowledgeController::class, 'ack_letter_save'])->name('submit.ackLetter');
 Route::post('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('submit.search');
 Route::post('/store_correspondence', [App\Http\Controllers\AcknowledgeController::class, 'store_correspondence'])->name('store_correspondence');
+Route::get('/correspondences/{id}', [App\Http\Controllers\AcknowledgeController::class, 'show_correspondence'])->name('correspondences');
+Route::post('/remove_correspondences', [App\Http\Controllers\AcknowledgeController::class, 'remove_correspondence'])->name('remove_correspondences');
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
+Route::get('/user', [App\Http\Controllers\AdminController::class, 'show_user'])->name('user');
+Route::post('/user', [App\Http\Controllers\AdminController::class, 'add_user'])->name('user');
+Route::get('/department', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department');
+Route::post('/department', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department');
 

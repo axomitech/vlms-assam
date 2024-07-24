@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AcknowledgeModel;
 use Illuminate\Http\Request;
+use Auth;
 
 use DB;
 
@@ -103,7 +104,7 @@ class AcknowledgeController extends Controller
             }
 
             return view('acknowledge_letter',compact('letter_no','diarize_no','letter_subject','letter_path','letter_id','sender_email','default_ack',
-                    'last_saved'));
+                    'last_saved','result'));
         // }
         // catch(\Exception  $ex) {
         //     //  return $ex->getMessage(); 
@@ -111,8 +112,32 @@ class AcknowledgeController extends Controller
         //     }
     }
 
+    public function show_correspondence($letter_id)
+    {
+        $results = AcknowledgeModel::get_correspondence_details($letter_id);
+        // print_r($results);
+        return view('correspondence',compact('letter_id','results'));
+    }
+    public function remove_correspondence(Request $request)
+    {
+        $validatedData = $request->validate([
+            'correspondence_id' => 'required'
+        ]);
+        $correspondence_id= $validatedData['correspondence_id'];
+
+        $results = AcknowledgeModel::removeCorrespondence($correspondence_id);
+        // print_r($results);
+        if($results)
+            $msg='Successfully removed';
+        else
+            $msg='Removing failed.';
+        
+        return $results;
+    }
+
     public function store_correspondence(Request $request)
     {
+        $jData = [];
         if ($request->hasFile('attachment_file')) {
                 
             if ($request->file('attachment_file')->isValid()) {
@@ -132,8 +157,9 @@ class AcknowledgeController extends Controller
 
             'letter_id' => $request->letter_id,
             'c_title' => $request->attachment_name,
-            'upload_by' => 'Test',
+            'upload_by' => Auth::user()->name,
             'file_path' => $correspondencePath,
+            'removed' => 0,
             'upload_date' => date("d-m-Y h:i:sa")
 
         ];
@@ -141,10 +167,22 @@ class AcknowledgeController extends Controller
         $result = AcknowledgeModel::storeCorrespondence($correspondenceDetails);
 
         if($result){
-            return 'file uploaded and insert';
+            $jData[1] = [
+                'message'=>'File uploaded successfully.',
+                'status'=>'success',
+                'letter_id'=>$request->letter_id
+            ];
         }else{
-            return 'insert error';
+            $jData[1] = [
+                'message'=>'File uploading failed.',
+                'status'=>'error',
+                'letter_id'=>$request->letter_id
+            ];
         }
+        
+        session()->flash('correspondence_upload', $request->letter_id);
+
+        return response()->json($jData,200);
         
     }
 }

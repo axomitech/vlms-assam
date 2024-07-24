@@ -46,6 +46,21 @@ class AcknowledgeModel extends Model
             ->where('letter_id', '=', $letter_id)
             ->first();
     }
+    public static function get_correspondence_details($letter_id)
+    {
+        return DB::table('correspondence')
+            // ->select('ack_id', 'letter_id', 'ack_letter_text', 'saved_by','last_saved')
+            ->where('letter_id', '=', $letter_id)
+            ->where('removed','!=', true)
+            ->orderBy('upload_date', 'asc')
+            ->get();
+    }
+    public static function removeCorrespondence($correspondence_id)
+    {
+        return DB::table('correspondence')
+                ->where('c_id', $correspondence_id)
+                ->update(['removed' => 1]);
+    }
     public static function update_acknowledge_letter_details($record)
     {
         return DB::table('acknowledge_letters')
@@ -56,7 +71,7 @@ class AcknowledgeModel extends Model
     public static function get_letter_details($letter_id)
     {
         return DB::table('letters')
-            ->select('letter_no', 'subject', 'letter_path', 'diary_date','letter_date')
+            // ->select('letter_no', 'subject', 'letter_path', 'diary_date','letter_date')
             ->where('id', '=', $letter_id)
             ->first();
     }

@@ -21,16 +21,19 @@
                     <td>{{$i}}. &nbsp;{{$value['crn']}}</td><td>{{$value['subject']}}</td><td>{{$value['letter_no']}}</td><td>{{$value['sender_name']}}</td><td>
                        @if (session('role') == 2)
                         &nbsp;
-                        <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-pen"></i></a>
+                        <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
                        @endif
                        @if (session('role') == 3)
                         &nbsp;
-                        <a href="{{route('actions',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-pen"></i></a>
+                        <a href="{{route('actions',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update" ></i></a>
                         @endif
                         @if (session('role') == 3)
                         &nbsp;
-                        <a class="file-btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" target="__blank" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf"></i></a>
-                        <a href="{{route('acknowledge_letter',[$value['letter_id']])}}" class="action-link"><i class="fas fa-award" style="color: #ffd43a;"></i></a>
+                        <a class="file-btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" target="__blank" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf text-danger"></i></a>
+                        &nbsp;
+                        <a href="{{route('acknowledge_letter',[$value['letter_id']])}}" class="action-link"><i class="fas fa-envelope-open-text text-success" data-toggle="tooltip" data-placement="top" title="Acknowledgement Letter Generation"></i></a>
+                        &nbsp;
+                        <a href="{{route('correspondences',[$value['letter_id']])}}" class="action-link"><i class="fas fa-file" style="color:#fd9f01;" data-toggle="tooltip" data-placement="top" title="Correspondences"></i></a>
                         @endif
                       </td>
                   </tr>

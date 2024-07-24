@@ -223,37 +223,6 @@
                   </p>
                 </a>
               </li>
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-          <!-- <li class="nav-item">
-            <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-envelope"></i>
-              <p>
-                Letters
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('dashboard') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Drafted</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('dashboard') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Inbox</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('dashboard') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Sent</p>
-                </a>
-              </li>
-            </ul>
-          </li> -->
           <li class="nav-item">
                 <a href="{{route('letters')}}" class="nav-link">
                   <i class="nav-icon fas fa-envelope"></i>
@@ -278,13 +247,44 @@
                   </p>
                 </a>
               </li> -->
-          <li class="nav-item">
+          <!-- <li class="nav-item">
               <a href="{{route('dashboard')}}" class="nav-link">
               <i class="nav-icon fas fa-user-cog"></i>
                 <p>
                   Settings
                 </p>
               </a>
+          </li> -->
+          <!-- Add icons to the links using the .nav-icon class
+      with font-awesome or any other icon font library -->
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-user-cog"></i>
+              <p>
+              Settings
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('user') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>User</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Department</p>
+                </a>
+              </li>
+              <!-- <li class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Sent</p>
+                </a>
+              </li> -->
+            </ul>
           </li>
           <li class="nav-item">
               <a href="{{route('test')}}" class="nav-link">

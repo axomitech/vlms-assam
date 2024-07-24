@@ -23,7 +23,7 @@
                                         <p class="card-text"><p></p>Dear Sir/Madam,</p>
                                         <p class="card-text"><p></p>{{ $default_ack}}</p></p>
                                         <p class="card-text"><p></p>{{ $system_msg}}</p></p>
-                                        <button type="button" class="btn" style="background-color: #173f5f;color: white;" id="btn-next">Sent</button>
+                                        <button type="button" class="btn" style="background-color: #173f5f;color: white;" id="btn-next">Send</button>
                                     </div>
                                 </div>
                             <!-- hdhadh -->

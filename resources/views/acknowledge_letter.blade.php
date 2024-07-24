@@ -15,14 +15,9 @@
                     <div class="col-md-2">
                         <button type="button" class="btn" style="background-color: #173f5f;color: white; text-decoration: none;" id="btn-pdf"><a href="{{ route('pdf_genarator', ['id' => $letter_id]) }}">PDF <i class="fas fa-download" style="color: #24a0ed"></i></a></button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-left">
                         <label class="text text-dark">Last Saved: <span class='saved_span'>{{ $last_saved}}</span></label>
                     </div>
-                    <!-- Rahul -->
-                    <div class="col-md-2">
-                        <button type="button" class="btn" style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal">Add<i class="fas fa-plus-circle" style="color: #24a0ed"></i></button>
-                    </div>
-                    <!-- Rahul -->
                 </div>
             </div>
 
@@ -50,11 +45,11 @@
                             <div class="col">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title"><u>Received Letter Details</u></h5>
-                                        <p class="card-text">Diarize No.: {{ $diarize_no}}</p>
+                                        <h5 class="card-title"><u>Letter Details</u></h5>
+                                        <p class="card-text"><p>Diarize No.: {{ $result->crn}}</p></p>
                                         <p class="card-text">Letter No.:  {{ $letter_no}}</p>
-                                        <p class="card-text">Letter Subject: {{ $letter_subject}}</p>
-                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#fileModal" id="view_letter">View Letter</button>
+                                        <p class="card-text">Subject: {{ $letter_subject}}</p>
+                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#viewLetterModal" id="view_letter">View Letter</button>
                                     </div>
                                 </div>
                             </div>
@@ -66,44 +61,19 @@
         </div>
     </div>
 </div>
-<!-- Rahul -->
-<!-- Modal -->
-<div class="modal fade" id="addCorrespondenceModal" tabindex="-1" role="dialog" aria-labelledby="addCorrespondenceModalTitle" aria-hidden="true">
+<!-- Modal viewCorrespondenceModal-->
+<div class="modal fade" id="viewLetterModal" tabindex="-1" role="dialog" aria-labelledby="viewLetterModalTitle"
+aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCorrespondenceModalTitle">Add Correspondence</h5>
+                <h5 class="modal-title" id="viewannxModalTitle">View</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="description_view">
-                <div id="parent">
-                    <div id="add">
-                        <form id="uploadForm" class="form-horizontal">
-                            @csrf <!-- CSRF token for Laravel -->		
-                            <div class="row" id="row1">		
-                                <div class=" text-center col-sm-4" id="col1">
-                                     <label>Attachment Title:</label><br>
-                                    <input type="text" id="attachment_name" name="attachment_name" />
-                                    <br>                    
-                                </div>
-                                <input type="hidden" name="letter_id" value="{{ $letter_id}}">
-                                <div class="  col-sm-4" id="col2">
-                                    <label class = "text-left">Upload:</label><br>
-                                    <input  type="file" id="attachment_file" name="attachment_file" />
-                                    <br>                   
-                                </div>
-                                <div class=" text-left col-sm-4" id="col3">
-                                    <label >Action:</label><br>
-                                    <button type="button" class="btn btn-primary save-btn1 btn-sm " data-url="{{ route('store_correspondence') }}" data-form="#uploadForm"  id="uploadBtn">Submit</button>
-                                    <!-- <input type="button" class="btn btn-primary btn-sm " value="Submit" name="Submit"  id="uploadBtn"> -->
-                                    <br>                   
-                                </div>    
-                            </div>
-                        </form>
-                    </div>
-                </div>       
+            <iframe id="annx" src="" title="Agenda File"  width="100%" height="500px"></iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -112,7 +82,7 @@
         </div>
     </div>
 </div>
-<!-- Rahul -->
+  <!-- Modal END-->
 
 @section('scripts')
     <script src="{{asset('js/custom/common.js')}}"></script>
@@ -258,14 +228,6 @@
         });
     </script>
     <script>
-        $('#btn-modal').click(function() {
-                $('#addCorrespondenceModal').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                });
-            });
-    </script>
-    <script>
         $('#uploadBtn').click(function(){
             var form = $('#uploadForm')[0];
             var formData = new FormData(form);
@@ -284,6 +246,18 @@
             });
         });
     </script>
+    <script>
+            $('#view_letter').click(function() {
+
+                // var iframe = modal.find('#annx');
+                    $("#annx").attr('src', '{{config('constants.options.storage_url')}}{{$letter_path}}');
+
+                    $('#viewLetterModal').modal({
+                                backdrop: 'static',
+                                keyboard: false
+                    });
+                });
+        </script>
 
 @endsection
 @endsection
