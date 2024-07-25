@@ -8,9 +8,10 @@ use App\Http\Requests\ActionResponseRequest;
 use App\Models\LetterActionResponse;
 use App\Models\LetterResponseAttachment;
 use App\Models\ActionDepartmentMap;
+use App\Models\UserDepartment;
 use App\Models\ActionSent;
 use Carbon\Carbon;
-
+use Auth;
 use DB;
 class LetterActionResponseController extends Controller
 {
@@ -38,8 +39,22 @@ class LetterActionResponseController extends Controller
         if($request->ajax()){
             
             DB::beginTransaction();
+            $actMap = $request->action_map;
+            $actDept = $request->action_dept;
+            $letter = $request->forward_letter;
 
-                $actions = $request->letter_action;
+            for($i = 0; $i < count($actDept); $i++){
+
+                ActionSent::storeActionForward([
+                    $actMap[$i],
+                    UserDepartment::getUser(Auth::user()->id),
+                    UserDepartment::getDepartmentUser($actDept[$i],3),
+                    $letter,
+                ]);
+
+            }
+
+            $actions = $request->letter_action;
                 try {
 
                     for($i = 0; $i < count($actions); $i++){
@@ -55,7 +70,9 @@ class LetterActionResponseController extends Controller
                         ];
                         
                     $noteId = LetterActionResponse::storeNote($noteDetails);
-                    DB::commit();
+                    
+                    
+                        DB::commit();
                     }
                     
                     

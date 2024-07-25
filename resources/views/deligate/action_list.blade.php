@@ -57,8 +57,12 @@
                                 </ul>
                             </td>
                             <td>
-
-                              </
+                              <ul class="list-group">
+                                @for($j = 0; $j < count($responsesStatuses[$i-1]); $j++)
+                                  <li class="list-group-item">{{$responsesStatuses[$i-1][$j]}}</li>
+                                @endfor
+                              </ul>
+                            </td>
                         </tr>
                         @php
                             $i++;
