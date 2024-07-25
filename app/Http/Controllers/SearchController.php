@@ -21,6 +21,7 @@ class SearchController extends Controller
     }
     public function search(Request $request)
     {
+        $where='';
         $inputData = $request->all();
 
         $diarized_no = $request->input('diarized_no');
@@ -30,9 +31,9 @@ class SearchController extends Controller
         $category = $request->input('category');
 
 
-        $results =SearchModel::get_letter_search($diarized_no,$letter_no,$received_from,$received_to);
+        $results =SearchModel::get_letter_search($inputData);
         
-        $table='<table class="table table-hover table-sm" id="letter-table">
+        $table='<table class="table table-hover table-striped table-sm" id="letter-table">
         <thead>
             <tr>
                 <th>Diarized No.</th><th>Diarized Date</th><th>Letter No.</th><th>Subject</th><th>Actions</th>
@@ -58,7 +59,7 @@ class SearchController extends Controller
                     </table>';
 
         if($has_data==0){
-            $table = 'No results founds';
+            $table = '<h6 style="color:red;"> No results found. Please enter correct combination.</h6>';
         }
 
 

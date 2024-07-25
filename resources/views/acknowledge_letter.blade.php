@@ -13,7 +13,7 @@
                         <button type="button" class="btn" style="background-color: #24a0ed;color: white;" data-target="#custom-tabs-one-home" id="btn-save">Save</button>
                     </div>
                     <div class="col-md-2">
-                        <button type="button" class="btn" style="background-color: #173f5f;color: white; text-decoration: none;" id="btn-pdf"><a href="{{ route('pdf_genarator', ['id' => $letter_id]) }}">PDF <i class="fas fa-download" style="color: #24a0ed"></i></a></button>
+                        <button type="button" class="btn" style="background-color: #173f5f;color: white; text-decoration: none;" id="btn-pdf"><a href="{{ route('pdf_genarator', ['id' => $letter_id]) }}" style="background-color: #173f5f;color: white; text-decoration: none;">PDF <i class="fas fa-download" style="color: #24a0ed"></i></a></button>
                     </div>
                     <div class="col-md-4 text-left">
                         <label class="text text-dark">Last Saved: <span class='saved_span'>{{ $last_saved}}</span></label>

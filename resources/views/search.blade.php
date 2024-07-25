@@ -2,16 +2,13 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 ">
         <div class="card">
-            <!-- <div class="card-header"><b>Search</b> </div> -->
-
             <div class="card-body">
-               
                 <div class="row">
                     <div class="col-md-12 ">
                         <form id="letter-form">
-                            <div class="card">
+                            <div class="card font-weight-bold" style="background-color:#f8f5ec">
                                 <div class="card-body">
                                     <form>
                                         @csrf <!-- CSRF token for Laravel -->
@@ -23,7 +20,7 @@
                                                 <input type="text" class="form-control" id="diarized_no" placeholder="">
                                             </div>
                                             <div class="col-md-2 offset-md-1">
-                                                Letter Number.:
+                                                Letter Number:
                                             </div>
                                             <div class="col-md-3 text-left">
                                                 <input type="text" class="form-control" id="letter_no" placeholder="">
@@ -62,18 +59,25 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <div class="row mt-5">
-                                        <div class="col-md-12">
-                                            <span class='table_span'></span>   
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <!-- hdhadh -->
                         </form>
                     </div>
                 </div>
-                
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span class='table_span'>No Results</span>   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

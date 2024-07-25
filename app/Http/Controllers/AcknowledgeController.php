@@ -157,6 +157,7 @@ class AcknowledgeController extends Controller
 
             'letter_id' => $request->letter_id,
             'c_title' => $request->attachment_name,
+            'letter_date' => $request->letter_date,
             'upload_by' => Auth::user()->name,
             'file_path' => $correspondencePath,
             'removed' => 0,

@@ -25,7 +25,8 @@
                                     <table class="table table-striped table-sm">
                                         <thead>
                                             <tr>
-                                            <th scope="col">Title</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Letter Date</th>
                                             <th scope="col">Uploaded By</th>
                                             <th scope="col">Upload Time</th>
                                             <th scope="col">Actions</th>
@@ -39,6 +40,7 @@
                                                 @foreach ($results as $result)
                                                 <tr>
                                                     <td>{{ $i++.'. '.$result->c_title }}</td>
+                                                    <td>{{ $result->letter_date}}</td>
                                                     <td>{{ $result->upload_by}}</td>
                                                     <td>{{ $result->upload_date}}</td>
                                                     <td>
@@ -72,7 +74,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCorrespondenceModalTitle">Add Correspondence</h5>
+                <h5 class="modal-title" id="addCorrespondenceModalTitle">Upload Correspondence</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -81,27 +83,63 @@
                 <div id="parent">
                     <div id="add">
                         <form id="uploadForm" class="form-horizontal">
-                            @csrf <!-- CSRF token for Laravel -->		
-                            <div class="row" id="row1">		
-                                <div class=" text-left col-sm-4" id="col1">
-                                     <label>Attachment Title:</label><br>
-                                    <input type="text" id="attachment_name" name="attachment_name" />
+                            @csrf <!-- CSRF token for Laravel -->
+                            <div class="row">	
+                                <div class="col-md-3">
+                                    <label>Attachment Subject:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea class="form-control" rows="3" id="attachment_name" name="attachment_name"></textarea>                  
+                                </div>
+                            </div>		
+                            <div class="row mt-3">	
+                                <div class="col-md-3">
+                                    <label>Letter Date:</label>
+                                    <input type="hidden" name="letter_id" value="{{ $letter_id}}">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control" id="letter_date" name="letter_date" placeholder="">                 
+                                </div>
+                            </div>		
+                            <div class="row mt-3">	
+                                <div class="col-md-3">
+                                    <label>Upload:</label>
+                                </div>
+                                <div class="col-md-4">
+                                <input  type="file" class="form-control-file" id="attachment_file" name="attachment_file">                
+                                </div>
+                            </div>		
+                            <div class="row mt-5">	
+                                <div class="col-md-7 text-center">
+                                    <button type="button" class="btn btn-primary save-btn btn-sm " data-url="{{ route('store_correspondence') }}" data-form="#uploadForm"
+                                      id="uploadBtn" data-message="Do you want to upload?" style="background-color: #173f5f;color: white;">Submit</button>               
+                                </div>
+                            </div>		
+                            <!-- <div class="row" id="row1">		
+                                <div class=" text-left col-md-5" id="col1">
+                                     <label>Letter Date:</label><br>
+                                    <input type="text" class="form-control" id="attachment_name" name="attachment_name">
+                                    <br>                    
+                                </div>
+                                <div class=" text-left col-sm-5" id="col1">
+                                     <label>Letter Date:</label><br>
+                                     <input type="date" class="form-control" id="letter_date" placeholder="">
                                     <br>                    
                                 </div>
                                 <input type="hidden" name="letter_id" value="{{ $letter_id}}">
                                 <div class="  col-sm-4" id="col2">
                                     <label class = "text-left">Upload:</label><br>
-                                    <input  type="file" id="attachment_file" name="attachment_file" />
+                                    <input  type="file" class="form-control-file" id="attachment_file" name="attachment_file" />
                                     <br>                   
                                 </div>
-                                <div class=" text-left col-sm-4" id="col3">
+                                <div class=" text-left col-sm-2" id="col3">
                                     <label >Action:</label><br>
                                     <button type="button" class="btn btn-primary save-btn btn-sm " data-url="{{ route('store_correspondence') }}" data-form="#uploadForm"
                                       id="uploadBtn" data-message="Do you want to upload?" style="background-color: #173f5f;color: white;">Submit</button>
-                                    <!-- <input type="button" class="btn btn-primary btn-sm " value="Submit" name="Submit"  id="uploadBtn"> -->
+                                    <input type="button" class="btn btn-primary btn-sm " value="Submit" name="Submit"  id="uploadBtn">
                                     <br>                   
                                 </div>    
-                            </div>
+                            </div> -->
                         </form>
                     </div>
                 </div>       

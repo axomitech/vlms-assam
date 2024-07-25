@@ -134,6 +134,8 @@ class LetterController extends Controller
     public function showLetters()
     {
         $letters = Letter::showLetterAndSender();
+        // print_r(session('role_dept'));
+        // exit;
         return view('diarize.letters',compact('letters'));
     }
 
