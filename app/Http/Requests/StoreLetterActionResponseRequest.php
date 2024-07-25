@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Department;
 
 class StoreLetterActionResponseRequest extends FormRequest
 {
@@ -25,6 +26,12 @@ class StoreLetterActionResponseRequest extends FormRequest
             'note'=>'required',
             'letter_action'=>'required|array|min:1',
             'letter_action.*'=>'required|numeric|min:1',
+
+            'action_map'=>'required|array|min:1',
+            'action_map.*'=>'required|numeric|min:1',
+            'action_dept'=>'required|array|min:1',
+            'action_dept.*'=>'required|numeric|min:'.Department::min('id').'|max:'.Department::max('id'),
+            'forward_letter'=>'required|numeric|min:1',
         ];
     }
 
@@ -39,6 +46,23 @@ class StoreLetterActionResponseRequest extends FormRequest
             'letter_action.*.required'=>'Letter action must be valid5.',
             'letter_action.*.numeric'=>'Letter action must be valid6.',
             'letter_action.*.min'=>'Letter action must be valid7.',
+
+            'action_map.required'=>'Please provide valid data.',
+            'action_map.array'=>'Please provide valid data.',
+            'action_map.min'=>'Please provide valid data.',
+            'action_map.*.required'=>'Please provide valid data.',
+            'action_map.*.numeric'=>'Please provide valid data.',
+            'action_map.*.min'=>'Please provide valid data.',
+            'action_dept.required'=>'Please provide valid data.',
+            'action_dept.array'=>'Please provide valid data.',
+            'action_dept.min'=>'Please provide valid data.',
+            'action_dept.*.required'=>'Please provide valid data.',
+            'action_dept.*.numeric'=>'Please provide valid data.',
+            'action_dept.*.min'=>'Please provide valid data.',
+            'action_dept.*.max'=>'Please provide valid data.',
+            'forward_letter.required'=>'Please provide valid data.',
+            'forward_letter.numeric'=>'Please provide valid data.',
+            'forward_letter.min'=>'Please provide valid data.',
         ];
     }
 }

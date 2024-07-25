@@ -21,18 +21,17 @@
                        CLOSE
                      </a>
                      <div class="card card-body">
-                       <embed src="" style="height: 30rem;" 
-                       type="application/pdf" id="letter-view">
+                       
                      </div>
                    </div>
                  </div>
                </div>
                <div class="row" style="overflow: scroll; height: 300px;">
                   <div class="col-md-12">
-                    <table class="table table-responsive-lg table-bordered" id="letter-table">
+                    <table class="table table-sm table-striped table-hover" id="letter-table">
                       <thead>
                           <tr>
-                              <th>Sl No.</th><th>From</th><th>Action Forwarded</th><th>Received</th><th>Respond</th>
+                              <th>Action Forwarded</th><th>From</th><th>Received</th><th>Respond</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -45,7 +44,7 @@
                                 $timeSpan = $createdAt->diffForHumans();
                             @endphp
                               <tr>
-                                  <td>{{$i}}</td><td>{{$value['sender_name']}}, {{$value['department_name']}}</td><td>{{$value['action_description']}}</td><td>{{$timeSpan}}</td><td><a class="file-btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" target="__blank" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf"></i></a>&emsp;<a href="{{route('responds',[encrypt($value['action_sent_id']),encrypt($value['act_dept_id']),encrypt($value['letter_id'])])}}"><i class="fas fa-pen"></i></a></td>
+                                <td>{{$i}}. {{$value['action_description']}}</td><td>{{$value['sender_name']}}, {{$value['department_name']}}</td><td>{{$timeSpan}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf"></i></a>&emsp;<a href="{{route('responds',[encrypt($value['action_sent_id']),encrypt($value['act_dept_id']),encrypt($value['letter_id'])])}}"><i class="fas fa-pen"></i></a></td>
                               </tr>
                               @php
                                   $i++;
@@ -59,7 +58,29 @@
         </div>
     </div>
 </div>
+<!-- /.modal -->
 
+<div class="modal fade" id="modal-lg">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <embed src="" type="application/pdf" id="letter-view" style="width:100%; height:350px">
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 @section('scripts')
 <script>
   $(document).on('click','.file-btn',function(){
@@ -87,9 +108,9 @@ $(function () {
       "buttons": [ "excel", "pdf", "print"]
     }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
      
-    $(".buttons-html5").addClass("btn btn-outline-info ml-1");
+    $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
     $(".buttons-html5").removeClass('btn-secondary');
-    $(".buttons-print").addClass("btn btn-outline-info ml-1");
+    $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
     $(".buttons-print").removeClass('btn-secondary');
   });
 

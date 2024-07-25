@@ -2,115 +2,80 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">LETTER RESPONSES</div>
-
-            <div class="card-body">
-               
-               <div class="row" style="overflow: scroll; height: 300px;">
+  <div class="col-md-7">
+    <div class="card card-primary card-outline card-outline-tabs">
+      <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Responses</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Respond</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="custom-tabs-one-tabContent">
+          <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab" style="width: 100%; height:480px;">
+             
+          </div>
+          <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+            <form id="note-form">
+              <div class="row">
                   <div class="col-md-12">
-                    {{-- <table class="table table-responsive-lg table-bordered" id="letter-table">
-                      <thead>
-                          <tr>
-                              <th>Sl No.</th><th>Department</th><th>Description</th><th>Registered Date</th><th>Note</th><th>Action</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          @php
-                              $i = 1;
-                          @endphp
-                          @foreach ($actions as $value)
-                              <tr>
-                                  <td>{{$i}}</td><td>{{$value['department_name']}}</td><td>{{$value['action_description']}}</td><td>{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td><td>{{$notes[$i-1]}}</td><td><a data-toggle="modal" data-target="#actionModal" href="#" data-letter="{{$value['letter_id']}}" data-subject="{{$value['action_description']}}" class="action-link" data-action="{{$value['action_id']}}"><i class="fas fa-pen"></i></a>&emsp;<a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a></td>
-                              </tr>
-                              @php
-                                  $i++;
-                              @endphp
+                      <label class="form-label">Action Status</label>
+                      <select class="form-control" id="action_status" name="action_status" >
+                          <option value="">Select Status</option>
+                          @foreach ($actionStatuses as $value)
+                           <option value="{{$value['id']}}">{{$value['status_name']}}</option>   
                           @endforeach
-                      </tbody>
-                    </table> --}}
+                      </select>
+                      <label class="action_status text text-danger"></label>
                   </div>
-               </div>
-               <div class="row">
-                <div class="col-md-5">
-                  <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
-                    <!-- <div class="box-header">
-                        <div class="box-tools">
-                        <p style="font-size:18px;font-weight:bold;margin-bottom: 9px; color:#173F5F;">Letters</p>
-                        </div>
-                    </div> -->
-                    <div class="box-body">
-                        <section class="content">
-                            <div class="container-fluid">
-                                <!-- Main row -->
-                                 <div class="row">
-                                    <div class="col-md-12 bg-danger1">
-                                        <form id="note-form" style="margin-top: 5rem;">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <label class="form-label">Response Attachment</label>
-                                                    <input type="file" class="form-control" name="action_response" id="action_response">
-                                                    <label class="text text-danger action_response" ></label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <label class="form-label">Action Status</label>
-                                                    <select class="form-control" id="action_status" name="action_status" >
-                                                        <option value="">Select Status</option>
-                                                        @foreach ($actionStatuses as $value)
-                                                         <option value="{{$value['id']}}">{{$value['status_name']}}</option>   
-                                                        @endforeach
-                                                    </select>
-                                                    <label class="action_status text text-danger"></label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                             <div class="col-md-12">
-                                               <label>Response Note</label>
-                                               <textarea class="form-control" name="note" rows="5"></textarea>
-                                               <label class="text text-danger note"></label>
-                                             </div>
-                                            </div>
-                                            <input type="hidden" name="act_sent" value="{{$actionSentId}}">
-                                            <input type="hidden" name="act_dept" value="{{$actionDeptId}}">
-                                            <div class="form-group row">
-                                             <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_response') }}" data-form="#note-form" data-message="That you want to respond to the forwared actions!" id="save-response-btn">SAVE</button>
-                                           </div>
-                                           </form>
-                                        
-                                        
-                                    </div>
-                                 </div>
-                                <!-- Main row -->
-                            </div><!-- /.container-fluid -->
-                        </section>                 
-                    </div>
-                </div>
-                 </div>
-                 <div class="col-md-7">
-                  <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" style="height:22rem;">
-                    <div class="box-body">
-                        <section class="content">
-                            <div class="container-fluid">
-                                <!-- Main row -->
-                                <div class="col-md-12 bg-danger1">
-                                  <!-- <div style="width: 60%; margin: auto;"> -->
-                                    <iframe src="{{$letterPath}}" style="width:32rem; height: 20rem;">
-                                    </iframe>
-                              </div>
-                            </div><!-- /.container-fluid -->
-                        </section>                 
-                    </div>
-                  </div>
-                 </div>
               </div>
-                
-            </div>
+              <div class="row">
+               <div class="col-md-12">
+                 <label>Response Note</label>
+                 <textarea class="form-control" name="note" rows="5"></textarea>
+                 <label class="text text-danger note"></label>
+               </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label">Response Attachment</label>
+                    <input type="file" class="form-control" name="action_response" id="action_response">
+                    <label class="text text-danger action_response" ></label>
+                </div>
+              </div>
+              <input type="hidden" name="act_sent" value="{{$actionSentId}}">
+              <input type="hidden" name="act_dept" value="{{$actionDeptId}}">
+              <div class="form-group row">
+               <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_response') }}" data-form="#note-form" data-message="That you want to respond to the forwared actions!" id="save-response-btn">SAVE</button>
+             </div>
+             </form>
+          </div>
         </div>
+      </div>
     </div>
 </div>
+  <div class="col-md-5">
+    <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
+      <div class="box-body">
+          <section class="content">
+              <div class="container-fluid">
+                  <!-- Main row -->
+                  <div class="col-md-12 bg-danger1">
+                    <!-- <div style="width: 60%; margin: auto;"> -->
+                      <iframe src="{{$letterPath}}" style="width: 100%; height:480px;">
+                      </iframe>
+                </div>
+              </div><!-- /.container-fluid -->
+          </section>                 
+      </div>
+    </div>
+  </div>
+</div>
+
 @section('scripts')
     <!-- DataTables  & Plugins -->
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
