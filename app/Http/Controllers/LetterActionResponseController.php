@@ -10,6 +10,7 @@ use App\Models\LetterResponseAttachment;
 use App\Models\ActionDepartmentMap;
 use App\Models\UserDepartment;
 use App\Models\ActionSent;
+use App\Models\Letter;
 use Carbon\Carbon;
 use Auth;
 use DB;
@@ -71,6 +72,7 @@ class LetterActionResponseController extends Controller
                         
                     $noteId = LetterActionResponse::storeNote($noteDetails);
                     
+                        Letter::changeLetterStage($letter,3);
                     
                         DB::commit();
                     }

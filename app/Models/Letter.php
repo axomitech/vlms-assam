@@ -58,4 +58,14 @@ class Letter extends Model
         ]);
 
     }
+
+    public static function changeLetterStage($letterId,$stageId){
+
+        return DB::table('letters')
+        ->where('id', $letterId)
+        ->update([
+            'stage_status'=>$stageId
+        ]);
+
+    }
 }
