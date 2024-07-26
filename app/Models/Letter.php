@@ -29,7 +29,7 @@ class Letter extends Model
 
     public static function showLetterAndSender(){
         return Letter::join('senders','letters.id','=','senders.letter_id')
-               ->join('user_departments','letters.user_id','=','user_departments.user_id')
+               ->join('user_departments','letters.user_id','=','user_departments.id')
                ->where([
                 'user_departments.department_id'=>session('role_dept')
                ])

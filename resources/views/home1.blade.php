@@ -18,7 +18,7 @@
                                         <!-- small box -->
                                         <div class="small-box" style="background-color: #58a6ff;">
                                         <div class="inner">
-                                            <h3 style="color:white;">{{ 3}} </h3>
+                                            <h3 style="color:white;">{{ $diarized_count}} </h3>
                                             <p style="font-size: 22px;color:white;">Diarized</p>
                                             <b style="font-size: 22px;color:white;"></b>
                                         </div>
@@ -53,7 +53,7 @@
                                         <!-- small box -->
                                         <div class="small-box" style="background-color: #3CAEA3;">
                                         <div class="inner">
-                                            <h3 style="color:white;">{{ 2; }}</h3>
+                                            <h3 style="color:white;">{{ $sent_count}}</h3>
                                             <p style="font-size: 22px;color:white;">Sent</p>
                                             <b style="font-size: 22px;color:white;"></b>
                                         </div>
@@ -68,7 +68,7 @@
                                         <!-- small box -->
                                         <div class="small-box" style="background-color: #ff9e69;">
                                         <div class="inner">
-                                            <h3 style="color:white;">{{ 2; }}</h3>
+                                            <h3 style="color:white;">{{ $archive_count }}</h3>
                                             <p style="font-size: 22px;color:white;">Archived</p>
                                             <b style="font-size: 22px;color:white;"></b>
                                         </div>
@@ -118,28 +118,49 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr class="table-success">
-                                                <td><small>1. CRN/CS/2024/10, 07/07/2024</small></td>
-                                                <td><small>PM Awas Yojona</small></td>
-                                                <td><small>Prime Minister Office</small></td>
-                                                </tr>
-                                                <tr class="table-warning">
-                                                <td><small>2. CRN/CS/2024/09, 19/06/2024</small></td>
-                                                <td><small>Jal Jeevan Misssion Scheme status</small></td>
-                                                <td><small>PHE Central Govt.</small></td>
-                                                </tr>
-                                                <tr class="table-success">
-                                                <td><small>3. CRN/CS/2024/08, 01/07/2024</small></td>
-                                                <td><small>Home Ministry Query</small></td>
-                                                <td><small>Home Ministry, GOI</small></td>
-                                                </tr>
-                                                <tr class="table-warning">
-                                                <td><small>4. CRN/CS/2024/07, 17/07/2024</small></td>
-                                                <td><small>Lorem ipsum dolor sit amet. Est voluptatem quos qui quas nulla qui velit quae. 
-                                                    Et vero quasi sit reprehenderit sunt sed consequuntur pariatur eum dolores tempore ut
-                                                     eligendi ratione.</small></td>
-                                                <td><small>Railway Ministry</small></td>
-                                                </tr>
+                                                @php
+                                                $i=1;
+                                                @endphp
+                                                @if (count($diarized_details) > 0)
+                                                    @foreach ($diarized_details as $value)
+                                                    @if ($value->draft_finalize)
+                                                    <tr class="table-success clickable-row" data-href="{{route('action_lists',[encrypt($value->letter_id)])}}" style="cursor: pointer;">
+                                                        @else
+                                                        <tr class="table-warning clickable-row" data-href="{{route('action_lists',[encrypt($value->letter_id)])}}" style="cursor: pointer;">
+                                                            @endif
+                                                            <td><small>{{ $i++.'. '.$value->crn.', '.$value->diary_date }}</small></td>
+                                                            <td><small>{{ $value->subject}}</small></td>
+                                                            
+                                                            <td><small>{{ $value->sender_name}}</small></td>
+                                                            </tr>
+                                                        <!-- <tr class="table-success">
+                                                        <td><small>1. CRN/CS/2024/10, 07/07/2024</small></td>
+                                                        <td><small>PM Awas Yojona</small></td>
+                                                        <td><small>Prime Minister Office</small></td>
+                                                        </tr>
+                                                        <tr class="table-warning">
+                                                        <td><small>2. CRN/CS/2024/09, 19/06/2024</small></td>
+                                                        <td><small>Jal Jeevan Misssion Scheme status</small></td>
+                                                        <td><small>PHE Central Govt.</small></td>
+                                                        </tr>
+                                                        <tr class="table-success">
+                                                        <td><small>3. CRN/CS/2024/08, 01/07/2024</small></td>
+                                                        <td><small>Home Ministry Query</small></td>
+                                                        <td><small>Home Ministry, GOI</small></td>
+                                                        </tr>
+                                                        <tr class="table-warning">
+                                                        <td><small>4. CRN/CS/2024/07, 17/07/2024</small></td>
+                                                        <td><small>Lorem ipsum dolor sit amet. Est voluptatem quos qui quas nulla qui velit quae. 
+                                                            Et vero quasi sit reprehenderit sunt sed consequuntur pariatur eum dolores tempore ut
+                                                            eligendi ratione.</small></td>
+                                                        <td><small>Railway Ministry</small></td>
+                                                        </tr> -->
+                                                    @endforeach
+                                                @else
+                                                    <tr class="text-center">
+                                                        <td colspan="4">No recent diarized</td>     
+                                                    </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
@@ -196,4 +217,13 @@
                 </div>
             </div>
         </div>
+    @endsection
+    @section('scripts')
+    <script>
+        $(document).ready(function () {
+            $(".clickable-row").click(function () {
+                window.open($(this).data("href"), '_blank');
+            });
+        });
+    </script>
     @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserDepartment;
+use App\Models\HomeModel;
 use Auth;
 
 class HomeController extends Controller
@@ -41,6 +42,13 @@ class HomeController extends Controller
     }
     public function box()
     {
-        return view('home1');
+
+        $diarized_count = HomeModel::get_diarized_count();
+        $sent_count = HomeModel::get_sent_count();
+        $archive_count = HomeModel::get_archive_count();
+        $diarized_details = HomeModel::get_diarized_details();
+        // print_r($diarized_details);
+        // exit;
+        return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count'));
     }
 }
