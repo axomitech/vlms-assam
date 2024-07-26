@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Common;
 class SessionInitiationController extends Controller
 {
     
@@ -20,6 +20,10 @@ class SessionInitiationController extends Controller
             'role'=>$role
         ]);
 
+        session([
+            'department'=>Common::getSingleColumnValue('departments','id',session('role_dept'),'department_name')
+        ]);
+        
         if(session('role') == 1){
             return redirect('/diarize');
         }

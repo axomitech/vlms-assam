@@ -7,12 +7,19 @@
       <input type="hidden" name="finalize_letter" id="finalize_letter" value="{{$letter_id}}">
     </form>
     &nbsp;
+    @php
+      $disable = ""
+    @endphp
     @if (!$finalizeStatus)
     @if (count($actions) > 0)
 
     <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to finalize these actions!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">FINALIZE</button></div> 
-      
+    
     @endif
+    @else
+      @php
+      $disable = "disabled";
+      @endphp  
     @endif
   </div>
 </div>
@@ -25,7 +32,7 @@
             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Actions</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false" disabled>Add Action</a>
+            <a class="nav-link {{$disable}}" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false" disabled>Add Action</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
@@ -38,8 +45,8 @@
             <div style="overflow-x:auto;">
               <table class="table table-sm table-striped" id="letter-table">
                 <thead>
-                    <tr>
-                        <th>Description</th><th>Registered Date</th><th>Department</th><th>Status</th>
+                    <tr class="text-sm">
+                        <th>Description</th><th>Department</th><th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,8 +54,8 @@
                         $i = 1;
                     @endphp
                     @foreach ($letterActions as $value)
-                        <tr>
-                            <td>{{$i}}. &nbsp;{{$value['action_description']}}</td><td>{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
+                        <tr class="text-sm">
+                            <td>{{$i}}. &nbsp;{{$value['action_description']}}<br>Dated:{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
                             <td>
                                 <ul class="list-group">
                                     @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
@@ -57,8 +64,12 @@
                                 </ul>
                             </td>
                             <td>
-
-                              </
+                              <ul class="list-group">
+                                @for($j = 0; $j < count($responsesStatuses[$i-1]); $j++)
+                                  <li class="list-group-item">{{$responsesStatuses[$i-1][$j]}}</li>
+                                @endfor
+                              </ul>
+                            </td>
                         </tr>
                         @php
                             $i++;

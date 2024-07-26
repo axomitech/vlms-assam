@@ -23,13 +23,15 @@ class Letter extends Model
         $letter->subject = $letterDetails[6];
         $letter->letter_path = $letterDetails[7];
         $letter->auto_ack = $letterDetails[8];
+        $letter->stage_status = 1;
+        $letter->department_id = session('role_dept');
         $letter->save();
         return $letter->id;
     }
 
     public static function showLetterAndSender(){
         return Letter::join('senders','letters.id','=','senders.letter_id')
-               ->join('user_departments','letters.user_id','=','user_departments.user_id')
+               ->join('user_departments','letters.user_id','=','user_departments.id')
                ->where([
                 'user_departments.department_id'=>session('role_dept')
                ])
@@ -50,7 +52,10 @@ class Letter extends Model
 
         return DB::table('letters')
         ->where('id', $letterId)
-        ->update(['finalize_status' => true]);
+        ->update([
+            'draft_finalize' => true,
+            'stage_status'=>2
+        ]);
 
     }
 }
