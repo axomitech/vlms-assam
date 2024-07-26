@@ -40,17 +40,11 @@ class LetterController extends Controller
         if($request->ajax()){
             $jData = [];
             $letterPath = "";
-            $letterCategory = [
-                '',
-                'vip',
-                'do'
-            ];
-            
             if ($request->hasFile('letter')) {
                 
                 if ($request->file('letter')->isValid()) {
 
-                    $letterPath = $request->letter->store('public/letters/'.$letterCategory[$request->category]);
+                    $letterPath = $request->letter->store('public/letters');
 
                 }else{
 

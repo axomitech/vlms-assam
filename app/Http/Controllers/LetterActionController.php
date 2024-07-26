@@ -37,7 +37,7 @@ class LetterActionController extends Controller
         $organization = Common::getSingleColumnValue('senders','letter_id',$letter_id,'organization');
         $letterPath = Common::getSingleColumnValue('letters','id',$letter_id,'letter_path');
         $letterCrn = Common::getSingleColumnValue('letters','id',$letter_id,'crn');
-        $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'finalize_status');
+        $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
         $actions = LetterAction::getDepartmentActions($letter_id);
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $notes = [];
@@ -60,11 +60,12 @@ class LetterActionController extends Controller
             $j = 0;
             foreach($actions AS $value1){
                 $actionDepartments[$i][$j] = $value1['department_name'];
+                $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
                 $j++;
             }
             $i++;
         }
-        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions'));
+        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses'));
     }
 
     public function letterIndex()
@@ -83,7 +84,7 @@ class LetterActionController extends Controller
         $organization = Common::getSingleColumnValue('senders','letter_id',$letter_id,'organization');
         $letterPath = Common::getSingleColumnValue('letters','id',$letter_id,'letter_path');
         $letterCrn = Common::getSingleColumnValue('letters','id',$letter_id,'crn');
-        $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'finalize_status');
+        $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $departments = Department::getAllDepartments();
         $actions = LetterAction::getDepartmentActions($letter_id);
@@ -103,7 +104,7 @@ class LetterActionController extends Controller
         // //print_r($letterActions);
         // print_r($actionDepartments);
         // die();
-        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses'));
+        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions'));
     }
 
     public function finalizeActions(Request $request){

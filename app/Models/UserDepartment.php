@@ -34,4 +34,11 @@ class UserDepartment extends Model
         ])->value('id');
         
     }
+
+    public static function getDefaultAccess($userId){
+        return UserDepartment::where([
+            'user_id'=>$userId,
+            'default_access'=>true
+        ])->select('id','department_id','role_id')->get();
+    }
 }

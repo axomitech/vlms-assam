@@ -23,6 +23,8 @@ class Letter extends Model
         $letter->subject = $letterDetails[6];
         $letter->letter_path = $letterDetails[7];
         $letter->auto_ack = $letterDetails[8];
+        $letter->stage_status = 1;
+        $letter->department_id = session('role_dept');
         $letter->save();
         return $letter->id;
     }
@@ -50,7 +52,10 @@ class Letter extends Model
 
         return DB::table('letters')
         ->where('id', $letterId)
-        ->update(['finalize_status' => true]);
+        ->update([
+            'draft_finalize' => true,
+            'stage_status'=>2
+        ]);
 
     }
 }
