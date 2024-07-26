@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row">
-  <div class="col-md-7">
+  <div class="col-md-12">
     <div class="card card-primary card-outline card-outline-tabs">
       <div class="card-header p-0 pt-1">
         <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
@@ -16,7 +16,7 @@
       </div>
       <div class="card-body">
         <div class="tab-content" id="custom-tabs-one-tabContent">
-          <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab" style="width: 100%; height:480px;">
+          <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
              
           </div>
           <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
@@ -55,22 +55,6 @@
              </form>
           </div>
         </div>
-      </div>
-    </div>
-</div>
-  <div class="col-md-5">
-    <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
-      <div class="box-body">
-          <section class="content">
-              <div class="container-fluid">
-                  <!-- Main row -->
-                  <div class="col-md-12 bg-danger1">
-                    <!-- <div style="width: 60%; margin: auto;"> -->
-                      <iframe src="{{$letterPath}}" style="width: 100%; height:480px;">
-                      </iframe>
-                </div>
-              </div><!-- /.container-fluid -->
-          </section>                 
       </div>
     </div>
   </div>
