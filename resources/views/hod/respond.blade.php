@@ -17,7 +17,26 @@
       <div class="card-body">
         <div class="tab-content" id="custom-tabs-one-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-             
+             <table class="table table-sm table-striped table-hover">
+                <thead>
+                  <tr class="text-sm">
+                    <th>Response</th><th>Response Status</th><th>Response Attached</th>
+                  </tr>
+                </thead>
+                @php
+                  $i = 1;
+                @endphp
+                <tbody>
+                  @foreach ($responses as $value)
+                  <tr class="text-sm">
+                    <td>{{$i}}. {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{config('constants.options.storage_url')}}{{$value['response_attachment']}}"><i class="fas fa-file-pdf"></i></a></td>
+                  </tr>
+                  @php
+                    $i++;
+                  @endphp
+                  @endforeach
+                </tbody>
+             </table>
           </div>
           <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
             <form id="note-form">
@@ -59,8 +78,35 @@
     </div>
   </div>
 </div>
+<!-- /.modal -->
 
+<div class="modal fade" id="modal-lg">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <embed src="" type="application/pdf" id="letter-view" style="width:100%; height:350px">
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 @section('scripts')
+<script>
+  $(document).on('click','.file-btn',function(){
+     $('#letter-view').attr('src',$(this).data('letter_path'));
+  });
+</script>
     <!-- DataTables  & Plugins -->
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>

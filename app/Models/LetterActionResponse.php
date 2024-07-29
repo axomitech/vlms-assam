@@ -14,6 +14,7 @@ class LetterActionResponse extends Model
         $response->act_dept_map_id = $noteDetails[0];
         $response->user_id = session('role_user');
         $response->action_remarks = $noteDetails[1];
+        $response->action_status_id = $noteDetails[2];
         $response->save();
         return $response->id;
         

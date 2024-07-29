@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreActionSentRequest;
 use App\Http\Requests\UpdateActionSentRequest;
+use App\Models\LetterActionResponse;
 use App\Models\UserDepartment;
 use App\Models\ActionStatus;
 use App\Models\ActionSent;
@@ -41,7 +42,15 @@ class ActionSentController extends Controller
         $letterPath = config('constants.options.storage_url').
         Common::getSingleColumnValue('letters','id',$letterId,'letter_path');
         $actionStatuses = ActionStatus::getAllActionStatus();
-        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId'));
+        $responses = LetterActionResponse::join('letter_response_attachments',
+        'letter_action_responses.id','=','letter_response_attachments.response_id')
+        ->join('action_sents','letter_action_responses.act_dept_map_id','=','action_sents.act_dept_id')
+        ->join('action_statuses','letter_action_responses.action_status_id','=','action_statuses.id')
+        ->where([
+           'action_sents.id' =>$actionSentId
+        ])->select('action_remarks','status_name','letter_action_responses.created_at AS response_date','response_attachment')
+        ->get();
+        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId','responses'));
     }
 
     

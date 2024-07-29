@@ -42,7 +42,6 @@ class ActionSent extends Model
                             'receiver_id'=>session('role_user'),
                             
                         ])
-                        ->whereIn('action_status_id',[1])
                         ->select('action_sents.id AS action_sent_id','action_department_maps.id AS act_dept_id',
                         'letter_actions.action_description',
                         'action_sents.created_at',
