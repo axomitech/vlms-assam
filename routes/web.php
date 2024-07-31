@@ -28,6 +28,7 @@ Route::get('/session_user/{user}/{dept}/{role}', [App\Http\Controllers\SessionIn
 Route::get('/inbox', [App\Http\Controllers\ActionSentController::class, 'index'])->name('inbox');
 Route::get('/outbox', [App\Http\Controllers\ActionSentController::class, 'outbox'])->name('outbox');
 Route::get('/responds/{sent}/{act}/{letter}',[App\Http\Controllers\ActionSentController::class, 'response'])->name('responds');
+Route::get('/action_response',[App\Http\Controllers\ActionSentController::class, 'getActionResponses'])->name('action_response');
 Route::get("/log", function(){
     Log::channel('i_love_this_logging_thing')->info("Action log debug test", ['log-string' => ['user'=>1], "run"]);
  

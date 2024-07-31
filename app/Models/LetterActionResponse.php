@@ -43,4 +43,15 @@ class LetterActionResponse extends Model
         ->get();
           
     }
+
+    public static function getResponses($actionSentId){
+        return LetterActionResponse::join('letter_response_attachments',
+        'letter_action_responses.id','=','letter_response_attachments.response_id')
+        ->join('action_sents','letter_action_responses.act_dept_map_id','=','action_sents.act_dept_id')
+        ->join('action_statuses','letter_action_responses.action_status_id','=','action_statuses.id')
+        ->where([
+           'action_sents.id' =>$actionSentId
+        ])->select('action_remarks','status_name','letter_action_responses.created_at AS response_date','response_attachment')
+        ->get();
+    }
 }

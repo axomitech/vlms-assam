@@ -129,7 +129,7 @@ class LetterActionResponseController extends Controller
                 $responsePath = "";
                 if ($request->file('action_response')->isValid()) {
 
-                    $responsePath = $request->action_response->store('public/action_response/');
+                    $responsePath = $request->action_response->store('public/action_response');
 
                 }else{
 
