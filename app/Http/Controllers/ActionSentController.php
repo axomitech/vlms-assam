@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreActionSentRequest;
 use App\Http\Requests\UpdateActionSentRequest;
+use App\Models\LetterActionResponse;
 use App\Models\UserDepartment;
 use App\Models\ActionStatus;
 use App\Models\ActionSent;
@@ -25,13 +27,19 @@ class ActionSentController extends Controller
 
     public function outbox()
     {
-        $forwards = ActionSent::outbox();
+        $forwardActions = ActionSent::getForwardedActions();
+        $forwards = [];
+        $i = 0;
+        foreach($forwardActions AS $value){
+            $forwards[$i] = ActionSent::outbox($value['action_id']);
+            $i++;
+        }
         // $timeSpans = [];
         // foreach($forwards AS $value){
         //     $timeSpans[$i] = Carbon::parse()
         //     $timeSpans[$i] = Carbon::parse($)
         // }
-        return view('hod.outbox',compact('forwards'));
+        return view('hod.outbox',compact('forwards','forwardActions'));
     }
 
     public function response($actionSentId,$actionDeptId,$letterId){
@@ -41,7 +49,33 @@ class ActionSentController extends Controller
         $letterPath = config('constants.options.storage_url').
         Common::getSingleColumnValue('letters','id',$letterId,'letter_path');
         $actionStatuses = ActionStatus::getAllActionStatus();
-        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId'));
+        $responses = LetterActionResponse::getResponses($actionSentId);
+        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId','responses'));
+    }
+
+    public function getActionResponses(Request $request){
+        $jdata = [];
+        if($request->ajax()){
+            $jdata[0] = [
+                'remarks'=>'',
+                'status'=>'',
+                'response_date'=>'',
+                'attachment'
+            ];
+            $responses = LetterActionResponse::getResponses($request->action_sent);
+            $i = 1;
+            foreach($responses AS $value){
+                $jdata[$i] = [
+                    'remarks'=>$value['action_remarks'],
+                    'status'=>$value['status_name'],
+                    'response_date'=>Carbon::parse($value['response_date'])->format('d/m/Y'),
+                    'attachment'=>config('constants.options.storage_url')."".$value['response_attachment'],
+                ];
+                $i++;
+            }
+        }
+
+        return response()->json($jdata);
     }
 
     

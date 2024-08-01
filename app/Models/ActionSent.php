@@ -42,7 +42,6 @@ class ActionSent extends Model
                             'receiver_id'=>session('role_user'),
                             
                         ])
-                        ->whereIn('action_status_id',[1])
                         ->select('action_sents.id AS action_sent_id','action_department_maps.id AS act_dept_id',
                         'letter_actions.action_description',
                         'action_sents.created_at',
@@ -52,24 +51,33 @@ class ActionSent extends Model
                         ->get();
     }
 
-    public static function outbox(){
+    public static function outbox($action_id){
         return ActionSent::join('action_department_maps','action_department_maps.id','=','action_sents.act_dept_id')
                         ->join('letter_actions','action_department_maps.letter_action_id','=','letter_actions.id')
                         ->join('user_departments','action_sents.receiver_id','=','user_departments.id')
                         ->join('users','user_departments.user_id','=','users.id')
                         ->join('departments','user_departments.department_id','=','departments.id')
                         ->join('letters','letters.id','=','letter_actions.letter_id')
-                        ->orderBy('action_sents.id','DESC')
+                        ->orderBy('letter_actions.id','DESC')
                         ->where([
-                            'sender_id'=>session('role_user')
+                            'sender_id'=>session('role_user'),
+                            'letter_actions.id'=>$action_id
                         ])
                         ->select('action_sents.id AS action_sent_id','action_department_maps.id AS act_dept_id',
-                        'letter_actions.action_description',
                         'action_sents.created_at',
                         'users.name AS receiver_name',
                         'department_name','letters.letter_path')
                         ->orderBy('action_sents.id','DESC')
                         ->get();
+    }
+
+    public static function getForwardedActions(){
+        return LetterAction::join('user_departments','letter_actions.user_id','=','user_departments.id')->where([
+            'user_departments.department_id'=>session('role_dept')
+        ])
+        ->orderBy('letter_actions.id','DESC')
+        ->select('letter_actions.id AS action_id','action_description')
+        ->get();
     }
 
     public static function updateActionStatus($actionSentId,$actionStatus){

@@ -129,12 +129,12 @@ class LetterActionResponseController extends Controller
                 $responsePath = "";
                 if ($request->file('action_response')->isValid()) {
 
-                    $responsePath = $request->action_response->store('public/action_response/');
+                    $responsePath = $request->action_response->store('public/action_response');
 
                 }else{
 
                     $jData[1] = [
-                        'message'=>'The letter upload was unsuccessful! Please try again.',
+                        'message'=>'The response upload was unsuccessful! Please try again.',
                         'status'=>'error'
                     ];
                 }
@@ -142,7 +142,7 @@ class LetterActionResponseController extends Controller
             }else{
 
                 $jData[1] = [
-                    'message'=>'The uploaded letter is absent! Please try again.',
+                    'message'=>'The uploaded response is absent! Please try again.',
                     'status'=>'error'
                 ];
             }
@@ -157,14 +157,14 @@ class LetterActionResponseController extends Controller
 
                     $noteId = LetterActionResponse::storeNote([
                         $actionDeptId,
-                        $note
+                        $note,
+                        $actionStatus
                     ]);
                     
                     $attachmentId = LetterResponseAttachment::storeAttachment([
                         $noteId,
                         $responsePath
                     ]);
-                    ActionSent::updateActionStatus($actionsentId,$actionStatus);
                     DB::commit();
                     $jData[1] = [
                         'message'=>'Response is successfully stored.',
