@@ -103,7 +103,7 @@ class LetterController extends Controller
                     Sender::storeSender($senderDetails);
                     DB::commit();
                     $jData[1] = [
-                        'message'=>'Letter data is successfully stored.',
+                        'message'=>'Letter is successfully diarized.',
                         'status'=>'success',
                         'letter_id'=>$letterId,
                         'ack_check'=>$request->auto_ack

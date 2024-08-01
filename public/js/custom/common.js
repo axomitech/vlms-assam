@@ -78,7 +78,7 @@ function successConfirm(status,message,responseStatus){
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes'
+    confirmButtonText: 'OK'
         }).then((result) => {
         if (result.isConfirmed) {
             if(status != 'error'){

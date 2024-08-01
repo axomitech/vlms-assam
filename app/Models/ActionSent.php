@@ -89,15 +89,16 @@ class ActionSent extends Model
     }
 
     public static function getResponseStatuses($actionDeptId,$departmentId){
-        $status = ActionSent::join('action_statuses','action_status_id','=','action_statuses.id')
+        $status = ActionSent::join('letter_action_responses','action_sents.act_dept_id','=','letter_action_responses.act_dept_map_id')
+        ->join('action_statuses','letter_action_responses.action_status_id','=','action_statuses.id')
         ->join('user_departments','user_departments.id','=','action_sents.receiver_id')
         ->where([
-            'act_dept_id'=>$actionDeptId,
+            'action_sents.act_dept_id'=>$actionDeptId,
             'user_departments.department_id'=>$departmentId
         ])
         ->orderBy('action_sents.id','DESC')
         ->first();
-        $statusName = "Not Started";
+        $statusName = "Not Responding";
         if($status != null){
             $statusName = $status->status_name;
         }

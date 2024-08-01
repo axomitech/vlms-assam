@@ -6,7 +6,7 @@
 /storage/*.key
 /vendor
 /vendor1
-.env
+/.env
 .env.backup
 .env.production
 .phpactor.json
@@ -19,3 +19,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/config/constants.php

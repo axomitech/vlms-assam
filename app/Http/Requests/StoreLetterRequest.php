@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\LetterPriority;
 use App\Models\LetterCategory;
+use Carbon\Carbon;
 
 class StoreLetterRequest extends FormRequest
 {
@@ -23,15 +24,16 @@ class StoreLetterRequest extends FormRequest
      */
     public function rules(): array
     {
+        $today = Carbon::now()->format('Y-m-d');
         return [
 
             'priority'=>'required|numeric|min:1|max:'.LetterPriority::max('id'),
             'category'=>'required|numeric|min:1|max:'.LetterCategory::max('id'),
             'letter'=>'required|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
-            'letter_no'=>'required|alpha_num',
-            'letter_date'=>'required|date|date_format:Y-m-d',
-            'received_date'=>'required|date|date_format:Y-m-d',
-            'diary_date'=>'required|date|date_format:Y-m-d',
+            'letter_no'=>'required',
+            'letter_date'=>'required|date|date_format:Y-m-d|before_or_equal:'.$today,
+            'received_date'=>'required|date|date_format:Y-m-d|before_or_equal:'.$today,
+            'diary_date'=>'required|date|date_format:Y-m-d|before_or_equal:'.$today,
             'subject'=>'required',
             'sender_name'=>'required',
             'sender_designation'=>'required',
@@ -63,12 +65,15 @@ class StoreLetterRequest extends FormRequest
             'letter_date.required'=>'Please provide the date of letter.',
             'letter_date.date'=>'Please provide a valid date of letter.',
             'letter_date.date_format'=>'Please provide a valid date of letter.',
+            'letter_date.before_or_equal'=>'Please provide a current date or before.',
             'received_date.required'=>'Please provide the date of letter received.',
             'received_date.date'=>'Please provide a valid date of letter received.',
             'received_date.date_format'=>'Please provide a valid date of letter received.',
+            'received_date.before_or_equal'=>'Please provide current date or before.',
             'diary_date.required'=>'Please provide the date of letter diary.',
             'diary_date.date'=>'Please provide a valid date of letter diary.',
             'diary_date.date_format'=>'Please provide a valid date of letter diary.',
+            'diary_date.before_or_equal'=>'Please provide current date or before.',
             'subject.required'=>'Please provide letter subject.',
             'sender_name.required'=>'Please provide sender name.',
             'sender_designation.required'=>'Please provide sender designation.',

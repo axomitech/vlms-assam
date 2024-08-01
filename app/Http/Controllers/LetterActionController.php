@@ -96,7 +96,7 @@ class LetterActionController extends Controller
         foreach($letterActions AS $value){
             $j = 0;
             foreach($actions AS $value1){
-                $actionDepartments[$i][$j] = $value1['department_name'];
+                $actionDepartments[$i][$j] = $value1['department_name'].$value['action_id'];
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
                 $j++;
             }
