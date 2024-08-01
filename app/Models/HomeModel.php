@@ -34,6 +34,13 @@ class HomeModel extends Model
             ->where('stage_status', '=', 3)
             ->count();
     }
+    public static function get_inbox_count()
+    {
+        return DB::table('action_sents')
+            ->join('action_department_maps','action_sents.act_dept_id','=','action_department_maps.id')
+            ->where('action_department_maps.department_id', '=', session('role_dept'))
+            ->count();
+    }
     public static function get_diarized_details()
     {
         return DB::table('letters')
@@ -41,7 +48,7 @@ class HomeModel extends Model
             ->where('letters.department_id', '=', session('role_dept'))
             ->where('letters.stage_status', '=', 1)
             ->select('letters.id as letter_id','letters.crn as crn','letters.subject as subject','senders.sender_name as sender_name',
-            'draft_finalize','diary_date')
+            'draft_finalize','diary_date','sender_designation','organization')
             ->get();
     }
 }

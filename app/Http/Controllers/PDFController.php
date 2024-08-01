@@ -46,18 +46,13 @@ class PDFController extends Controller
         $mpdf->Output($pdf_name, 'D');
     }
 
-    public function downloadAll($letter_id)
+    public function downloadAll1($letter_id)
     {
 
         $result = AcknowledgeModel::get_letter_details($letter_id);
         $letter_path = $result->letter_path;
 
-    //    print_r($letter_path);
-    //    exit();
-        // $this->createActionDetails($letter_id);
 
-        // Path to the existing PDF
-        // $pdfPath = storage_path('app/public/old.pdf');
         $pdfPath = storage_path('app/'.$letter_path);
 
         // Check if the file exists
@@ -157,6 +152,56 @@ class PDFController extends Controller
         //     ->header('Content-Type', 'application/pdf')
         //     ->header('Content-Disposition', 'inline; filename="merged.pdf"');
 
+        $mpdf->Output('test.pdf', 'D');
+    }
+    public function downloadAll($letter_id){
+
+        $letter = AcknowledgeModel::get_letter_details($letter_id);
+        $letter_path = $letter->letter_path;
+
+        $correspondance = AcknowledgeModel::get_correspondence_details($letter_id);
+
+        $pdfFiles = [
+            storage_path('app/'.$letter_path)
+        ];
+
+        foreach($correspondance as $c){
+            array_push($pdfFiles,storage_path('app/'.$c->file_path));
+        }
+
+        // print_r($pdfFiles);
+        // exit;
+
+        $outputPath = storage_path('app/public/letters/vip/merged.pdf');
+
+        $this->mergePdfsNew($pdfFiles, $outputPath);
+
+    }
+
+    public function mergePdfsNew(array $pdfFiles, string $outputPath): void
+    {
+        $mpdf = new Mpdf();
+
+        foreach ($pdfFiles as $file) {
+            $mpdf->AddPage();
+            $pageCount = $mpdf->SetSourceFile($file);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                
+                $tplId = $mpdf->ImportPage($i);
+                $size = $mpdf->getTemplateSize($tplId);//rahul
+                $mpdf->useTemplate($tplId, 0, 0, $size['width'], $size['height'], true);//rahul
+                // $mpdf->UseTemplate($tplId);
+                if ($i < $pageCount) {
+                        $mpdf->AddPage($size['orientation']);
+                }
+            }
+        }
+
+        // $page_format = $mpdf->GetPageFormat($page_number);
+        // if ($page_format['orientation'] === 'L') {
+        //     echo 'hi';
+        // }
+        // $mpdf->Output($outputPath, \Mpdf\Output\Destination::FILE);
         $mpdf->Output('test.pdf', 'D');
     }
 }

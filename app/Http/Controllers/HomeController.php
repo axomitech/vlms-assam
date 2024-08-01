@@ -59,9 +59,10 @@ class HomeController extends Controller
         $sent_count = HomeModel::get_sent_count();
         $archive_count = HomeModel::get_archive_count();
         $diarized_details = HomeModel::get_diarized_details();
+        $inbox_count = HomeModel::get_inbox_count();
         // print_r($diarized_details);
         // exit;
-        return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count'));
+        return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
     }
 
     private function sessionInitiate($user,$department,$role){

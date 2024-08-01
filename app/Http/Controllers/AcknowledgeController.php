@@ -84,7 +84,7 @@ class AcknowledgeController extends Controller
                 $ack_no='<div style="overflow: hidden;"><span style="float: left;">No.: CRN/ACK/2024/10</span><span style="float: right;">Dated: '.date("d/m/Y").'</span></div>';
                 // $dated = '<h6 style="text-align: right;">Dated: '.date("d/m/Y").'</h6>';
                 $default_subject = '<u>Acknowledgment of Receipt of Your Letter "No.- '.$letter_no.', Dated- '.$letter_date.'".</u>';
-                $ref= 'Letter No.- '.$letter_no.', Dated- '.$letter_date.', subject: "'. $letter_subject.'"';
+                $ref= 'Letter No.- '.$letter_no.', Dated- '.$letter_date.', Subject: "'. $letter_subject.'"';
                 
                 $letter_body='<p>Dear Sir/Madam, <p>I am writing to confirm receipt of your letter dated "'.$letter_date.'" and letter no. "'.$letter_no
                 .'". I appreciate your prompt communication on this matter.<p>Please be assured that I have reviewed the contents of your letter
