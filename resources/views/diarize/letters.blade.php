@@ -18,7 +18,21 @@
               @endphp
               @foreach ($letters as $value)
                   <tr>
-                    <td>{{$i}}. &nbsp;{{$value['crn']}}</td><td>{{$value['subject']}}</td><td>{{$value['letter_no']}}</td><td>{{$value['sender_name']}}</td><td>
+                    <td>{{$i}}. &nbsp;{{$value['crn']}}</td><td>
+                      
+                      <div class="text-block" id="textBlock1">
+                        <p class="shortText">
+                          {{substr($value['subject'], 0, 100)}}... 
+                          <a href="#" class="readMore">Read more</a>
+                        </p>
+                        <div class="longText" style="display: none;">
+                          <p>
+                            {{$value['subject']}}
+                            <a href="#" class="readLess">Read less</a>
+                          </p>
+                        </div>
+                    </td>
+                      <td>{{$value['letter_no']}}</td><td>{{$value['sender_name']}}</td><td>
                        @if (session('role') == 2)
                         &nbsp;
                         <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
@@ -82,6 +96,23 @@
     $(".buttons-print").removeClass('btn-secondary');
   });
 
+    </script>
+    <script>
+      $(document).ready(function() {
+      $('.readMore').on('click', function(event) {
+        event.preventDefault();
+        var textBlock = $(this).closest('.text-block');
+        textBlock.find('.shortText').hide();
+        textBlock.find('.longText').show();
+      });
+
+      $('.readLess').on('click', function(event) {
+        event.preventDefault();
+        var textBlock = $(this).closest('.text-block');
+        textBlock.find('.longText').hide();
+        textBlock.find('.shortText').show();
+      });
+    });
     </script>
 @endsection
 @endsection

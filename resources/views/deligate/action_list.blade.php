@@ -46,7 +46,7 @@
               <table class="table table-sm table-striped" id="letter-table">
                 <thead>
                     <tr class="text-sm">
-                        <th>Description</th><th>Department</th><th>Status</th>
+                        <th>Description</th><th>Department</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,20 +55,33 @@
                     @endphp
                     @foreach ($letterActions as $value)
                         <tr class="text-sm">
-                            <td>{{$i}}. &nbsp;{{$value['action_description']}}<br>Dated:{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
-                            <td>
-                                <ul class="list-group">
-                                    @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
-                                      <li class="list-group-item">{{$actionDepartments[$i-1][$j]}}</li>
-                                    @endfor
-                                </ul>
+                            <td>{{$i}}. &nbsp;
+                              <div class="text-block" id="textBlock1">
+                                <p class="shortText">
+                                  {{substr($value['action_description'], 0, 100)}}... 
+                                  <a href="#" class="readMore">Read more</a>
+                                </p>
+                                <div class="longText" style="display: none;">
+                                  <p>
+                                    {{$value['action_description']}}
+                                    <a href="#" class="readLess">Read less</a>
+                                  </p>
+                                </div>
+                              <br>Dated:{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}
                             </td>
                             <td>
-                              <ul class="list-group">
-                                @for($j = 0; $j < count($responsesStatuses[$i-1]); $j++)
-                                  <li class="list-group-item">{{$responsesStatuses[$i-1][$j]}}</li>
-                                @endfor
-                              </ul>
+                                <table class="table-bordered">
+                                  @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
+                                      <tr>
+                                          <td>
+                                            {{$actionDepartments[$i-1][$j]}}
+                                          </td>
+                                          <td>
+                                            {{$responsesStatuses[$i-1][$j]}}
+                                          </td>
+                                      </tr>
+                                    @endfor
+                                </table>
                             </td>
                         </tr>
                         @php
@@ -189,6 +202,23 @@ $(function () {
     $('.js-example-basic-multiple').select2();
 
     
+</script>
+<script>
+  $(document).ready(function() {
+  $('.readMore').on('click', function(event) {
+    event.preventDefault();
+    var textBlock = $(this).closest('.text-block');
+    textBlock.find('.shortText').hide();
+    textBlock.find('.longText').show();
+  });
+
+  $('.readLess').on('click', function(event) {
+    event.preventDefault();
+    var textBlock = $(this).closest('.text-block');
+    textBlock.find('.longText').hide();
+    textBlock.find('.shortText').show();
+  });
+});
 </script>
 @endsection
 @endsection

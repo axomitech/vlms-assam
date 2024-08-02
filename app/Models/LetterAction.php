@@ -18,12 +18,13 @@ class LetterAction extends Model
         return $action->id;
     }
 
-    public static function getDepartmentActions($letterId){
+    public static function getDepartmentActions($letterId,$actionId){
         return LetterAction::join('action_department_maps','letter_actions.id','=','action_department_maps.letter_action_id')
             ->join('letters','letter_actions.letter_id','=','letters.id')
             ->join('departments','action_department_maps.department_id','=','departments.id')
             ->where([
-                'letter_actions.letter_id'=>$letterId
+                'letter_actions.letter_id'=>$letterId,
+                'letter_actions.id'=>$actionId
             ])
             ->orderBy('letter_actions.id','DESC')
             ->groupBY('action_id','subject','letter_no','letter_path','act_dept_id','dept_id','department_name')

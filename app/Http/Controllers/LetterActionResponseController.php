@@ -58,15 +58,17 @@ class LetterActionResponseController extends Controller
             $actions = $request->letter_action;
                 try {
 
-                    for($i = 0; $i < count($actions); $i++){
+                    for($i = 0; $i < count($actDept); $i++){
                         
                         $noteDetails = [
 
                             ActionDepartmentMap::getActionDepartment([
+                                $actDept[$i],
                                 $actions[$i]
                             ]),
     
-                            $request->note
+                            $request->note,
+                            null
     
                         ];
                         

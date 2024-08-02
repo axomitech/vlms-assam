@@ -20,7 +20,8 @@ class ActionDepartmentMap extends Model
 
    public static function getActionDepartment($actionDetails){
         return ActionDepartmentMap::where([
-            'letter_action_id'=>$actionDetails[0],
+            'department_id'=>$actionDetails[0],
+            'letter_action_id'=>$actionDetails[1],
         ])->value('id'); 
    }
 }

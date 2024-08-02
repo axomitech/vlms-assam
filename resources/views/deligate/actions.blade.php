@@ -35,7 +35,7 @@
               <table class="table table-sm table-striped" id="letter-table">
                 <thead>
                     <tr>
-                        <th>Description</th><th>Department</th><th>Status</th><th>Responses</th>
+                        <th>Description</th><th>Department</th><th>Responses</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,22 +44,26 @@
                     @endphp
                     @foreach ($letterActions as $value)
                         <tr>
-                            <td>{{$i}}. &nbsp;{{$value['action_description']}}<br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
+                            <td>{{$i}}. &nbsp;
+                              <div class="text-block" id="textBlock1">
+                                <p class="shortText">
+                                  {{substr($value['action_description'], 0, 100)}}... 
+                                  <a href="#" class="readMore">Read more</a>
+                                </p>
+                                <div class="longText" style="display: none;">
+                                  <p>
+                                    {{$value['action_description']}}
+                                    <a href="#" class="readLess">Read less</a>
+                                  </p>
+                                </div>
+                              <br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
                             <td>
-                                <ul class="list-group">
-                                    @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
-                                      <li class="list-group-item">{{$actionDepartments[$i-1][$j]}}</li>
-                                    @endfor
-                                </ul>
+                              <table class="table-bordered">
+                                @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
+                                      <tr><td>{{$actionDepartments[$i-1][$j]}}</td><td>{{$responsesStatuses[$i-1][$j]}}</td></tr>
+                                  @endfor
+                              </table>
                             </td>
-                            <td>
-                              <ul class="list-group">
-                                @for($j = 0; $j < count($responsesStatuses[$i-1]); $j++)
-                                  <li class="list-group-item">{{$responsesStatuses[$i-1][$j]}}</li>
-                                @endfor
-                              </ul>
-                            </td>
-                            
                             <td>
                               <a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a>
                             </td>
@@ -106,7 +110,7 @@
     
   </div>
   <div class=" col-md-5">
-    <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 100%;">
+    <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 65%;">
     </iframe>
   </div>
 </div>
@@ -291,6 +295,23 @@ $(function () {
 
   })
 
+</script>
+<script>
+  $(document).ready(function() {
+  $('.readMore').on('click', function(event) {
+    event.preventDefault();
+    var textBlock = $(this).closest('.text-block');
+    textBlock.find('.shortText').hide();
+    textBlock.find('.longText').show();
+  });
+
+  $('.readLess').on('click', function(event) {
+    event.preventDefault();
+    var textBlock = $(this).closest('.text-block');
+    textBlock.find('.longText').hide();
+    textBlock.find('.shortText').show();
+  });
+});
 </script>
 @endsection
 @endsection

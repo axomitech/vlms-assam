@@ -38,28 +38,24 @@ class LetterActionController extends Controller
         $letterPath = Common::getSingleColumnValue('letters','id',$letter_id,'letter_path');
         $letterCrn = Common::getSingleColumnValue('letters','id',$letter_id,'crn');
         $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
-        $actions = LetterAction::getDepartmentActions($letter_id);
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $notes = [];
         $i = 0;
-        foreach($actions AS $value){
-            $note = LetterActionResponse::getActionLastNote($value['action_id']);
-            if($note != null){
-                $notes[$i] = $note->action_remarks;
-            }else{
-                $notes[$i] = '';
-
-            }
-            $i++;
-        }
-        $actions = LetterAction::getDepartmentActions($letter_id);
         $actionDepartments = [];
         $letterActions = LetterAction::getLetterActions($letter_id);
         $i = 0;
         $responsesStatuses=[];
         foreach($letterActions AS $value){
             $j = 0;
+            $actions = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
             foreach($actions AS $value1){
+                $note = LetterActionResponse::getActionLastNote($value['action_id']);
+                if($note != null){
+                    $notes[$i] = $note->action_remarks;
+                }else{
+                    $notes[$i] = '';
+
+                }
                 $actionDepartments[$i][$j] = $value1['department_name'];
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
                 $j++;
@@ -88,15 +84,16 @@ class LetterActionController extends Controller
         $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $departments = Department::getAllDepartments();
-        $actions = LetterAction::getDepartmentActions($letter_id);
+        
         $actionDepartments = [];
         $letterActions = LetterAction::getLetterActions($letter_id);
         $responsesStatuses = [];
         $i = 0;
         foreach($letterActions AS $value){
             $j = 0;
+            $actions = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
             foreach($actions AS $value1){
-                $actionDepartments[$i][$j] = $value1['department_name'].$value['action_id'];
+                $actionDepartments[$i][$j] = $value1['department_name'];
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
                 $j++;
             }
