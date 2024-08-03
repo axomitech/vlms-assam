@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLetterRequest;
 use App\Http\Requests\UpdateLetterRequest;
+use App\Http\Requests\StageLetterRequest;
 use App\Models\Letter;
 use App\Models\Sender;
 use App\Models\Department;
@@ -124,6 +125,45 @@ class LetterController extends Controller
                 return response()->json($jData,200);
         }
     }
+
+    public function changeLetterStage(StageLetterRequest $request)
+    {
+        if($request->ajax()){
+            $jData = [];
+            $message = "";
+            if($request->stage == 4){
+                $message = "Letter is successfully marked completed!";
+            }
+
+            if($request->stage == 5){
+                $message = "Letter is successfully archived!";
+            }
+            DB::beginTransaction();
+    
+                try {
+
+                    Letter::changeLetterStage($request->stage_letter,$request->stage);
+                   
+                    DB::commit();
+                    $jData[1] = [
+                        'message'=>$message,
+                        'status'=>'success',
+                    ];
+
+                    
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    $jData[1] = [
+                        'message'=>'Something went wrong! Please try again.'.$e->getMessage(),
+                        'candidate'=>'',
+                        'status'=>'error'
+                    ];
+                }
+
+                return response()->json($jData,200);
+        }
+    }
+
 
     public function showLetters()
     {

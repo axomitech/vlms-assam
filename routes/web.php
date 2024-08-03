@@ -14,6 +14,7 @@ Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name(
 Route::get('/diarize', [App\Http\Controllers\LetterController::class, 'index'])->name('diarize');
 Route::get('/letters', [App\Http\Controllers\LetterController::class, 'showLetters'])->name('letters');
 Route::post('/store_letter', [App\Http\Controllers\LetterController::class, 'store'])->name('store_letter');
+Route::post('/change_stage', [App\Http\Controllers\LetterController::class, 'changeLetterStage'])->name('change_stage');
 Route::get('/action_letters', [App\Http\Controllers\LetterActionController::class, 'index'])->name('action_letters');
 Route::get('/letter_lists', [App\Http\Controllers\LetterActionController::class, 'letterIndex'])->name('letter_lists');
 Route::get('/actions/{id}', [App\Http\Controllers\LetterActionController::class, 'actions'])->name('actions');

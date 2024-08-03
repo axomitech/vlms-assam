@@ -17,10 +17,10 @@
              
                <div class="row" style="overflow: scroll; height: 300px;">
                   <div class="col-md-12">
-                    <table class="table table-sm table-hover table-striped" id="letter-table">
+                    <table class="table table-sm table-hover table-striped table-responsive text text-sm text-justify" id="letter-table">
                       <thead>
                           <tr>
-                              <th>Action Forwarded</th><th>To</th><th>Sent</th>
+                              <th>Sl no.</th><th>Action Forwarded</th><th>To</th><th>Sent</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -32,7 +32,8 @@
                                  $timeSpan = "";
                             @endphp
                               <tr>
-                                  <td>{{$i}}. &nbsp;{{$value['action_description']}}</td><td>
+                                  <td>{{$i}}</td>
+                                  <td style="width: 35%;"> {{$value['action_description']}}</td><td>
                                     @foreach ($forwards[$i-1] as $forward)
                                         
                                     @endforeach 
@@ -83,9 +84,10 @@
           </button>
         </div>
         <div class="modal-body">
-            <table class="table table-sm table-striped table-hover">
+            <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify">
                 <thead>
                   <tr class="text-sm">
+                    <th>Sl no.</th>
                     <th>Response</th><th>Response Status</th><th>Response Attached</th>
                   </tr>
                 </thead>
@@ -139,7 +141,7 @@ $(function () {
     },function(j){
         var tr = "";
         for(var i = 1; i < j.length; i++){
-            tr += "<tr><td>"+i+"."+j[i].remarks+"<br><b>Responded:"+j[i].response_date+"</b></td><td>"+j[i].status+"</td><td><a class='file-btn'  data-toggle='collapse' href='#collapseExample' data-letter_path="+j[i].attachment+"><i class='fas fa-file-pdf'></i></a></td></tr>";
+            tr += "<tr><td>"+i+"</td><td>"+j[i].remarks+"<br><b>Responded:"+j[i].response_date+"</b></td><td>"+j[i].status+"</td><td><a class='file-btn'  data-toggle='collapse' href='#collapseExample' data-letter_path="+j[i].attachment+"><i class='fas fa-file-pdf'></i></a></td></tr>";
         }
         $('#response-body').html(tr);
     });

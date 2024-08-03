@@ -36,10 +36,10 @@ class LetterActionResponse extends Model
         ->join('users','user_departments.user_id','=','users.id')
         ->where([
             'action_department_maps.letter_action_id'=>$actionId,
-            'letter_action_responses.user_id'=>session('role_user')
         ])
         ->orderBy('letter_action_responses.updated_at', 'desc')
         ->select('action_remarks','letter_action_responses.created_at','users.name')
+        ->groupBy('letter_action_id','action_remarks','letter_action_responses.created_at','users.name','letter_action_responses.updated_at')
         ->get();
           
     }

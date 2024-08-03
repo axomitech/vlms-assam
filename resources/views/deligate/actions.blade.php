@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-
+@if($markComplete > 0)
+<div class="row">
+  <div class="offset-10 col-md-2">
+    <form id="letter-complete-form">
+      <input type="hidden" name="stage_letter" value="{{$letter_id}}">
+      <input type="hidden" name="stage" value="4">
+    </form>
+    &emsp;<button type="button" class="btn btn-sm btn-outline-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to mark complete the letter!" id="save-complete-btn">Mark Complete</button>
+  </div>
+</div>
+@endif
 <div class="row">
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs">
@@ -32,10 +42,10 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
             <div>
-              <table class="table table-sm table-striped" id="letter-table">
+              <table class="table table-sm table-striped text text-sm text-justify" id="letter-table">
                 <thead>
                     <tr>
-                        <th>Description</th><th>Department</th><th>Responses</th>
+                        <th>Sl no.</th><th>Description</th><th>Department</th><th>Responses</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,7 +54,12 @@
                     @endphp
                     @foreach ($letterActions as $value)
                         <tr>
-                            <td>{{$i}}. &nbsp;
+                          <td>
+                            {{$i}}
+                          </td>
+                            <td>
+                              @if(strlen($value['action_description']) > 100)
+
                               <div class="text-block" id="textBlock1">
                                 <p class="shortText">
                                   {{substr($value['action_description'], 0, 100)}}... 
@@ -56,6 +71,10 @@
                                     <a href="#" class="readLess">Read less</a>
                                   </p>
                                 </div>
+                              
+                              @else
+                                {{$value['action_description']}}
+                              @endif
                               <br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
                             <td>
                               <table class="table-bordered">
@@ -207,7 +226,7 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="actionModalLabel">Note Entry</h5>
+          <h5 class="modal-title text-sm text-justify" id="actionModalLabel">Note Entry</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
         </div>
         <div class="modal-body">
@@ -224,15 +243,15 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="noteModalLabel">File Preview</h5>
+          <h5 class="modal-title text text-sm text-justify" id="noteModalLabel">File Preview</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12">
-              <table class="table table-responsive-lg table-bordered">
+              <table class="table table-sm table-hover table-striped table-responsive text text-sm text-justify">
                 <thead>
-                  <tr><th>Sl No.</th><th>Name</th><th>Notes</th><th>Date</th><th>Time</th></tr>
+                  <tr><th>Notes</th><th>Name</th></tr>
                 </thead>
                 <tbody id="note-body">
 
@@ -288,7 +307,7 @@ $(function () {
       },function(j){
         var tr = "";
         for(var i = 1; i < j.length; i++){
-          tr += "<tr><td>"+i+"</td><td>"+j[i].name+"</td><td>"+j[i].note+"</td><td>"+j[i].date_day+"</td><td>"+j[i].date_time+"</td></tr>";
+          tr += "<tr><td>"+i+"."+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"</b></td><td>"+j[i].name+"</td></tr>";
         }
         $('#note-body').html(tr);
       });

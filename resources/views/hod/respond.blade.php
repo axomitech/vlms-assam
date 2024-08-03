@@ -10,17 +10,17 @@
             <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Responses</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Respond</a>
+            <a class="nav-link {{$disableResponse}}" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Respond</a>
           </li>
         </ul>
       </div>
       <div class="card-body">
         <div class="tab-content" id="custom-tabs-one-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-             <table class="table table-sm table-striped table-hover">
+             <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify">
                 <thead>
                   <tr class="text-sm">
-                    <th>Response</th><th>Response Status</th><th>Response Attached</th>
+                    <th>Sl no.</th><th>Response</th><th>Response Status</th><th>Response Attached</th>
                   </tr>
                 </thead>
                 @php
@@ -29,7 +29,8 @@
                 <tbody>
                   @foreach ($responses as $value)
                   <tr class="text-sm">
-                    <td>{{$i}}. {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{config('constants.options.storage_url')}}{{$value['response_attachment']}}"><i class="fas fa-file-pdf"></i></a></td>
+                    <td>{{$i}}.</td>
+                    <td style="width: 45%;"> {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{config('constants.options.storage_url')}}{{$value['response_attachment']}}"><i class="fas fa-file-pdf"></i></a></td>
                   </tr>
                   @php
                     $i++;

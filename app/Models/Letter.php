@@ -36,7 +36,7 @@ class Letter extends Model
                 'user_departments.department_id'=>session('role_dept')
                ])
                ->orderBy('letters.id','DESC')
-               ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn')
+               ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn','stage_status')
                ->get();
     }
 

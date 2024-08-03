@@ -50,7 +50,13 @@ class ActionSentController extends Controller
         Common::getSingleColumnValue('letters','id',$letterId,'letter_path');
         $actionStatuses = ActionStatus::getAllActionStatus();
         $responses = LetterActionResponse::getResponses($actionSentId);
-        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId','responses'));
+        $disableResponse = "";
+        foreach($responses AS $value){
+            if($value['status_name'] == "Complete"){
+                $disableResponse = "disabled";
+            }
+        }
+        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId','responses','disableResponse'));
     }
 
     public function getActionResponses(Request $request){

@@ -1,15 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-
+<form id="letter-complete-form">
+  <input type="hidden" id="stage_letter" name="stage_letter">
+  <input type="hidden" id="stage" name="stage" value="5">
+</form>
 <div class="row">
   <div class="col-md-12">
     <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
       <div class="box-body">
         <table class="table table-sm table-hover table-striped" id="letter-table">
           <thead>
-              <tr>
-                <th>Diarize No.</th><th>Subject</th><th>Letter No.</th><th>Sender</th><th>Letter</th>
+              <tr class="text text-sm text-justify">
+                <th>Sl no.</th><th>Diarize No.</th><th>Subject</th><th>Letter No.</th><th>Sender</th><th>Letter</th>
               </tr>
           </thead>
           <tbody>
@@ -17,21 +20,27 @@
                   $i = 1;
               @endphp
               @foreach ($letters as $value)
-                  <tr>
-                    <td>{{$i}}. &nbsp;{{$value['crn']}}</td><td>
-                      
-                      <div class="text-block" id="textBlock1">
-                        <p class="shortText">
-                          {{substr($value['subject'], 0, 100)}}... 
-                          <a href="#" class="readMore">Read more</a>
-                        </p>
-                        <div class="longText" style="display: none;">
-                          <p>
-                            {{$value['subject']}}
-                            <a href="#" class="readLess">Read less</a>
+                  <tr class="text text-sm text-justify">
+                    <td>{{$i}}</td>
+                    <td> &nbsp;{{$value['crn']}}</td>
+                    <td style="width: 30%;">
+                        @if(strlen($value['subject']) > 100)
+                        <div class="text-block" id="textBlock1">
+                          <p class="shortText text-justify text-sm">
+                            {{substr($value['subject'], 0, 100)}}... 
+                            <a href="#" class="readMore">Read more</a>
                           </p>
-                        </div>
-                    </td>
+                          <div class="longText" style="display: none;">
+                            <p class="text-sm text-justify">
+                              {{$value['subject']}}
+                              <a href="#" class="readLess">Read less</a>
+                            </p>
+                          </div>
+                      
+                        @else
+                        {{$value['subject']}}
+                        @endif
+                      </td>
                       <td>{{$value['letter_no']}}</td><td>{{$value['sender_name']}}</td><td>
                        @if (session('role') == 2)
                         &nbsp;
@@ -48,6 +57,10 @@
                         <a href="{{route('acknowledge_letter',[$value['letter_id']])}}" class="action-link"><i class="fas fa-envelope-open-text text-success" data-toggle="tooltip" data-placement="top" title="Acknowledgement Letter Generation"></i></a>
                         &nbsp;
                         <a href="{{route('correspondences',[$value['letter_id']])}}" class="action-link"><i class="fas fa-file" style="color:#fd9f01;" data-toggle="tooltip" data-placement="top" title="Correspondences"></i></a>
+                          @if($value['stage_status'] == 4)
+                          &nbsp;
+                          <a href="#" class="action-link save-btn archive" data-letter="{{$value['letter_id']}}" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-archive-btn"><i class="fas fa-folder" style="color:#01fd4d;" data-toggle="tooltip" data-placement="top" title="Correspondences"></i></a>
+                          @endif
                         @endif
                       </td>
                   </tr>
@@ -83,7 +96,13 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{asset('js/custom/common.js')}}"></script>
+<script>
+  $(document).on('click','.archive',function(){
+      alert($(this).data('letter'));
+      $('#stage_letter').val($(this).data('letter'));
+    });
+</script>
+<script src="{{asset('js/custom/common.js')}}"></script>
     <script>
        $(function () {
     $("#letter-table").DataTable({
@@ -113,6 +132,8 @@
         textBlock.find('.shortText').show();
       });
     });
+
+    
     </script>
 @endsection
 @endsection

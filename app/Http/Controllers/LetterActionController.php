@@ -45,6 +45,7 @@ class LetterActionController extends Controller
         $letterActions = LetterAction::getLetterActions($letter_id);
         $i = 0;
         $responsesStatuses=[];
+        $completeCount = 0;
         foreach($letterActions AS $value){
             $j = 0;
             $actions = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
@@ -58,11 +59,18 @@ class LetterActionController extends Controller
                 }
                 $actionDepartments[$i][$j] = $value1['department_name'];
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
+                if($responsesStatuses[$i][$j] == "Complete"){
+                    $completeCount += 1;
+                }
                 $j++;
             }
             $i++;
         }
-        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses'));
+        $markComplete = 0;
+        if(count($actionDepartments) == $completeCount){
+            $markComplete = 1;
+        }
+        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete'));
     }
 
     public function letterIndex()

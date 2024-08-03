@@ -96,7 +96,7 @@ class ActionSent extends Model
             'action_sents.act_dept_id'=>$actionDeptId,
             'user_departments.department_id'=>$departmentId
         ])
-        ->orderBy('action_sents.id','DESC')
+        ->orderBy('letter_action_responses.id','DESC')
         ->first();
         $statusName = "Not Responding";
         if($status != null){
