@@ -46,10 +46,14 @@ class LetterActionController extends Controller
         $i = 0;
         $responsesStatuses=[];
         $completeCount = 0;
+        $actions = [];
+        $actionIds = [];
+        $k = 0;
         foreach($letterActions AS $value){
             $j = 0;
-            $actions = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
-            foreach($actions AS $value1){
+            $actions[$k] = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
+            $actionIds[$k] = $value['action_id'];
+            foreach($actions[$k] AS $value1){
                 $note = LetterActionResponse::getActionLastNote($value['action_id']);
                 if($note != null){
                     $notes[$i] = $note->action_remarks;
@@ -64,12 +68,14 @@ class LetterActionController extends Controller
                 }
                 $j++;
             }
+            $k++;
             $i++;
         }
         $markComplete = 0;
-        if(count($actionDepartments) == $completeCount){
+        if($completeCount > count($letterActions)){
             $markComplete = 1;
         }
+        
         return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete'));
     }
 

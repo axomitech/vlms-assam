@@ -97,11 +97,14 @@
           </div>
           <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
             <form id="note-form">
-              @foreach ($actions as $value)
-                  <input type="hidden" name="action_map[]" value="{{$value['act_dept_id']}}">  
-                  <input type="hidden" name="action_dept[]" value="{{$value['dept_id']}}">
-                  @endforeach
-                  <input type="hidden" name="forward_letter" value="{{$letter_id}}">
+                @for ($i = 0; $i < count($actions); $i++)
+                @foreach ($actions[$i] as $value)
+                <input type="hidden" name="action_map[]" value="{{$value['act_dept_id']}}">  
+                <input type="hidden" name="action_dept[]" value="{{$value['dept_id']}}">
+                <input type="hidden" name="letter_action[]" id="letter_action" value="{{$value['action_id']}}">
+                @endforeach
+                @endfor
+                <input type="hidden" name="forward_letter" value="{{$letter_id}}">
               <div class="row">
                <div class="col-md-12">
                  <label>Add Note</label>
@@ -110,10 +113,7 @@
                </div>
               </div>
               <div class="form-group row">
-                @foreach ($actions as $value)
-                <input type="hidden" name="letter_action[]" id="letter_action" value="{{$value['action_id']}}">
-                @endforeach
-               <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to direct a note to this action!" id="save-note-btn">SAVE</button>
+                <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to direct a note to this action!" id="save-note-btn">SAVE</button>
              </div>
              </form>
           </div>

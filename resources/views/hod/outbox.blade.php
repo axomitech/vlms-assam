@@ -78,13 +78,12 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="btn btn-outline-danger btn-sm">Mark Complete</button>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify">
+            <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify" id="outbox-table">
                 <thead>
                   <tr class="text-sm">
                     <th>Sl no.</th>
@@ -134,6 +133,14 @@ $(function () {
     $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
     $(".buttons-print").removeClass('btn-secondary');
   });
+  
+  $(function () {
+    $("#outbox-table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": [ "excel", "pdf", "print"]
+    })
+  });
+
 
   $(document).on('click','.response-link',function(){
     $.get("{{route('action_response')}}",{

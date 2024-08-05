@@ -98,7 +98,6 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script>
   $(document).on('click','.archive',function(){
-      alert($(this).data('letter'));
       $('#stage_letter').val($(this).data('letter'));
     });
 </script>
