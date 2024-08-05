@@ -38,6 +38,7 @@ class LetterActionController extends Controller
         $letterPath = Common::getSingleColumnValue('letters','id',$letter_id,'letter_path');
         $letterCrn = Common::getSingleColumnValue('letters','id',$letter_id,'crn');
         $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
+        $completeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'stage_status');
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $notes = [];
         $i = 0;
@@ -73,7 +74,11 @@ class LetterActionController extends Controller
         }
         $markComplete = 0;
         if($completeCount > count($letterActions)){
+            if($completeStatus < 4){
+                
             $markComplete = 1;
+
+            }
         }
         
         return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete'));
