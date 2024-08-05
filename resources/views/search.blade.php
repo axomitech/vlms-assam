@@ -32,13 +32,10 @@
                                             </div>
                                             <div class="col-md-3 text-left">
                                                 <select class="form-control" id="category">
-                                                    <option>Select</option>
-                                                    <option value="pmo">Prime Minister Office</option>
-                                                    <option value="pmo">President Office</option>
-                                                    <option value="pmo">Governor Officer</option>
-                                                    <option>MP</option>
-                                                    <option>MLA</option>
-                                                    <option>Others</option>
+                                                    <option value="">Select</option>
+                                                    @foreach ($categories as $c)
+                                                        <option value="{{$c->id}}">{{$c->category_name}}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-md-2 offset-md-1">
@@ -56,6 +53,8 @@
                                         <div class="row mt-2">
                                             <div class="col-md-12 text-center">
                                                 <button type="submit" class="btn" id="btn-search" style="background-color: #174060;color: white;">Search</button>
+                                                &nbsp;
+                                                <button type="reset" class="btn" id="btn-search" style="background-color: #174060;color: white;">Reset</button>
                                             </div>
                                         </div>
                                     </form>

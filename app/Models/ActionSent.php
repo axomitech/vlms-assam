@@ -98,7 +98,7 @@ class ActionSent extends Model
         ])
         ->orderBy('letter_action_responses.id','DESC')
         ->first();
-        $statusName = "Not Responding";
+        $statusName = "Finalize Pending";
         if($status != null){
             $statusName = $status->status_name;
         }

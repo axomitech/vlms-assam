@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="box shadow-lg p-2 mb-3 bg-white rounded d-inline-block overflow-auto" style="height: 300px;">
+                <div class="box shadow-lg p-2 mb-3 bg-white rounded d-inline-block overflow-auto min-vw-75" style="height: 300px;">
                     <div class="box-header">
                         <div class="box-tools">
                             <div class="row">
@@ -146,7 +146,8 @@
                                             <thead>
                                                 <tr>
                                                     <th scope="col"><small><b>Diarized No.</b></small></th>
-                                                    <th scope="col"><small><b>Letter Details</b></small></th>
+                                                    <th scope="col"><small><b>Subject</b></small></th>
+                                                    <th scope="col"><small><b>From</b></small></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -164,10 +165,12 @@
                                                                 
                                                                 </small>
                                                             </td>
-                                                            <td><small><u>Subject</u>- {{ $value->subject}}<br><u>From</u>- {{ $value->sender_name}},
+                                                            <td><small>{{ $value->subject}}                                                       
+                                                                </small>
+                                                            </td>
+                                                            <td><small>{{ $value->sender_name}}<br>
                                                                     {{$value->sender_designation}},
-                                                                    {{$value->organization}}
-                                                        
+                                                                    {{$value->organization}}                                                      
                                                                 </small>
                                                             </td>
                                                         </tr>

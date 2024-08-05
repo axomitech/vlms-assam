@@ -49,6 +49,7 @@ class HomeModel extends Model
             ->where('letters.stage_status', '=', 1)
             ->select('letters.id as letter_id','letters.crn as crn','letters.subject as subject','senders.sender_name as sender_name',
             'draft_finalize','diary_date','sender_designation','organization')
+            ->orderBy('letters.id', 'desc') 
             ->get();
     }
 }
