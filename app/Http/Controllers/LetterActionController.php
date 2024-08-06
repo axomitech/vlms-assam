@@ -64,7 +64,7 @@ class LetterActionController extends Controller
                 }
                 $actionDepartments[$i][$j] = $value1['department_name'];
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
-                if($responsesStatuses[$i][$j] == "Complete"){
+                if($responsesStatuses[$i][$j] == "Completed"){
                     $completeCount += 1;
                 }
                 $j++;
