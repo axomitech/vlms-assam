@@ -2,7 +2,7 @@
 
 @section('content')
 @if($markComplete > 0)
-<div class="row">
+<div class="row h-100">
   <div class="offset-10 col-md-2">
     <form id="letter-complete-form">
       <input type="hidden" name="stage_letter" value="{{$letter_id}}">
@@ -12,7 +12,7 @@
   </div>
 </div>
 @endif
-<div class="row">
+<div class="row h-auto">
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs">
       <div class="card-header">
@@ -128,11 +128,14 @@
     </div>
     
   </div>
-  <div class=" col-md-5">
-    <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 65%;">
-    </iframe>
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-body">
+        <iframe class="w-100" style="height:22.5rem" src="{{config('constants.options.storage_url')}}{{$letterPath}}">
+        </iframe>
+      </div>
+    </div>
   </div>
-</div>
 {{-- <div class="row">
     <div class="col-md-12">
         <div class="card">
