@@ -59,7 +59,7 @@ class ActionSentController extends Controller
         $responses = LetterActionResponse::getResponses($actionSentId);
         $disableResponse = "";
         foreach($responses AS $value){
-            if($value['status_name'] == "Complete"){
+            if($value['status_name'] == "Completed"){
                 $disableResponse = "disabled";
             }
         }
