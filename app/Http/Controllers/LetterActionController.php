@@ -73,9 +73,9 @@ class LetterActionController extends Controller
             $i++;
         }
         $markComplete = 0;
-        if($completeCount > count($letterActions)){
+        if($completeCount >= count($letterActions)){
             if($completeStatus < 4){
-                
+
             $markComplete = 1;
 
             }
@@ -107,6 +107,7 @@ class LetterActionController extends Controller
         $actionDepartments = [];
         $letterActions = LetterAction::getLetterActions($letter_id);
         $responsesStatuses = [];
+        $actions = [];
         $i = 0;
         foreach($letterActions AS $value){
             $j = 0;
