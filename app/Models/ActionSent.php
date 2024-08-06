@@ -31,7 +31,7 @@ class ActionSent extends Model
 
     }
 
-    public static function inbox(){
+    public static function inbox($letterId){
         return ActionSent::join('action_department_maps','action_department_maps.id','=','action_sents.act_dept_id')
                         ->join('letter_actions','action_department_maps.letter_action_id','=','letter_actions.id')
                         ->join('user_departments','action_sents.sender_id','=','user_departments.id')
@@ -40,7 +40,7 @@ class ActionSent extends Model
                         ->join('letters','letters.id','=','letter_actions.letter_id')
                         ->where([
                             'receiver_id'=>session('role_user'),
-                            
+                            'action_sents.letter_id'=>$letterId
                         ])
                         ->select('action_sents.id AS action_sent_id','action_department_maps.id AS act_dept_id',
                         'letter_actions.action_description',

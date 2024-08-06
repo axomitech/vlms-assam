@@ -9,6 +9,7 @@ use App\Models\LetterActionResponse;
 use App\Models\UserDepartment;
 use App\Models\ActionStatus;
 use App\Models\ActionSent;
+use App\Models\Letter;
 use App\Models\Common;
 use Carbon\Carbon;
 use Auth;
@@ -19,10 +20,16 @@ class ActionSentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($letterId)
     {
-        $forwards = ActionSent::inbox();
+        $letterId = decrypt($letterId);
+        $forwards = ActionSent::inbox($letterId);
         return view('hod.inbox',compact('forwards'));
+    }
+
+    public function inbox(){
+        $letters = Letter::showInboxLetters();
+        return view('hod.inbox_letter',compact('letters'));
     }
 
     public function outbox()

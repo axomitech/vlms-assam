@@ -40,6 +40,18 @@ class Letter extends Model
                ->get();
     }
 
+    public static function showInboxLetters(){
+        return Letter::join('senders','letters.id','=','senders.letter_id')
+               ->join('action_sents','letters.id','=','action_sents.letter_id')
+               ->where([
+                'action_sents.receiver_id'=>session('role_dept')
+               ])
+               ->groupBy('letter_no','subject','sender_name','letter_path','letters.id','organization','crn','stage_status')
+               ->orderBy('letters.id','DESC')
+               ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn','stage_status')
+               ->get();
+    }
+
     public static function generateLetterCrn($crn){
 
         return DB::table('letters')

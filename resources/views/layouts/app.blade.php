@@ -232,7 +232,7 @@
               </li>
               @if (session('role') > 1)  
                 <li class="nav-item">
-                  <a href="{{ route('inbox') }}" class="nav-link">
+                  <a href="{{ route('inbox_letters') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Inbox</p>
                   </a>

@@ -26,7 +26,8 @@ Route::post('/store_response', [App\Http\Controllers\LetterActionResponseControl
 Route::post('/finalize_letter', [App\Http\Controllers\LetterActionController::class, 'finalizeActions'])->name('finalize_letter');
 Route::post('/send_action', [App\Http\Controllers\ActionSentController::class, 'store'])->name('send_action');
 Route::get('/session_user/{user}/{dept}/{role}', [App\Http\Controllers\SessionInitiationController::class, 'index'])->name('session_user');
-Route::get('/inbox', [App\Http\Controllers\ActionSentController::class, 'index'])->name('inbox');
+Route::get('/inbox/{id}', [App\Http\Controllers\ActionSentController::class, 'index'])->name('inbox');
+Route::get('/inbox_letters', [App\Http\Controllers\ActionSentController::class, 'inbox'])->name('inbox_letters');
 Route::get('/outbox', [App\Http\Controllers\ActionSentController::class, 'outbox'])->name('outbox');
 Route::get('/responds/{sent}/{act}/{letter}',[App\Http\Controllers\ActionSentController::class, 'response'])->name('responds');
 Route::get('/action_response',[App\Http\Controllers\ActionSentController::class, 'getActionResponses'])->name('action_response');
