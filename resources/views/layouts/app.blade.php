@@ -205,30 +205,16 @@
                   </p>
                 </a>
             </li>
-            <!-- <li class="nav-item">
-                <a href="{{route('home')}}" class="nav-link">
-                <i class="nav-icon fas fa-building"></i>
-                  <p>
-                  Department
-                  </p>
-                </a>
-            </li> -->
-            <li class="nav-item">
+            @if (session('role') == 1)  
+              <li class="nav-item">
                 <a href="{{route('diarize')}}" class="nav-link">
-                <i class="nav-icon fas fa-pencil-alt"></i>
+                  <i class="nav-icon fas fa-pencil-alt"></i>
                   <p>
                     Diarize
                   </p>
                 </a>
               </li>
-          <!-- <li class="nav-item">
-                <a href="{{route('letters')}}" class="nav-link">
-                  <i class="nav-icon fas fa-envelope"></i>
-                  <p>
-                    Letters
-                  </p>
-                </a>
-              </li> -->
+            @endif
           <li class="nav-item">
             <a href="#" class="nav-link">
             <i class="nav-icon fas fa-envelope"></i>
@@ -244,24 +230,26 @@
                   <p>Diarized</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('inbox') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Inbox</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('outbox') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Sent</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('dashboard') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Archived</p>
-                </a>
-              </li>
+              @if (session('role') > 1)  
+                <li class="nav-item">
+                  <a href="{{ route('inbox') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Inbox</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('outbox') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Sent</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('dashboard') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Archived</p>
+                  </a>
+                </li>
+                @endif
             </ul>
           </li>
           <li class="nav-item">

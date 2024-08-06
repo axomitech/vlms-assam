@@ -17,21 +17,21 @@ class HomeModel extends Model
     {
         return DB::table('letters')
             ->where('department_id', '=', session('role_dept'))
-            ->where('stage_status', '=', 1)
+            ->whereIn('letters.stage_status', [1,2])
             ->count();
     }
     public static function get_sent_count()
     {
         return DB::table('letters')
             ->where('department_id', '=', session('role_dept'))
-            ->where('stage_status', '=', 2)
+            ->where('stage_status', '=', 3)
             ->count();
     }
     public static function get_archive_count()
     {
         return DB::table('letters')
             ->where('department_id', '=', session('role_dept'))
-            ->where('stage_status', '=', 3)
+            ->where('stage_status', '=', 5)
             ->count();
     }
     public static function get_inbox_count()
@@ -46,8 +46,8 @@ class HomeModel extends Model
         return DB::table('letters')
             ->join('senders','letters.id','=','senders.letter_id')
             ->where('letters.department_id', '=', session('role_dept'))
-            ->where('letters.stage_status', '=', 1)
-            ->select('letters.id as letter_id','letters.crn as crn','letters.subject as subject','senders.sender_name as sender_name',
+            ->whereIn('letters.stage_status', [1,2])
+            ->select('letters.id as letter_id','letters.crn as crn','letters.subject as subject','stage_status','senders.sender_name as sender_name',
             'draft_finalize','diary_date','sender_designation','organization')
             ->orderBy('letters.id', 'desc') 
             ->get();
