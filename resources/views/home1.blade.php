@@ -121,8 +121,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="box shadow-lg p-2 mb-3 bg-white rounded d-inline-block overflow-auto min-vw-75" style="height: 300px;">
+            <div class="col-md-6 col-lg-6">
+                <div class="box shadow-lg p-2 mb-3 bg-white rounded d-inline-block overflow-auto w-100" style="height: 300px;">
                     <div class="box-header">
                         <div class="box-tools">
                             <div class="row">
@@ -143,7 +143,7 @@
                             <div class="container-fluid">
                                 <!-- Main row -->
                                  <div class="row">
-                                    <div class="col-md-12 bg-danger1">
+                                    <div class="col-md-12">
                                         <table class="table table-hover table-sm">
                                             <thead>
                                                 <tr>
