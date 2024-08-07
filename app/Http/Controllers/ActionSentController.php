@@ -28,7 +28,12 @@ class ActionSentController extends Controller
     }
 
     public function inbox(){
-        $letters = Letter::showInboxLetters();
+        $receiverId = Common::getSingleColumnValue('user_departments',[
+            'department_id'=>session('role_dept'),
+            'user_id'=>Auth::user()->id,
+            'role_id'=>session('role')
+        ],'id');
+        $letters = Letter::showInboxLetters($receiverId);
         return view('hod.inbox_letter',compact('letters'));
     }
 
@@ -54,7 +59,9 @@ class ActionSentController extends Controller
         $actionDeptId = decrypt($actionDeptId);
         $letterId = decrypt($letterId);
         $letterPath = config('constants.options.storage_url').
-        Common::getSingleColumnValue('letters','id',$letterId,'letter_path');
+        Common::getSingleColumnValue('letters',[
+            'id'=>$letterId,
+        ],'letter_path');
         $actionStatuses = ActionStatus::getAllActionStatus();
         $responses = LetterActionResponse::getResponses($actionSentId);
         $disableResponse = "";

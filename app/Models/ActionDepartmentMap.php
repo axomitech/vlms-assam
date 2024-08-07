@@ -24,4 +24,12 @@ class ActionDepartmentMap extends Model
             'letter_action_id'=>$actionDetails[1],
         ])->value('id'); 
    }
+
+   public static function changeActionStatus($actionStatusDetails){
+        return ActionDepartmentMap::where([
+            'id'=>$actionStatusDetails[0]
+        ])->update([
+            'action_status_id'=>$actionStatusDetails[1]
+        ]);
+   }
 }

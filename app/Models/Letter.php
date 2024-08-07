@@ -40,11 +40,11 @@ class Letter extends Model
                ->get();
     }
 
-    public static function showInboxLetters(){
+    public static function showInboxLetters($receiverId){
         return Letter::join('senders','letters.id','=','senders.letter_id')
                ->join('action_sents','letters.id','=','action_sents.letter_id')
                ->where([
-                'action_sents.receiver_id'=>session('role_dept')
+                'action_sents.receiver_id'=>$receiverId
                ])
                ->groupBy('letter_no','subject','sender_name','letter_path','letters.id','organization','crn','stage_status')
                ->orderBy('letters.id','DESC')

@@ -41,7 +41,7 @@
                                     @if (session('role') > 0)  
                                         <div class="col-md-6 col-sm-3">
                                             <!-- small box -->
-                                            <a href="{{route('inbox')}}">
+                                            <a href="{{route('inbox_letters')}}">
                                             <div class="small-box" style="background-color: #8355fe;">
                                                 <div class="inner">
                                                     <div class="row">

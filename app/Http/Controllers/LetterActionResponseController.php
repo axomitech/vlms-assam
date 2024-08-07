@@ -49,7 +49,7 @@ class LetterActionResponseController extends Controller
                 ActionSent::storeActionForward([
                     $actMap[$i],
                     UserDepartment::getUser(Auth::user()->id),
-                    UserDepartment::getDepartmentUser($actDept[$i],3),
+                    $actDept[$i],
                     $letter,
                 ]);
 
@@ -166,6 +166,10 @@ class LetterActionResponseController extends Controller
                     $attachmentId = LetterResponseAttachment::storeAttachment([
                         $noteId,
                         $responsePath
+                    ]);
+                    ActionDepartmentMap::changeActionStatus([
+                        $actionDeptId,
+                        $actionStatus
                     ]);
                     DB::commit();
                     $jData[1] = [

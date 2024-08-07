@@ -21,7 +21,7 @@ class SessionInitiationController extends Controller
         ]);
 
         session([
-            'department'=>Common::getSingleColumnValue('departments','id',session('role_dept'),'department_name')
+            'department'=>Common::getSingleColumnValue('departments',['id'=>session('role_dept')],'department_name')
         ]);
         
         if(session('role') == 1){

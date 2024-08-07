@@ -31,14 +31,14 @@ class LetterActionController extends Controller
     public function actions($id)
     {
         $letter_id = decrypt($id);
-        $letterNo = Common::getSingleColumnValue('letters','id',$letter_id,'letter_no');
-        $letterSubject = Common::getSingleColumnValue('letters','id',$letter_id,'subject');
-        $senderName = Common::getSingleColumnValue('senders','letter_id',$letter_id,'sender_name');
-        $organization = Common::getSingleColumnValue('senders','letter_id',$letter_id,'organization');
-        $letterPath = Common::getSingleColumnValue('letters','id',$letter_id,'letter_path');
-        $letterCrn = Common::getSingleColumnValue('letters','id',$letter_id,'crn');
-        $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
-        $completeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'stage_status');
+        $letterNo = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_no');
+        $letterSubject = Common::getSingleColumnValue('letters',['id'=>$letter_id],'subject');
+        $senderName = Common::getSingleColumnValue('senders',['letter_id'=>$letter_id],'sender_name');
+        $organization = Common::getSingleColumnValue('senders',['letter_id'=>$letter_id],'organization');
+        $letterPath = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_path');
+        $letterCrn = Common::getSingleColumnValue('letters',['id'=>$letter_id],'crn');
+        $finalizeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'draft_finalize');
+        $completeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'stage_status');
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $notes = [];
         $i = 0;
@@ -94,13 +94,13 @@ class LetterActionController extends Controller
     public function letterActions($id)
     {
         $letter_id = decrypt($id);
-        $letterNo = Common::getSingleColumnValue('letters','id',$letter_id,'letter_no');
-        $letterSubject = Common::getSingleColumnValue('letters','id',$letter_id,'subject');
-        $senderName = Common::getSingleColumnValue('senders','letter_id',$letter_id,'sender_name');
-        $organization = Common::getSingleColumnValue('senders','letter_id',$letter_id,'organization');
-        $letterPath = Common::getSingleColumnValue('letters','id',$letter_id,'letter_path');
-        $letterCrn = Common::getSingleColumnValue('letters','id',$letter_id,'crn');
-        $finalizeStatus = Common::getSingleColumnValue('letters','id',$letter_id,'draft_finalize');
+        $letterNo = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_no');
+        $letterSubject = Common::getSingleColumnValue('letters',['id'=>$letter_id],'subject');
+        $senderName = Common::getSingleColumnValue('senders',['letter_id'=>$letter_id],'sender_name');
+        $organization = Common::getSingleColumnValue('senders',['letter_id'=>$letter_id],'organization');
+        $letterPath = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_path');
+        $letterCrn = Common::getSingleColumnValue('letters',['id'=>$letter_id],'crn');
+        $finalizeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'draft_finalize');
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
         $departments = Department::getAllDepartments();
         

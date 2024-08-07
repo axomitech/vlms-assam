@@ -10,11 +10,9 @@ class Common extends Model
 {
     use HasFactory;
 
-    public static function getSingleColumnValue($tableName,$columnName,$columnValue,$searchedColumn){
+    public static function getSingleColumnValue($tableName,$condition,$searchedColumn){
 
-        return DB::table($tableName)->where([
-            $columnName => $columnValue
-        ])->value($searchedColumn);
+        return DB::table($tableName)->where($condition)->value($searchedColumn);
         
     }
 }
