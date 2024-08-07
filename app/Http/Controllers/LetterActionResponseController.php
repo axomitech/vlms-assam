@@ -49,7 +49,7 @@ class LetterActionResponseController extends Controller
                 ActionSent::storeActionForward([
                     $actMap[$i],
                     UserDepartment::getUser(Auth::user()->id),
-                    $actDept[$i],
+                    UserDepartment::getDepartmentUser($actDept[$i],3),
                     $letter,
                 ]);
 

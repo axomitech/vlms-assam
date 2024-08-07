@@ -127,7 +127,13 @@ class ActionSentController extends Controller
                     $letter = $request->forward_letter;
 
                     for($i = 0; $i < count($actDept); $i++){
-
+                        print_r([
+                            $actMap[$i],
+                            UserDepartment::getUser(Auth::user()->id),
+                            UserDepartment::getDepartmentUser($actDept[$i],3),
+                            $letter,
+                        ]);
+                        die();
                         ActionSent::storeActionForward([
                             $actMap[$i],
                             UserDepartment::getUser(Auth::user()->id),
