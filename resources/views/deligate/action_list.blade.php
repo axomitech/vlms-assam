@@ -27,7 +27,7 @@
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs">
       <div class="card-header">
-        <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+        <ul class="nav nav-pills nav-fill" id="custom-tabs-four-tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Actions</a>
           </li>

@@ -37,7 +37,7 @@ class LetterActionResponse extends Model
         ->where([
             'action_department_maps.letter_action_id'=>$actionId,
         ])
-        ->orderBy('letter_action_responses.updated_at', 'desc')
+        ->orderBy('letter_action_responses.updated_at', 'ASC')
         ->select('action_remarks','letter_action_responses.created_at','users.name')
         ->groupBy('letter_action_id','action_remarks','letter_action_responses.created_at','users.name','letter_action_responses.updated_at')
         ->get();
