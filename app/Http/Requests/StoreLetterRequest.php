@@ -41,6 +41,7 @@ class StoreLetterRequest extends FormRequest
             'sender_email'=>'required|email',
             'organization'=>'required',
             'address'=>'required',
+            'receipt'=>'required|min:0|max:1'
         ];
     }
 

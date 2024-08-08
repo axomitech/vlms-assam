@@ -95,6 +95,7 @@
                                                             
                                                     
                                                         <div class="col-md-3">
+                                                            <input type="hidden" name="receipt" value="{{$receipt}}">
                                                             <button type="button" class="btn btn-warning btn-sm" data-target="#custom-tabs-one-home" id="btn-next">NEXT</button>
                                                             
                                                         </div>

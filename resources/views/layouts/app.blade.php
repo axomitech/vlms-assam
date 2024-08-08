@@ -206,14 +206,29 @@
                 </a>
             </li>
             @if (session('role') == 1)  
-              <li class="nav-item">
-                <a href="{{route('diarize')}}" class="nav-link">
-                  <i class="nav-icon fas fa-pencil-alt"></i>
-                  <p>
-                    Diarize
-                  </p>
-                </a>
-              </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-cog"></i>
+                <p>
+                Diarize
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(1)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Receipt</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(0)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Issue</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
             @endif
           <li class="nav-item">
             <a href="#" class="nav-link">

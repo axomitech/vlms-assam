@@ -14,7 +14,9 @@ function confirmSubmission(url,formData,confirmMessage,refreshStatus){
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!'
+        confirmButtonText: 'Yes!',
+        allowOutsideClick: false,
+        allowEscapeKey:false
         }).then((result) => {
         if (result.isConfirmed) {
             
@@ -42,6 +44,8 @@ function confirmSubmission(url,formData,confirmMessage,refreshStatus){
                     // handle error response
                     if(response.status == 422){
                         Swal.fire({
+                            allowOutsideClick: false,
+                            allowEscapeKey:false,
                             icon: 'error',
                             title: 'Oops...',
                             text: 'Something went wrong! Please check the form',
@@ -78,6 +82,8 @@ function successConfirm(status,message,responseStatus){
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
+    allowOutsideClick: false,
+    allowEscapeKey:false,
     confirmButtonText: 'OK'
         }).then((result) => {
         if (result.isConfirmed) {

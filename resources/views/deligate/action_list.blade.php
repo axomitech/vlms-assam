@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@if($markComplete > 0)
+<div class="row">
+  <div class="offset-10 col-md-2">
+    <form id="letter-complete-form">
+      <input type="hidden" name="stage_letter" value="{{$letter_id}}">
+      <input type="hidden" name="stage" value="4">
+    </form>
+    &emsp;<button type="button" class="btn btn-sm btn-outline-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to mark complete the letter!" id="save-complete-btn">Mark Complete</button>
+  </div>
+</div>
+@endif
 <div class="row">
   <div class="col-md-12">
     <form id="finalize-form" hidden>

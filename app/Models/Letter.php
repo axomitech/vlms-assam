@@ -25,6 +25,10 @@ class Letter extends Model
         $letter->auto_ack = $letterDetails[8];
         $letter->stage_status = 1;
         $letter->department_id = session('role_dept');
+        $letter->receipt = true;
+        if($letterDetails[9] == 0){
+            $letter->receipt = false;
+        }
         $letter->save();
         return $letter->id;
     }
