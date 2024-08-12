@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserDepartment;
@@ -62,7 +63,8 @@ class HomeController extends Controller
         $inbox_count = HomeModel::get_inbox_count();
         // print_r($diarized_details);
         // exit;
-        return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
+        //return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
+        return Redirect::away(route('letters')) ;
     }
 
     private function sessionInitiate($user,$department,$role){

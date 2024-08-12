@@ -17,7 +17,7 @@
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-       <div class="box shadow-lg p-3 mb-5 bg-white rounded" style="height:20rem; overflow-y: scroll;">
+       <div class="box shadow-lg p-3 mb-5 bg-white rounded">
           <div class="box-body">
             <table class="table table-sm table-hover table-striped letter-table" id="">
               <thead>
@@ -96,7 +96,7 @@
         </div>
       </div>
       <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-        <div class="box shadow-lg p-3 mb-5 bg-white rounded" style="height:20rem; overflow-y: scroll;">
+        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
           <div class="box-body">
             <table class="table table-sm table-hover table-striped letter-table" id="">
               <thead>
@@ -166,7 +166,7 @@
         </div>
       </div>
       <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-        <div class="box shadow-lg p-3 mb-5 bg-white rounded" style="height:20rem; overflow-y: scroll;">
+        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
           <div class="box-body">
             <table class="table table-sm table-hover table-striped letter-table" id="">
               <thead>
@@ -236,7 +236,7 @@
         </div>
       </div>
       <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
-        <div class="box shadow-lg p-3 mb-5 bg-white rounded" style="height:20rem; overflow-y: scroll;">
+        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
           <div class="box-body">
             <table class="table table-sm table-hover table-striped letter-table" id="">
               <thead>
