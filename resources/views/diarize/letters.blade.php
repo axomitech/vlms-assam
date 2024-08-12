@@ -22,7 +22,7 @@
             <table class="table table-sm table-hover table-striped letter-table" id="">
               <thead>
                   <tr>
-                    <th colspan="6" class="text text-center">Receipt Diarized Letters</th>
+                    <th colspan="6" class="text text-center">Diarized Letters</th>
                   </tr>
                   <tr class="text text-sm text-justify">
                     <th>Sl no.</th><th>Diarize No.</th><th>Subject</th><th>Letter No.</th><th>Sender</th><th>Category</th><th>Letter</th>
