@@ -9,7 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $letters = Letter::showLetterAndSender();
+        $letters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept')
+        ],[]);
+        
         return view('dashboard.dashboard', compact('letters'));
         // return response()->json($data);
     }

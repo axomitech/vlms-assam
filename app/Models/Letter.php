@@ -41,7 +41,7 @@ class Letter extends Model
                 $lettersDetails = $lettersDetails->whereIn('letters.id',$letters);
                }
                $lettersDetails = $lettersDetails->orderBy('letters.id','DESC')
-               ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn','stage_status')
+               ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn','stage_status','receipt')
                ->get();
 
                return $lettersDetails;
