@@ -33,7 +33,9 @@ class ActionSentController extends Controller
             'user_id'=>Auth::user()->id,
             'role_id'=>session('role')
         ],'id');
-        $letters = Letter::showInboxLetters($receiverId);
+        $letters = Letter::showInboxLetters([
+            'action_sents.receiver_id'=>$receiverId
+           ]);
         return view('hod.inbox_letter',compact('letters'));
     }
 

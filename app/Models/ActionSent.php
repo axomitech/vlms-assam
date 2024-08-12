@@ -76,7 +76,7 @@ class ActionSent extends Model
             'user_departments.department_id'=>session('role_dept')
         ])
         ->orderBy('letter_actions.id','DESC')
-        ->select('letter_actions.id AS action_id','action_description')
+        ->select('letter_actions.id AS action_id','action_description','letter_actions.letter_id')
         ->get();
     }
 

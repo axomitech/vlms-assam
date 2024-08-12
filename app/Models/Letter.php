@@ -33,23 +33,24 @@ class Letter extends Model
         return $letter->id;
     }
 
-    public static function showLetterAndSender(){
-        return Letter::join('senders','letters.id','=','senders.letter_id')
+    public static function showLetterAndSender($condition,$letters){
+        $lettersDetails =  Letter::join('senders','letters.id','=','senders.letter_id')
                ->join('user_departments','letters.user_id','=','user_departments.id')
-               ->where([
-                'user_departments.department_id'=>session('role_dept')
-               ])
-               ->orderBy('letters.id','DESC')
+               ->where($condition);
+               if(count($letters) > 0){
+                $lettersDetails = $lettersDetails->whereIn('letters.id',$letters);
+               }
+               $lettersDetails = $lettersDetails->orderBy('letters.id','DESC')
                ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn','stage_status')
                ->get();
+
+               return $lettersDetails;
     }
 
-    public static function showInboxLetters($receiverId){
+    public static function showInboxLetters($condition){
         return Letter::join('senders','letters.id','=','senders.letter_id')
                ->join('action_sents','letters.id','=','action_sents.letter_id')
-               ->where([
-                'action_sents.receiver_id'=>$receiverId
-               ])
+               ->where($condition)
                ->groupBy('letter_no','subject','sender_name','letter_path','letters.id','organization','crn','stage_status')
                ->orderBy('letters.id','DESC')
                ->select('letter_no','subject','sender_name','letter_path','letters.id AS letter_id','organization','crn','stage_status')

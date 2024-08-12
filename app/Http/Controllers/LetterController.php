@@ -7,10 +7,13 @@ use App\Http\Requests\UpdateLetterRequest;
 use App\Http\Requests\StageLetterRequest;
 use App\Models\Letter;
 use App\Models\Sender;
+use App\Models\ActionSent;
 use App\Models\Department;
 use App\Models\LetterPriority;
 use App\Models\LetterCategory;
+use App\Models\Common;
 use Carbon\Carbon;
+use Auth;
 use DB;
 
 class LetterController extends Controller
@@ -167,10 +170,38 @@ class LetterController extends Controller
 
     public function showLetters()
     {
-        $letters = Letter::showLetterAndSender();
-        // print_r(session('role_dept'));
-        // exit;
-        return view('diarize.letters',compact('letters'));
+        $letters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'receipt'=>true
+        ],[]);
+        $issuedLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'receipt'=>false
+        ],[]);
+        $actionSents = ActionSent::getForwardedActions();
+        $letterIds = [];
+        $i = 0;
+        foreach($actionSents AS $value){
+            $letterIds[$i] = $value['letter_id'];
+            $i++;
+        }
+        $sentLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept')
+        ],$letterIds);
+        $receiverId = Common::getSingleColumnValue('user_departments',[
+            'department_id'=>session('role_dept'),
+            'user_id'=>Auth::user()->id,
+            'role_id'=>session('role')
+        ],'id');
+
+        $inboxLetters = Letter::showInboxLetters([
+            'action_sents.receiver_id'=>$receiverId,
+        ]);
+        $archivedLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>5
+        ],[]);
+        return view('diarize.letters',compact('letters','issuedLetters','sentLetters','inboxLetters','archivedLetters'));
     }
 
     /**
