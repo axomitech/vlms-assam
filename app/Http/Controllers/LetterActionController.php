@@ -131,7 +131,7 @@ class LetterActionController extends Controller
 
             }
         }
-        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete'));
+        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','forwardStatus'));
     }
 
     public function finalizeActions(Request $request){

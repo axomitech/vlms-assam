@@ -105,15 +105,18 @@
 <script src="{{asset('js/custom/common.js')}}"></script>
 <script>
 $(function () {
-    $("#letter-table").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": [ "excel", "pdf", "print"]
-    }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
+  $("#letter-table").DataTable({
+    "responsive": true, "lengthChange": false, "autoWidth": false
+  });
+    // $("#letter-table").DataTable({
+    //   "responsive": true, "lengthChange": false, "autoWidth": false,
+    //   "buttons": [ "excel", "pdf", "print"]
+    // }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
      
-    $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
-    $(".buttons-html5").removeClass('btn-secondary');
-    $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
-    $(".buttons-print").removeClass('btn-secondary');
+    // $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
+    // $(".buttons-html5").removeClass('btn-secondary');
+    // $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
+    // $(".buttons-print").removeClass('btn-secondary');
   });
 
   $(document).on('click','.action-link',function(){

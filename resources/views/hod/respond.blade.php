@@ -17,7 +17,7 @@
       <div class="card-body">
         <div class="tab-content" id="custom-tabs-one-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-             <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify">
+             <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify" id="response-table">
                 <thead>
                   <tr class="text-sm">
                     <th>Sl no.</th><th>Response</th><th>Response Status</th><th>Response Attached</th>
@@ -124,7 +124,7 @@
 <script src="{{asset('js/custom/common.js')}}"></script>
 <script>
 $(function () {
-    $("#letter-table").DataTable({
+    $("#response-table").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": [ "excel", "pdf", "print"]
     }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');

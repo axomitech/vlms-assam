@@ -2,6 +2,7 @@
 
 @section('content')
 @if($markComplete > 0)
+@if($forwardStatus > 0)
 <div class="row">
   <div class="offset-10 col-md-2">
     <form id="letter-complete-form">
@@ -12,8 +13,9 @@
   </div>
 </div>
 @endif
+@endif
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-3">
     <form id="finalize-form" hidden>
       <input type="hidden" name="finalize_letter" id="finalize_letter" value="{{$letter_id}}">
     </form>
@@ -22,16 +24,17 @@
       $disable = ""
     @endphp
     @if (!$finalizeStatus)
-    @if (count($actions) > 0)
+      @if (count($actions) > 0)
 
-    <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to finalize these actions!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">FINALIZE</button></div> 
-    
-    @endif
+      <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to save these actions for HOD!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">SAVE FOR HOD</button>
+      
+      @endif
     @else
       @php
       $disable = "disabled";
       @endphp  
     @endif
+    <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disable}}>ADD ACTION</button>
   </div>
 </div>
 <div class="row">
@@ -41,9 +44,6 @@
         <ul class="nav nav-pills nav-fill" id="custom-tabs-four-tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Actions</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {{$disable}}" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false" disabled>Add Action</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
@@ -103,41 +103,8 @@
               </table>
             </div>
           </div>
-          <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-            <form id="action-form">
-              <div class="form-group row first-div">
-                <div class="col-md-12">
-                  <label class="form-label fw-bold">Action Point</label>
-                  <textarea class="form-control" name="letter_action" id="letter_action" rows="4"></textarea>
-                  <label class="text text-danger letter_action fw-bold"></label>
-                </div>
-                <div class="col-md-12">
-                  <label>Departments</label>
-                  <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
-                    <option value="">SELECT DEPARTMENT</option>
-                    @foreach ($departments as $value)
-                    <option value="{{$value['id']}}">{{$value['department_name']}}</option>
-                    @endforeach
-                  </select>
-                  <label class="text text-danger departments0"></label>
-                </div>
-                <div class="col-md-2">
-                  &nbsp;
-                </div>
-              </div>
-          
-            
-              <div class="form-group row button-div">
-                <input type="hidden" id="letter" name="letter" value="{{$letter_id}}">
-                <button type="button" class="btn btn-primary save-btn ml-1" data-url="{{ route('store_action') }}" data-form="#action-form" data-message="That you want to direct action to this letter!" id="save-action-btn">SAVE</button>
-              </div>
-            </form>
-          </div>
           <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
              Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
-          </div>
-          <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
-             Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
           </div>
         </div>
       </div>
@@ -149,7 +116,60 @@
     </iframe>
   </div>
 </div>
-
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title text-primary">Add Action</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <form id="action-form">
+                    <div class="form-group row first-div">
+                      <div class="col-md-12">
+                        <label class="form-label fw-bold">Action Point</label>
+                        <textarea class="form-control" name="letter_action" id="letter_action" rows="4"></textarea>
+                        <label class="text text-danger letter_action fw-bold"></label>
+                      </div>
+                      <div class="col-md-12">
+                        <label>Departments</label>
+                        <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
+                          <option value="">SELECT DEPARTMENT</option>
+                          @foreach ($departments as $value)
+                          <option value="{{$value['id']}}">{{$value['department_name']}}</option>
+                          @endforeach
+                        </select>
+                        <label class="text text-danger departments0"></label>
+                      </div>
+                    </div>
+                    <div class="form-group row button-div">
+                      <input type="hidden" id="letter" name="letter" value="{{$letter_id}}">
+                      <button type="button" class="btn btn-primary save-btn ml-1" data-url="{{ route('store_action') }}" data-form="#action-form" data-message="That you want to direct action to this letter!" id="save-action-btn">SAVE</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              
+            </div>
+            <div cclass="col-md-7">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width: 25rem; height:20rem;">
+                  </iframe>
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
 @section('scripts')
     <!-- DataTables  & Plugins -->
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -166,17 +186,17 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{asset('js/custom/common.js')}}"></script>
 <script>
-$(function () {
-    $("#letter-table").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": [ "excel", "pdf", "print"],
-    }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
+// $(function () {
+//     $("#letter-table").DataTable({
+//       "responsive": true, "lengthChange": false, "autoWidth": false,
+//       "buttons": [ "excel", "pdf", "print"],
+//     }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
     
-    $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
-    $(".buttons-html5").removeClass('btn-secondary');
-    $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
-    $(".buttons-print").removeClass('btn-secondary');
-  });
+//     $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
+//     $(".buttons-html5").removeClass('btn-secondary');
+//     $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
+//     $(".buttons-print").removeClass('btn-secondary');
+//   });
   
   $(document).on('click','.action-link',function(){
     $('.modal-title').text($(this).data('subject'));

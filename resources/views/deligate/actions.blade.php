@@ -1,17 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
-@if($markComplete > 0)
+              @php
+                  $disabled = "disabled";
+              @endphp
+              @if($forwardStatus <= 0)
+              @if($finalizeStatus)
+                @php
+                  $disabled = "";
+                @endphp
+              @endif
+            @endif
 <div class="row">
-  <div class="offset-10 col-md-2">
-    <form id="letter-complete-form">
+  @if($markComplete > 0)
+  <div class="col-md-2">
+    <form id="letter-complete-form" hidden>
       <input type="hidden" name="stage_letter" value="{{$letter_id}}">
       <input type="hidden" name="stage" value="4">
     </form>
-    &emsp;<button type="button" class="btn btn-sm btn-outline-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to mark complete the letter!" id="save-complete-btn">Mark Complete</button>
+    <button type="button" class="btn btn-sm btn-outline-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to mark complete the letter!" id="save-complete-btn">Mark Complete</button>
+  </div>
+  @endif
+  <div class="col-md-2">
+    <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
   </div>
 </div>
-@endif
+
 <div class="row  bg-danger1">
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs h-100">
@@ -19,19 +33,6 @@
         <ul class="nav nav-pills nav-fill nav-justified" id="custom-tabs-four-tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Actions</a>
-          </li>
-          <li class="nav-item">
-            @php
-                  $disabled = "disabled";
-            @endphp
-            @if($forwardStatus <= 0)
-              @if($finalizeStatus)
-                @php
-                  $disabled = "";
-                @endphp
-              @endif
-            @endif
-            <a class="nav-link {{$disabled}}" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Forward</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
@@ -95,33 +96,8 @@
               </table>
             </div>
           </div>
-          <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-            <form id="note-form">
-                @for ($i = 0; $i < count($actions); $i++)
-                @foreach ($actions[$i] as $value)
-                <input type="hidden" name="action_map[]" value="{{$value['act_dept_id']}}">  
-                <input type="hidden" name="action_dept[]" value="{{$value['dept_id']}}">
-                <input type="hidden" name="letter_action[]" id="letter_action" value="{{$value['action_id']}}">
-                @endforeach
-                @endfor
-                <input type="hidden" name="forward_letter" value="{{$letter_id}}">
-              <div class="row">
-               <div class="col-md-12">
-                 <label>Add Note</label>
-                 <textarea class="form-control" name="note" rows="5"></textarea>
-                 <label class="text text-danger note"></label>
-               </div>
-              </div>
-              <div class="form-group row">
-                <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to direct a note to this action!" id="save-note-btn">SAVE</button>
-             </div>
-             </form>
-          </div>
           <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
              Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
-          </div>
-          <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
-             Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
           </div>
         </div>
       </div>
@@ -224,12 +200,63 @@
         </div>
     </div>
 </div> --}}
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title text-primary">Forward</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <form id="note-form">
+                    @for ($i = 0; $i < count($actions); $i++)
+                    @foreach ($actions[$i] as $value)
+                    <input type="hidden" name="action_map[]" value="{{$value['act_dept_id']}}">  
+                    <input type="hidden" name="action_dept[]" value="{{$value['dept_id']}}">
+                    <input type="hidden" name="letter_action[]" id="letter_action" value="{{$value['action_id']}}">
+                    @endforeach
+                    @endfor
+                    <input type="hidden" name="forward_letter" value="{{$letter_id}}">
+                  <div class="row">
+                   <div class="col-md-12">
+                     <label>Add Note</label>
+                     <textarea class="form-control" name="note" rows="8"></textarea>
+                     <label class="text text-danger note"></label>
+                   </div>
+                  </div>
+                  <div class="form-group row">
+                    <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to direct a note to this action!" id="save-note-btn">SAVE</button>
+                 </div>
+                 </form>
+                </div>
+              </div>
+              
+            </div>
+            <div cclass="col-md-7">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width: 25rem; height:20rem;">
+                  </iframe>
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-sm text-justify" id="actionModalLabel">Note Entry</h5>
+          <h7 class="modal-title text-sm text-justify" id="actionModalLabel">Note Entry</h7>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
         </div>
         <div class="modal-body">
@@ -285,16 +312,16 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{asset('js/custom/common.js')}}"></script>
 <script>
-$(function () {
-    $("#letter-table").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": [ "excel", "pdf", "print"]
-    }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
-    $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
-    $(".buttons-html5").removeClass('btn-secondary');
-    $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
-    $(".buttons-print").removeClass('btn-secondary');
-  });
+// $(function () {
+//     $("#letter-table").DataTable({
+//       "responsive": true, "lengthChange": false, "autoWidth": false,
+//       "buttons": [ "excel", "pdf", "print"]
+//     }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
+//     $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
+//     $(".buttons-html5").removeClass('btn-secondary');
+//     $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
+//     $(".buttons-print").removeClass('btn-secondary');
+//   });
 
   $(document).on('click','.action-link',function(){
     $('.modal-title').text($(this).data('subject'));
