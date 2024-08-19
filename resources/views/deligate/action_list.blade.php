@@ -26,7 +26,7 @@
     @if (!$finalizeStatus)
       @if (count($actions) > 0)
 
-      <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to save these actions for HOD!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">SAVE FOR HOD</button>
+      <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to save and send these actions for HOD!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">SAVE & SENT</button>
       
       @endif
     @else
@@ -54,10 +54,11 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
             <div style="overflow-x:auto;">
+              @if(count($letterActions) > 0)
               <table class="table table-sm table-striped" id="letter-table">
                 <thead>
                     <tr class="text-sm">
-                        <th>Description</th><th>Department</th>
+                       <th>Sl No.</th> <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,33 +67,30 @@
                     @endphp
                     @foreach ($letterActions as $value)
                         <tr class="text-sm">
-                            <td>{{$i}}. &nbsp;
-                              <div class="text-block" id="textBlock1">
-                                <p class="shortText">
-                                  {{substr($value['action_description'], 0, 100)}}... 
-                                  <a href="#" class="readMore">Read more</a>
-                                </p>
-                                <div class="longText" style="display: none;">
-                                  <p>
-                                    {{$value['action_description']}}
-                                    <a href="#" class="readLess">Read less</a>
-                                  </p>
-                                </div>
-                              <br>Dated:{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}
-                            </td>
+                            <td>{{$i}}</td>
                             <td>
-                                <table class="table-bordered">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="text-block" id="textBlock1">
+                                    <p class="shortText">
+                                      {{substr($value['action_description'], 0, 100)}}... 
+                                      <a href="#" class="readMore">Read more</a>
+                                    </p>
+                                    <div class="longText" style="display: none;">
+                                      <p>
+                                        {{$value['action_description']}}
+                                        <a href="#" class="readLess">Read less</a>
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <br>Dated:{{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}
+                                </div>
+                                <div class="col-md-6">
                                   @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
-                                      <tr>
-                                          <td>
-                                            {{$actionDepartments[$i-1][$j]}}
-                                          </td>
-                                          <td>
-                                            {{$responsesStatuses[$i-1][$j]}}
-                                          </td>
-                                      </tr>
-                                    @endfor
-                                </table>
+                                  {{$actionDepartments[$i-1][$j]}}&nbsp;Status:<b>{{$responsesStatuses[$i-1][$j]}}</b>
+                                  @endfor
+                                </div>
+                              </div>
                             </td>
                         </tr>
                         @php
@@ -101,6 +99,9 @@
                     @endforeach
                 </tbody>
               </table>
+              @else
+              <p class="text text-center text-danger">Please add actions to the letter.</p>
+              @endif
             </div>
           </div>
           <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">

@@ -34,12 +34,13 @@ class LetterActionResponse extends Model
         ->join('letter_actions','letter_actions.id','=','action_department_maps.letter_action_id')
         ->join('user_departments','letter_action_responses.user_id','=','user_departments.id')
         ->join('users','user_departments.user_id','=','users.id')
+        ->leftjoin('letter_response_attachments','letter_action_responses.id','=','letter_response_attachments.response_id')
         ->where([
             'action_department_maps.letter_action_id'=>$actionId,
         ])
         ->orderBy('letter_action_responses.updated_at', 'ASC')
-        ->select('action_remarks','letter_action_responses.created_at','users.name')
-        ->groupBy('letter_action_id','action_remarks','letter_action_responses.created_at','users.name','letter_action_responses.updated_at')
+        ->select('action_remarks','letter_action_responses.created_at','users.name','response_attachment')
+        ->groupBy('letter_action_id','action_remarks','letter_action_responses.created_at','users.name','letter_action_responses.updated_at','response_attachment')
         ->get();
           
     }

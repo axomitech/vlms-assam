@@ -238,7 +238,7 @@
               </div>
               
             </div>
-            <div cclass="col-md-7">
+            <div class="col-md-7">
               <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-body">
                   <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width: 25rem; height:20rem;">
@@ -278,17 +278,26 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-5">
               <table class="table table-sm table-hover table-striped table-responsive text text-sm text-justify">
                 <thead>
-                  <tr><th>Notes</th><th>Name</th></tr>
+                  <tr><th>Responses</th></tr>
                 </thead>
                 <tbody id="note-body">
-
+                  <tr><td class="text text-danger">No responses received yet!</td></tr>
                 </tbody>
               </table>
             </div>
+            <div class="col-md-7">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width: 25rem; height:20rem;" id="responseAttached">
+                  </iframe>
+                </div>
+              </div>
+            </div>
            </div>
+           
           </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -336,14 +345,23 @@
         'action':action
       },function(j){
         var tr = "";
-        for(var i = 1; i < j.length; i++){
-          tr += "<tr><td>"+i+"."+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"</b></td><td>"+j[i].name+"</td></tr>";
-        }
-        $('#note-body').html(tr);
+        var attachment = "";
+        if(j.length > 0){
+          for(var i = 1; i < j.length; i++){
+          if(j[i].attach != ""){
+            attachment = "<a href='#' class='attach' data-attach='"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
+          }
+          tr += "<tr><td><b>"+j[i].name+"</b> : "+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"&nbsp;"+attachment+"</b></td></tr>";
+          attachment = "";
+          }
+            $('#note-body').html(tr);
+          }
       });
 
   })
-
+  $(document).on('click','.attach',function(){
+    $('#responseAttached').attr('src',$(this).data('attach'));
+  });
 </script>
 <script>
   $(document).ready(function() {

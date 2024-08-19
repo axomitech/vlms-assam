@@ -172,6 +172,7 @@ class LetterController extends Controller
     {
         $letters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>1
         ],[]);
        
         $actionSents = ActionSent::getForwardedActions();

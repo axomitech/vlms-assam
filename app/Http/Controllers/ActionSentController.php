@@ -60,8 +60,7 @@ class ActionSentController extends Controller
         $actionSentId = decrypt($actionSentId);
         $actionDeptId = decrypt($actionDeptId);
         $letterId = decrypt($letterId);
-        $letterPath = config('constants.options.storage_url').
-        Common::getSingleColumnValue('letters',[
+        $letterPath = Common::getSingleColumnValue('letters',[
             'id'=>$letterId,
         ],'letter_path');
         $actionStatuses = ActionStatus::getAllActionStatus();

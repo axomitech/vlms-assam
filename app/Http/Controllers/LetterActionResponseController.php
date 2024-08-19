@@ -105,15 +105,21 @@ class LetterActionResponseController extends Controller
                 'note'=>'',
                 'date_time'=>'',
                 'name'=>'',
+                'attach'=>'',
             ];
             $i = 1;
             $notes = LetterActionResponse::getAllActionNotes($request->action);
+            $attachment = "";
             foreach($notes AS $value){
+                if($value['response_attachment'] != ""){
+                    $attachment = config('constants.options.storage_url')."".$value['response_attachment'];
+                }
                 $jdata[$i] = [
                     'note'=>$value['action_remarks'],
                     'date_day'=>Carbon::parse($value['created_at'])->format('d/m/Y'),
                     'date_time'=>Carbon::parse($value['created_at'])->format('H:m:s'),
                     'name'=>$value['name'],
+                    'attach'=> $attachment,
                 ];
                 $i++;
             }

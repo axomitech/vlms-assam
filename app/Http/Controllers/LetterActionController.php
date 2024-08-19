@@ -50,6 +50,7 @@ class LetterActionController extends Controller
         $actions = [];
         $actionIds = [];
         $k = 0;
+        $departments = " ";
         foreach($letterActions AS $value){
             $j = 0;
             $actions[$k] = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
@@ -63,6 +64,7 @@ class LetterActionController extends Controller
 
                 }
                 $actionDepartments[$i][$j] = $value1['department_name'];
+                $departments .= $value1['department_name']."_";
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
                 if($responsesStatuses[$i][$j] == "Completed"){
                     $completeCount += 1;
@@ -73,7 +75,7 @@ class LetterActionController extends Controller
             $i++;
         }
         $markComplete = 0;
-        if($completeCount >= count($letterActions)){
+        if($completeCount == count(array_filter(explode("_",$departments)))){
             if($completeStatus < 4){
 
             $markComplete = 1;
