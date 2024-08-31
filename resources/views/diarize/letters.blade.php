@@ -186,6 +186,10 @@
                             @endif
                           </td>
                           <td>{{$value['letter_no']}}</td><td>{{$value['sender_name']}}</td><td>
+                            @if (session('role') == 1)
+                            &nbsp;
+                            <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-paper-plane" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
+                           @endif
                            @if (session('role') == 2)
                             &nbsp;
                             <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
