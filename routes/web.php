@@ -51,7 +51,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/remove_correspondences', [App\Http\Controllers\AcknowledgeController::class, 'remove_correspondence'])->name('remove_correspondences');
     Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
     Route::get('/user', [App\Http\Controllers\AdminController::class, 'show_user'])->name('user');
-    Route::post('/user', [App\Http\Controllers\AdminController::class, 'add_user'])->name('user1');
+    Route::post('/user/add', [App\Http\Controllers\AdminController::class, 'add_user'])->name('user.add');
+    Route::post('/user/edit', [App\Http\Controllers\AdminController::class, 'edit_user'])->name('user.edit');
+    Route::post('/user/default/access', [App\Http\Controllers\AdminController::class, 'default_access'])->name('user.default.access');
+
     Route::get('/department', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department');
     Route::post('/department', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department1');   
     

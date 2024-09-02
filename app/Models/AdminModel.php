@@ -25,7 +25,8 @@ class AdminModel extends Model
                             'roles.role_name',
                             'departments.department_name',
                             'departments.id as dept_id',
-                            'user_departments.id as profile_id'
+                            'user_departments.id as profile_id',
+                            'user_departments.default_access as default_access',
                     )
                     ->get();
     }

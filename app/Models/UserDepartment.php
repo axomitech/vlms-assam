@@ -9,6 +9,12 @@ class UserDepartment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'department_id',
+        'role_id',
+    ];
+
     public static function roleUser($userId){
         return UserDepartment::join('departments','user_departments.department_id','=','departments.id')
         ->join('roles','user_departments.role_id','=','roles.id')
