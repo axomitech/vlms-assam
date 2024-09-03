@@ -155,4 +155,49 @@ class AdminController extends Controller
         return response()->json(['success' => false], 404);
     }
 
+    public function show_department(Request $request)
+    {
+        $departments = Department::getAllDepartmentsWithAbbreviation();
+        // return $departments;
+        return view('admin.department', compact('departments'));
+    }
+
+    public function add_department(Request $request)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'dept_name' => 'required|string|max:255|unique:departments,department_name',
+            'dept_abbr' => 'required|string|max:10|unique:departments,abbreviation'
+        ]);
+
+        // Create and save the department
+        $department = new Department();
+        $department->department_name = $validatedData['dept_name'];
+        $department->abbreviation = $validatedData['dept_abbr'];
+        $department->save();
+
+        // Return a success response
+        return back()->with('success', 'Department added successfully.');
+    }
+
+    public function edit_department(Request $request)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'dept_id' => 'required|exists:departments,id',
+            'dept_name' => 'required|string|max:255',
+            'dept_abbr' => 'nullable|string|max:10',
+        ]);
+
+        // Find the department by ID
+        $department = Department::find($validatedData['dept_id']);
+
+        // Update the department details
+        $department->department_name = $validatedData['dept_name'];
+        $department->abbreviation = $validatedData['dept_abbr'];
+        $department->save();
+
+        // Return a response, e.g., redirect back with a success message
+        return redirect()->back()->with('success', 'Department updated successfully!');
+    }
 }

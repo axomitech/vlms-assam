@@ -11,8 +11,18 @@ class Department extends Model
 
     public static function getAllDepartments(){
 
-        return Department::select('id','department_name')->get();
+        return Department::select('id', 'department_name')
+        ->where('id', '!=', 0)
+        ->get();
+    
+    }
 
+    public static function getAllDepartmentsWithAbbreviation(){
+
+        return Department::select('id', 'department_name', 'abbreviation')
+        ->where('id', '!=', 0)
+        ->get();
+    
     }
 
     public static function getDepartmentAbbreviation($departmentId){

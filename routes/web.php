@@ -55,8 +55,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/edit', [App\Http\Controllers\AdminController::class, 'edit_user'])->name('user.edit');
     Route::post('/user/default/access', [App\Http\Controllers\AdminController::class, 'default_access'])->name('user.default.access');
 
-    Route::get('/department', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department');
-    Route::post('/department', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department1');   
+    Route::get('/department/view', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department.index');
+    Route::post('/department/add', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department.add');   
+    Route::post('/department/edit', [App\Http\Controllers\AdminController::class, 'edit_department'])->name('department.edit');   
     
 });
 
