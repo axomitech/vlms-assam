@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLetterAssignRequest;
 use App\Http\Requests\UpdateLetterAssignRequest;
 use App\Models\LetterAssign;
+use DB;
 
 class LetterAssignController extends Controller
 {
@@ -29,7 +30,48 @@ class LetterAssignController extends Controller
      */
     public function store(StoreLetterAssignRequest $request)
     {
-        //
+        if($request->ajax()){
+            
+            DB::beginTransaction();
+    
+                try {
+                    
+                    if(session('role') == 1){
+
+                        $id = LetterAssign::assignLetter([
+
+                            $request->assign_letter,
+                            $request->assignee,
+                            $request->assign_remarks,
+                            
+                        ]);
+                    }else if(session('role') == 3){
+                        LetterAssign::forwardFrom($request->forward_from);
+                        $id = LetterAssign::assignLetter([
+
+                            $request->assign_letter,
+                            $request->assignee,
+                            $request->assign_remarks,
+                            
+                        ]);
+
+                    }
+                    DB::commit();
+                    $jData[1] = [
+                        'message'=>'Letter is successfully assigned.',
+                        'status'=>'success',
+                    ];
+
+                   } catch (\Exception $e) {
+                    DB::rollback();
+                    $jData[1] = [
+                        'message'=>'Something went wrong! Please try again.'.$e->getMessage(),
+                        'status'=>'error'
+                    ];
+                }
+
+                return response()->json($jData,200);
+        }
     }
 
     /**
@@ -37,7 +79,7 @@ class LetterAssignController extends Controller
      */
     public function show(LetterAssign $letterAssign)
     {
-        //
+       
     }
 
     /**

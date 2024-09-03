@@ -64,15 +64,23 @@
                             @endif
                           </td>
                           <td>
+                            @if (session('role') == 1)
+                            &nbsp;
+                            @if($assignedLetters[$i-1] <= 0)
+                            <a href="" class="assign-link" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{$value['letter_id']}}"><i class="fas fa-paper-plane" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
+                            @endif
+                            @endif
                            @if (session('role') == 2)
                             &nbsp;
+                            @if($assignedLetters[$i-1] > 0)
                             <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
-                           @endif
+                            @endif
+                            @endif
                            @if (session('role') == 3)
+                            
                             &nbsp;
                             <a href="{{route('actions',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update" ></i></a>
-                            @endif
-                            @if (session('role') == 3)
+                          
                             &nbsp;
                             <a class="file-btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" target="__blank" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf text-danger"></i></a>
                             &nbsp;
@@ -82,6 +90,11 @@
                               @if($value['stage_status'] == 4)
                               &nbsp;
                               <a href="#" class="action-link save-btn archive" data-letter="{{$value['letter_id']}}" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-archive-btn"><i class="fas fa-folder" style="color:#01fd4d;" data-toggle="tooltip" data-placement="top" title="Correspondences"></i></a>
+                              
+                              @endif
+                              &nbsp;
+                              @if($assignedLetters[$i-1] > 0)
+                                <a href="" class="assign-link" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{$value['letter_id']}}" data-forward="{{$assignedLetters[$i-1]}}" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-paper-plane" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
                               @endif
                             @endif
                           </td>
@@ -186,10 +199,6 @@
                             @endif
                           </td>
                           <td>{{$value['letter_no']}}</td><td>{{$value['sender_name']}}</td><td>
-                            @if (session('role') == 1)
-                            &nbsp;
-                            <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-paper-plane" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
-                           @endif
                            @if (session('role') == 2)
                             &nbsp;
                             <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
@@ -295,11 +304,82 @@
     
    </div>
  </div>
-
+ <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Send Letter</h5>
+        <form id="assign-deligate-form" hidden>
+          <div class="form-group">
+            <label for="assignee" class="col-form-label">Assign</label>
+            <input class="form-control" name="assignee" value="{{$deligateId}}">
+          </div>
+          <div class="form-group">
+            <input type="hidden" name="assign_letter" class="assign_letter" value="">
+            <input type="hidden" name="forward_from" class="forward_from" value="">
+            <label for="assign_remarks" class="col-form-label">Remarks:</label>
+            <textarea class="form-control" name="assign_remarks" rows="4">Prepare actions.</textarea>
+          </div>
+          
+        </form>
+        <button type="button" class="btn btn-outline-warning offset-8 save-btn" data-url="{{ route('assign_letter') }}" data-form="#assign-deligate-form" data-message="That you want to assign this letter to your deligate!">Assign Deligate</button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="card card-primary card-outline card-outline-tabs">
+              <div class="card-body">
+                <form id="assign-form">
+                  <div class="form-group">
+                    <label for="assignee" class="col-form-label">Assign</label>
+                    <select class="form-control" name="assignee" id="assignee">
+                      <option value="">Select Assignee</option>
+                      @foreach ($departmentUsers AS $value)
+                        @if(session('role_user') != $value['user_id'] )
+                        <option value="{{$value['user_id']}}">{{$value['name']}}</option>
+                        @endif
+                        @endforeach
+                    </select>
+                    <label class="text text-danger assignee"></label>
+                  </div>
+                  <div class="form-group">
+                    <input type="hidden" name="assign_letter" class="assign_letter" value="">
+                    <input type="hidden" name="forward_from" class="forward_from" value="">
+                    <label for="assign_remarks" class="col-form-label">Remarks:</label>
+                    <textarea class="form-control" id="assign_remarks" name="assign_remarks" rows="4"></textarea>
+                    <label class="text text-danger assign_remarks"></label>
+                  </div>
+                  <button type="button" class="btn btn-primary save-btn" data-url="{{ route('assign_letter') }}" data-form="#assign-form" data-message="That you want to assign this letter!" id="assign-btn">SEND</button>
+                </form>
+              </div>
+            </div>
+            
+          </div>
+          <div cclass="col-md-7">
+            <div class="card card-primary card-outline card-outline-tabs">
+              <div class="card-body">
+                <iframe src="" style="width: 25rem; height:20rem;" id="letter-view">
+                </iframe>
+              </div>
+            </div>
+          </div>
+      </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
 @section('scripts')
 
 <script>
-  $(document).on('click','.file-btn',function(){
+  $(document).on('click','.file-btn, .assign-link',function(){
      $('#letter-view').attr('src',$(this).data('letter_path'));
   });
 </script>
@@ -353,7 +433,12 @@
       });
     });
 
-    
+    $(document).on('click','.assign-link',function(){
+
+      $('.assign_letter').val($(this).data('letter'));
+      $('.forward_from').val($(this).data('forward'));
+
+    });
     </script>
 @endsection
 @endsection
