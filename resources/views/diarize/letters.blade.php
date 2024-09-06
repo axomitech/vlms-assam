@@ -67,20 +67,21 @@
                             @if (session('role') == 1)
                             &nbsp;
                             @if($assignedLetters[$i-1] <= 0)
-                            <a href="" class="assign-link" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{$value['letter_id']}}"><i class="fas fa-paper-plane" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
+                            <a href="" class="assign-link" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{$value['letter_id']}}" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-paper-plane" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
                             @endif
                             @endif
                            @if (session('role') == 2)
                             &nbsp;
-                            @if($assignedLetters[$i-1] > 0)
+                            @if($delegatgeLetters[$i-1] > 0)
                             <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
                             @endif
                             @endif
                            @if (session('role') == 3)
                             
                             &nbsp;
+                            @if($assignedLetters[$i-1] > 0)
                             <a href="{{route('actions',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update" ></i></a>
-                          
+                            @endif
                             &nbsp;
                             <a class="file-btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" target="__blank" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf text-danger"></i></a>
                             &nbsp;
@@ -205,7 +206,9 @@
                            @endif
                            @if (session('role') == 3)
                             &nbsp;
+                            @if ($assignedSentLetters[$i-1] > 0)
                             <a href="{{route('actions',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update" ></i></a>
+                            @endif
                             @endif
                             @if (session('role') == 3)
                             &nbsp;
@@ -309,20 +312,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Send Letter</h5>
-        <form id="assign-deligate-form" hidden>
-          <div class="form-group">
-            <label for="assignee" class="col-form-label">Assign</label>
-            <input class="form-control" name="assignee" value="{{$deligateId}}">
-          </div>
-          <div class="form-group">
-            <input type="hidden" name="assign_letter" class="assign_letter" value="">
-            <input type="hidden" name="forward_from" class="forward_from" value="">
-            <label for="assign_remarks" class="col-form-label">Remarks:</label>
-            <textarea class="form-control" name="assign_remarks" rows="4">Prepare actions.</textarea>
-          </div>
-          
-        </form>
-        <button type="button" class="btn btn-outline-warning offset-8 save-btn" data-url="{{ route('assign_letter') }}" data-form="#assign-deligate-form" data-message="That you want to assign this letter to your deligate!">Assign Deligate</button>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

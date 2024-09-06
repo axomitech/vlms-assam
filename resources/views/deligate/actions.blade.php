@@ -12,6 +12,7 @@
               @endif
             @endif
 <div class="row">
+  
   @if($markComplete > 0)
   <div class="col-md-2">
     <form id="letter-complete-form" hidden>
@@ -21,6 +22,25 @@
     <button type="button" class="btn btn-sm btn-outline-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to mark complete the letter!" id="save-complete-btn">Mark Complete</button>
   </div>
   @endif
+  @php
+      $disable = "";
+  @endphp 
+  @if (!$finalizeStatus)
+      @if (count($actions) > 0)
+      <form id="finalize-form">
+        <input type="hidden" name="finalize_letter" id="finalize_letter" value="{{$letter_id}}">
+      </form>
+      <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to save and send these actions for HOD!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">SAVE & SENT</button>
+      
+      @endif
+    @else
+      @php
+      $disable = "disabled";
+      @endphp  
+    @endif
+  <div class="col-md-2">
+    <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg-action" {{$disable}}>ADD ACTION</button>
+  </div>
   <div class="col-md-2">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
   </div>
@@ -251,6 +271,61 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade bd-example-modal-lg-action" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title text-primary">Add Action</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <form id="action-form">
+                    <div class="form-group row first-div">
+                      <div class="col-md-12">
+                        <label class="form-label fw-bold">Action Point</label>
+                        <textarea class="form-control" name="letter_action" id="letter_action" rows="4"></textarea>
+                        <label class="text text-danger letter_action fw-bold"></label>
+                      </div>
+                      <div class="col-md-12">
+                        <label>Departments</label>
+                        <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
+                          <option value="">SELECT DEPARTMENT</option>
+                          @foreach ($departments as $value)
+                          <option value="{{$value['id']}}">{{$value['department_name']}}</option>
+                          @endforeach
+                        </select>
+                        <label class="text text-danger departments0"></label>
+                      </div>
+                    </div>
+                    <div class="form-group row button-div">
+                      <input type="hidden" id="letter" name="letter" value="{{$letter_id}}">
+                      <button type="button" class="btn btn-primary save-btn ml-1" data-url="{{ route('store_action') }}" data-form="#action-form" data-message="That you want to direct action to this letter!" id="save-action-btn">SAVE</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              
+            </div>
+            <div cclass="col-md-7">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-body">
+                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width: 25rem; height:20rem;">
+                  </iframe>
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -379,6 +454,7 @@
     textBlock.find('.shortText').show();
   });
 });
+$('.js-example-basic-multiple').select2();
 </script>
 @endsection
 @endsection

@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class AssignDeligate extends Model
 {
     use HasFactory;
+
+    public static function hodDeligateForLetter($letterId){
+
+        return AssignDeligate::join('letter_assigns','hod_id','=','receiver_id')
+        ->where([
+            'deligate_id'=>session('role_user'),
+            'in_hand'=>true,
+            'letter_id'=>$letterId
+        ])->count();
+
+    }
 }

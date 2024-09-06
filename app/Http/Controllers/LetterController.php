@@ -13,6 +13,7 @@ use App\Models\UserDepartment;
 use App\Models\LetterPriority;
 use App\Models\LetterAssign;
 use App\Models\LetterCategory;
+use App\Models\AssignDeligate;
 use App\Models\Common;
 use Carbon\Carbon;
 use Auth;
@@ -177,6 +178,8 @@ class LetterController extends Controller
             'stage_status'=>1
         ],[]);
         $assignedLetters = [];
+        $assignedSentLetters = [];
+        $delegatgeLetters = [];
         $i = 0;
         $condition = [];
         
@@ -195,6 +198,7 @@ class LetterController extends Controller
             }
             //$assignedLetters[$i] = LetterAssign::checkLetterAssign($value['letter_id']);
             $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
+            $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
             $i++;
         }
         $actionSents = ActionSent::getForwardedActions();
@@ -202,6 +206,13 @@ class LetterController extends Controller
         $i = 0;
         foreach($actionSents AS $value){
             $letterIds[$i] = $value['letter_id'];
+            $condition = [
+                'letter_id'=>$value['letter_id'],
+                'receiver_id'=>session('role_user'),
+                'in_hand'=> true,
+            ];
+            $assignedSentLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
+
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
@@ -223,7 +234,7 @@ class LetterController extends Controller
             'stage_status'=>5
         ],[]);
         $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
-        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId'));
+        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters'));
     }
 
     /**
