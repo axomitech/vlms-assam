@@ -48,4 +48,13 @@ class UserDepartment extends Model
             'default_access'=>true
         ])->select('id','department_id','role_id')->get();
     }
+
+    public static function getAllUserDepartment($department,$role){
+        return UserDepartment::where([
+            'department_id'=>$department,
+            'role_id'=>$role
+        ])->join('users','user_departments.user_id','=','users.id')
+        ->select('user_departments.id AS user_id','name')
+        ->get();
+    }
 }

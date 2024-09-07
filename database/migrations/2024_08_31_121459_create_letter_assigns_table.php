@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('letter_assigns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('letter_id')->index('letter-assign')->comment('Letter assigned to a HOD of a department');
-            $table->unsignedBigInteger('user_id')->index('letter-assigne')->comment('HOD of a department to whome letter is assigned.');
+            $table->unsignedBigInteger('user_id')->index('letter-assigne')->comment('HOD or Diarizer of a department from whome letter is assigned.');
+            $table->unsignedBigInteger('receiver_id')->index('letter-receiver')->comment('HOD of a department to whome letter is assigned.');
             $table->boolean('in_hand')->comment('Letter in hand after assignment.')->default(true);
+            $table->text('remarks')->comment('Remarks on letter assignment.');
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letters');
             $table->foreign('user_id')->references('id')->on('user_departments');
+            $table->foreign('receiver_id')->references('id')->on('user_departments');
         });
     }
 

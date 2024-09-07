@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/outbox', [App\Http\Controllers\ActionSentController::class, 'outbox'])->name('outbox');
     Route::get('/responds/{sent}/{act}/{letter}',[App\Http\Controllers\ActionSentController::class, 'response'])->name('responds');
     Route::get('/action_response',[App\Http\Controllers\ActionSentController::class, 'getActionResponses'])->name('action_response');
+    Route::post('/assign_letter', [App\Http\Controllers\LetterAssignController::class, 'store'])->name('assign_letter');
     Route::get("/log", function(){
         Log::channel('i_love_this_logging_thing')->info("Action log debug test", ['log-string' => ['user'=>1], "run"]);
      

@@ -9,8 +9,11 @@ use App\Models\Letter;
 use App\Models\Sender;
 use App\Models\ActionSent;
 use App\Models\Department;
+use App\Models\UserDepartment;
 use App\Models\LetterPriority;
+use App\Models\LetterAssign;
 use App\Models\LetterCategory;
+use App\Models\AssignDeligate;
 use App\Models\Common;
 use App\Models\Recipient;
 use Carbon\Carbon;
@@ -181,39 +184,67 @@ class LetterController extends Controller
     public function showLetters()
     {
         $letters = Letter::showLetterAndSender([
-            'user_departments.department_id' => session('role_dept'),
-            'stage_status' => 1
-        ], []);
-
-        $issueLetters = Letter::showLetterAndRecipient([
-            'user_departments.department_id' => session('role_dept'),
-            'stage_status' => 1
-        ], []);
-
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>1
+        ],[]);
+        $assignedLetters = [];
+        $assignedSentLetters = [];
+        $delegatgeLetters = [];
+        $i = 0;
+        $condition = [];
+        
+        foreach($letters AS $value){
+            if(session('role') == 1){
+                $condition = [
+                    'letter_id'=>$value['letter_id'],
+                    'user_id'=>session('role_user')
+                ];
+            }else if(session('role') == 3 || session('role') == 2){
+                $condition = [
+                    'letter_id'=>$value['letter_id'],
+                    'receiver_id'=>session('role_user'),
+                    'in_hand'=> true,
+                ];
+            }
+            //$assignedLetters[$i] = LetterAssign::checkLetterAssign($value['letter_id']);
+            $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
+            $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
+            $i++;
+        }
         $actionSents = ActionSent::getForwardedActions();
         $letterIds = [];
         $i = 0;
         foreach ($actionSents as $value) {
             $letterIds[$i] = $value['letter_id'];
+            $condition = [
+                'letter_id'=>$value['letter_id'],
+                'receiver_id'=>session('role_user'),
+                'in_hand'=> true,
+            ];
+            $assignedSentLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
+
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
-            'user_departments.department_id' => session('role_dept')
-        ], $letterIds);
-        $receiverId = Common::getSingleColumnValue('user_departments', [
-            'department_id' => session('role_dept'),
-            'user_id' => Auth::user()->id,
-            'role_id' => session('role')
-        ], 'id');
-
+            'user_departments.department_id'=>session('role_dept')
+        ],$letterIds);
+        $receiverId = Common::getSingleColumnValue('user_departments',[
+            'department_id'=>session('role_dept'),
+            'user_id'=>Auth::user()->id,
+            'role_id'=>session('role')
+        ],'id');
+        $deligateId = Common::getSingleColumnValue('assign_deligates',[
+            'hod_id'=>session('role_user')
+        ],'deligate_id');
         $inboxLetters = Letter::showInboxLetters([
             'action_sents.receiver_id' => $receiverId,
         ]);
         $archivedLetters = Letter::showLetterAndSender([
-            'user_departments.department_id' => session('role_dept'),
-            'stage_status' => 5
-        ], []);
-        return view('diarize.letters', compact('letters', 'sentLetters', 'inboxLetters', 'archivedLetters','issueLetters'));
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>5
+        ],[]);
+        $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
+        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters'));
     }
 
     /**
