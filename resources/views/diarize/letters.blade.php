@@ -13,6 +13,7 @@
         <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
         <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
         <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Archived</button>
+        <button class="nav-link" id="nav-issue-tab" data-toggle="tab" data-target="#nav-issue" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Issue</button>
       </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -291,6 +292,85 @@
           </div>
         </div>
       </div>
+      <div class="tab-pane fade" id="nav-issue" role="tabpanel" aria-labelledby="nav-issue-tab">
+        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+           <div class="box-body">
+             <table class="table table-sm table-hover table-striped letter-table" id="">
+               <thead>
+                   <tr>
+                     <th colspan="6" class="text text-center">Issued Letters</th>
+                   </tr>
+                   <tr class="text text-sm text-justify">
+                     <th>Sl no.</th><th>Diarize No.</th><th>Subject</th><th>Letter No.</th><th>Recipient</th><th>Category</th><th>Letter</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   @php
+                       $i = 1;
+                   @endphp
+                   @foreach ($issueLetters as $value)
+                       <tr class="text text-sm text-justify">
+                         <td>{{$i}}</td>
+                         <td> &nbsp;{{$value['crn']}}</td>
+                         <td style="width: 30%;">
+                             @if(strlen($value['subject']) > 100)
+                             <div class="text-block" id="textBlock1">
+                               <p class="shortText text-justify text-sm">
+                                 {{substr($value['subject'], 0, 100)}}... 
+                                 <a href="#" class="readMore">Read more</a>
+                               </p>
+                               <div class="longText" style="display: none;">
+                                 <p class="text-sm text-justify">
+                                   {{$value['subject']}}
+                                   <a href="#" class="readLess">Read less</a>
+                                 </p>
+                               </div>
+                           
+                             @else
+                             {{$value['subject']}}
+                             @endif
+                           </td>
+                           
+                           <td>{{$value['letter_no']}}</td><td>{{$value['recipient_name']}}</td>
+                           <td>
+                             @if($value['receipt'] == true)
+                               Receipt
+                             @else
+                               Issued
+                             @endif
+                           </td>
+                           <td>
+                            @if (session('role') == 2)
+                             &nbsp;
+                             <a href="{{route('action_lists',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update"></i></a>
+                            @endif
+                            @if (session('role') == 3)
+                             &nbsp;
+                             <a href="{{route('actions',[encrypt($value['letter_id'])])}}" class="action-link"><i class="fas fa-edit" style="color:#173f5f;" data-toggle="tooltip" data-placement="top" title="View/Update" ></i></a>
+                             @endif
+                             @if (session('role') == 3)
+                             &nbsp;
+                             <a class="file-btn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" target="__blank" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf text-danger"></i></a>
+                             &nbsp;
+                             <a href="{{route('acknowledge_letter',[$value['letter_id']])}}" class="action-link"><i class="fas fa-envelope-open-text text-success" data-toggle="tooltip" data-placement="top" title="Acknowledgement Letter Generation"></i></a>
+                             &nbsp;
+                             <a href="{{route('correspondences',[$value['letter_id']])}}" class="action-link"><i class="fas fa-file" style="color:#fd9f01;" data-toggle="tooltip" data-placement="top" title="Correspondences"></i></a>
+                               @if($value['stage_status'] == 4)
+                               &nbsp;
+                               <a href="#" class="action-link save-btn archive" data-letter="{{$value['letter_id']}}" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-archive-btn"><i class="fas fa-folder" style="color:#01fd4d;" data-toggle="tooltip" data-placement="top" title="Correspondences"></i></a>
+                               @endif
+                             @endif
+                           </td>
+                       </tr>
+                       @php
+                           $i++;
+                       @endphp
+                   @endforeach
+               </tbody>
+             </table>
+           </div>
+         </div>
+       </div>
     </div>
     
    </div>

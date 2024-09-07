@@ -185,6 +185,11 @@ class LetterController extends Controller
             'stage_status' => 1
         ], []);
 
+        $issueLetters = Letter::showLetterAndRecipient([
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 1
+        ], []);
+
         $actionSents = ActionSent::getForwardedActions();
         $letterIds = [];
         $i = 0;
@@ -208,7 +213,7 @@ class LetterController extends Controller
             'user_departments.department_id' => session('role_dept'),
             'stage_status' => 5
         ], []);
-        return view('diarize.letters', compact('letters', 'sentLetters', 'inboxLetters', 'archivedLetters'));
+        return view('diarize.letters', compact('letters', 'sentLetters', 'inboxLetters', 'archivedLetters','issueLetters'));
     }
 
     /**

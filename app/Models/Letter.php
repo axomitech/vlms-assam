@@ -85,4 +85,18 @@ class Letter extends Model
         ]);
 
     }
+
+    public static function showLetterAndRecipient($condition,$letters){
+        $lettersDetails =  Letter::join('recipients','letters.id','=','recipients.letter_id')
+               ->join('user_departments','letters.user_id','=','user_departments.id')
+               ->where($condition);
+               if(count($letters) > 0){
+                $lettersDetails = $lettersDetails->whereIn('letters.id',$letters);
+               }
+               $lettersDetails = $lettersDetails->orderBy('letters.id','DESC')
+               ->select('letter_no','subject','recipient_name','letter_path','letters.id AS letter_id','organization','crn','stage_status','receipt')
+               ->get();
+
+               return $lettersDetails;
+    }
 }
