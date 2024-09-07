@@ -7,27 +7,53 @@ use App\Traits\GlobalHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdminModel extends Model
 {
     use HasFactory;
 
-    public static function get_all_user_details(){
+    public static function get_all_user_details()
+    {
         return DB::table('user_departments')
-                    ->join('users','user_departments.user_id','=','users.id')
-                    ->join('departments','user_departments.department_id','=','departments.id')
-                    ->join('roles','user_departments.role_id','=','roles.id')
-                    ->select('users.id as u_id',
-                            'users.name as u_name',
-                            'users.email as u_email',
-                            'roles.id as role_id',
-                            'roles.role_name',
-                            'departments.department_name',
-                            'departments.id as dept_id',
-                            'user_departments.id as profile_id',
-                            'user_departments.default_access as default_access',
-                    )
-                    ->get();
+            ->join('users', 'user_departments.user_id', '=', 'users.id')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+            ->join('roles', 'user_departments.role_id', '=', 'roles.id')
+            ->select(
+                'users.id as u_id',
+                'users.name as u_name',
+                'users.email as u_email',
+                'roles.id as role_id',
+                'roles.role_name',
+                'departments.department_name',
+                'departments.id as dept_id',
+                'user_departments.id as profile_id',
+                'user_departments.default_access as default_access',
+            )
+            ->where('user_departments.user_id','!=',Auth::user()->id)
+            ->get();
     }
+
+    public static function get_all_dept_user($dept_id){
+        return DB::table('user_departments')
+            ->join('users', 'user_departments.user_id', '=', 'users.id')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+            ->join('roles', 'user_departments.role_id', '=', 'roles.id')
+            ->select(
+                'users.id as u_id',
+                'users.name as u_name',
+                'users.email as u_email',
+                'roles.id as role_id',
+                'roles.role_name',
+                'departments.department_name',
+                'departments.id as dept_id',
+                'user_departments.id as profile_id',
+                'user_departments.default_access as default_access',
+            )
+            ->where('user_departments.department_id', $dept_id)
+            ->where('user_departments.user_id','!=',Auth::user()->id)
+            ->get();
+    }
+
 }

@@ -17,6 +17,18 @@ class Department extends Model
     
     }
 
+    public static function getDepartmentsWithoutAdmin(){
+        return Department::select('departments.id', 'departments.department_name')
+            ->leftJoin('user_departments', function($join) {
+                $join->on('departments.id', '=', 'user_departments.department_id')
+                     ->where('user_departments.role_id', '=', 4);
+            })
+            ->whereNull('user_departments.role_id')
+            ->where('departments.id', '!=', 0)
+            ->get();
+    }
+    
+
     public static function getAllDepartmentsWithAbbreviation(){
 
         return Department::select('id', 'department_name', 'abbreviation')

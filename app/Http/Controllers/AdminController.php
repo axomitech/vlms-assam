@@ -20,13 +20,47 @@ class AdminController extends Controller
 {
     public function show_user()
     {
-        $results = AdminModel::get_all_user_details();
+        $currentDept = session('role_dept');
+
+        $currentRole = session('role');
+
+        // Fetch the department users only
+        $resultDept = AdminModel::get_all_dept_user($currentDept);
+    
+        // Fetch all users
+        $resultsAll = AdminModel::get_all_user_details();
+
+        $results = ($currentRole == 4)
+        ? $resultDept
+        : $resultsAll;
+
+        // Fetch all departments
         $departments = Department::getAllDepartments();
+
+        // Fetch departments that do not have a departmental admin
+        $departmentsWithoutAdmin = Department::getDepartmentsWithoutAdmin();
+
+        // Fetch all roles
         $roles = Role::getAllRoles();
-        // print_r($departments);
-        // exit;
-        return view('admin.user', compact('results', 'departments', 'roles'));
+
+        // Fetch roles available for super admins - DEPARTMENTAL ADMIN
+        $superAdminRoles = Role::getSuperAdminRoles();
+
+        // Based on the current role, fetch departmental admin roles or super admin roles
+        $rolesForAdmins = ($currentRole == 4)
+            ? Role::getDepartmentalAdminRoles()
+            : $superAdminRoles;
+
+        return view('admin.user', compact(
+            'results',
+            'departments',
+            'roles',
+            'superAdminRoles',
+            'departmentsWithoutAdmin',
+            'rolesForAdmins'
+        ));
     }
+
 
     public function add_user(Request $request)
     {
@@ -57,7 +91,8 @@ class AdminController extends Controller
             UserDepartment::create([
                 'user_id' => $user->id,
                 'department_id' => $request->dept_id,
-                'role_id' => $request->role_id
+                'role_id' => $request->role_id,
+                'default_access' => true
             ]);
 
             // Commit the transaction
@@ -132,13 +167,6 @@ class AdminController extends Controller
 
     public function default_access(Request $request)
     {
-        // $request->validate([
-        //     'user_id' => 'required|integer',
-        //     'department_id' => 'required|integer',
-        //     'role_id' => 'required|integer',
-        //     'default_access' => 'required|boolean',
-        // ]);
-
         $userDepartment = UserDepartment::where([
             ['user_id', $request->user_id],
             ['department_id', $request->department_id],

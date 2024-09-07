@@ -14,7 +14,7 @@
                                     Users
                                 </div>
                                 <div class="col-md-7 text-right">
-                                    <button type="button" class="btn btn-sm" style="background-color: #173f5f;color: white;"
+                                    <button type="button" class="btn btn-sm col-3" style="background-color: #173f5f;color: white;"
                                         id="btn-modal" data-toggle="modal" data-target="#addUserModal">Add<i
                                             class="fas fa-plus-circle" style="color: #24a0ed"></i></button>
 
@@ -192,6 +192,7 @@
                                         <input type="email" class="form-control" id="email" name="email" required>
                                     </div>
                                 </div>
+                                @if (session('role') == 5)
                                 <div class="row mt-2">
                                     <div class="col-md-3">
                                         <label for="dept_id">Department</label>
@@ -199,12 +200,15 @@
                                     <div class="col-md-9">
                                         <select class="form-control" id="dept_id" name="dept_id" required>
                                             <option value="">Select Department</option>
-                                            @foreach ($departments as $dept)
+                                            @foreach ($departmentsWithoutAdmin as $dept)
                                                 <option value="{{ $dept->id }}">{{ $dept->department_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
+                                @else
+                                 <input type="hidden" name="dept_id" value="{{ session('role_dept') }}">
+                                @endif
                                 <div class="row mt-2">
                                     <div class="col-md-3">
                                         <label for="role_id">Role</label>
@@ -212,7 +216,7 @@
                                     <div class="col-md-9">
                                         <select class="form-control" id="role_id" name="role_id" required>
                                             <option value="">Select Role</option>
-                                            @foreach ($roles as $role)
+                                            @foreach ($rolesForAdmins as $role)
                                                 <option value="{{ $role->id }}">{{ $role->role_name }}</option>
                                             @endforeach
                                         </select>

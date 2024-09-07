@@ -12,4 +12,12 @@ class Role extends Model
     public static function getAllRoles(){
         return Role::select('id','role_name')->get();
     }
+
+    public static function getSuperAdminRoles(){
+        return Role::select('id','role_name')->where('id',4)->get();
+    }
+    public static function getDepartmentalAdminRoles(){
+        return Role::select('id','role_name')->whereIn('id',[1,2,3])->get();
+
+    }
 }

@@ -267,7 +267,7 @@
                 @endif
             </ul>
           </li>
-          @if (session('role') == 5)  
+          @if (session('role') > 3)  
 
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -284,12 +284,15 @@
                   <p>User</p>
                 </a>
               </li>
+              @if (session('role') > 4)  
+
               <li class="nav-item">
                 <a href="{{ route('department.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Department</p>
                 </a>
               </li>
+              @endif
             </ul>
           </li>
           @endif

@@ -13,6 +13,7 @@ class UserDepartment extends Model
         'user_id',
         'department_id',
         'role_id',
+        'default_access'
     ];
 
     public static function roleUser($userId){

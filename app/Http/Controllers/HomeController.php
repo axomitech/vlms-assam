@@ -9,6 +9,7 @@ use App\Models\UserDepartment;
 use App\Models\Common;
 use App\Models\HomeModel;
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class HomeController extends Controller
 {
@@ -20,8 +21,6 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        
-        
     }
 
     /**
@@ -31,11 +30,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
+
         $sessionUser = UserDepartment::roleUser(Auth::user()->id);
         Log::channel('dblog')->info('This is a test log message.');
-        return view('home',compact('sessionUser'));
-
+        return view('home', compact('sessionUser'));
     }
 
     public function test()
@@ -44,16 +42,21 @@ class HomeController extends Controller
     }
     public function box()
     {
-        $profile = UserDepartment::getDefaultAccess(Auth::user()->id);
+        $profile = UserDepartment::getDefaultAccess(FacadesAuth::user()->id);
+        // Check if no profile has default access
+        if ($profile->isEmpty()) {
+            // Redirect to unauthorized page if no default access found
+            return abort(403, 'Unauthorized Access');
+        }
         $userDepartmentId = "";
         $roleId = "";
         $departmentId = "";
-        foreach($profile AS $value){
+        foreach ($profile as $value) {
             $userDepartmentId = $value['id'];
             $roleId = $value['role_id'];
             $departmentId = $value['department_id'];
         }
-        $this->sessionInitiate($userDepartmentId,$departmentId,$roleId);
+        $this->sessionInitiate($userDepartmentId, $departmentId, $roleId);
         // return view('home1');
 
         $diarized_count = HomeModel::get_diarized_count();
@@ -64,27 +67,28 @@ class HomeController extends Controller
         // print_r($diarized_details);
         // exit;
         //return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
-        return Redirect::away(route('letters')) ;
+        return Redirect::away(route('letters'));
     }
 
-    private function sessionInitiate($user,$department,$role){
+    private function sessionInitiate($user, $department, $role)
+    {
 
         session([
-            'role_user'=>$user
+            'role_user' => $user
         ]);
 
         session([
-            'role_dept'=>$department
+            'role_dept' => $department
         ]);
 
         session([
-            'role'=>$role
+            'role' => $role
         ]);
 
         session([
-            'department'=>Common::getSingleColumnValue('departments',[
-                'id'=>session('role_dept')
-            ],'department_name')
+            'department' => Common::getSingleColumnValue('departments', [
+                'id' => session('role_dept')
+            ], 'department_name')
         ]);
     }
 }
