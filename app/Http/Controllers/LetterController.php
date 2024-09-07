@@ -12,6 +12,7 @@ use App\Models\Department;
 use App\Models\LetterPriority;
 use App\Models\LetterCategory;
 use App\Models\Common;
+use App\Models\Recipient;
 use Carbon\Carbon;
 use Auth;
 use DB;
@@ -22,10 +23,11 @@ class LetterController extends Controller
      * Display a listing of the resource.
      */
     public function index($receipt)
-    {   $receipt = decrypt($receipt);
+    {
+        $receipt = decrypt($receipt);
         $priorities = LetterPriority::getAllPriorities();
         $letterCategories = LetterCategory::getAllLetterCategories();
-        return view('diarize.diarize',compact('priorities','letterCategories','receipt'));
+        return view('diarize.diarize', compact('priorities', 'letterCategories', 'receipt'));
     }
 
     /**
@@ -41,58 +43,57 @@ class LetterController extends Controller
      */
     public function store(StoreLetterRequest $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $jData = [];
             $letterPath = "";
             if ($request->hasFile('letter')) {
-                
+
                 if ($request->file('letter')->isValid()) {
 
                     $letterPath = $request->letter->store('public/letters');
-
-                }else{
+                } else {
 
                     $jData[1] = [
-                        'message'=>'The letter upload was unsuccessful! Please try again.',
-                        'candidate'=>'',
-                        'status'=>'error'
+                        'message' => 'The letter upload was unsuccessful! Please try again.',
+                        'candidate' => '',
+                        'status' => 'error'
                     ];
                 }
-
-            }else{
+            } else {
 
                 $jData[1] = [
-                    'message'=>'The uploaded letter is absent! Please try again.',
-                    'candidate'=>'',
-                    'status'=>'error'
+                    'message' => 'The uploaded letter is absent! Please try again.',
+                    'candidate' => '',
+                    'status' => 'error'
                 ];
             }
             DB::beginTransaction();
-    
-                try {
 
-                    $letterDetails = [
+            try {
 
-                        $request->category,
-                        $request->priority,
-                        $request->letter_date,
-                        $request->received_date,
-                        $request->diary_date,
-                        $request->letter_no,
-                        $request->subject,
-                        $letterPath,
-                        $request->auto_ack,
-                        $request->receipt,
-                    ];
+                $letterDetails = [
 
-                    $letterId = Letter::storeLetter($letterDetails);
-                    $abbreviation = Department::getDepartmentAbbreviation(session('role_dept'));
-                    $year = Carbon::now()->year;
-                    $crn = [
-                        $letterId,
-                        "CRN/".$abbreviation."/".$year."/".$letterId
-                    ];
-                    Letter::generateLetterCrn($crn);
+                    $request->category,
+                    $request->priority,
+                    $request->letter_date,
+                    $request->received_date,
+                    $request->diary_date,
+                    $request->letter_no,
+                    $request->subject,
+                    $letterPath,
+                    $request->auto_ack,
+                    $request->receipt,
+                ];
+
+                $letterId = Letter::storeLetter($letterDetails);
+                $abbreviation = Department::getDepartmentAbbreviation(session('role_dept'));
+                $year = Carbon::now()->year;
+                $crn = [
+                    $letterId,
+                    "CRN/" . $abbreviation . "/" . $year . "/" . $letterId
+                ];
+                Letter::generateLetterCrn($crn);
+                if ($request->receipt == 1) {
                     $senderDetails = [
 
                         $letterId,
@@ -105,65 +106,74 @@ class LetterController extends Controller
 
                     ];
                     Sender::storeSender($senderDetails);
-                    DB::commit();
-                    $jData[1] = [
-                        'message'=>'Letter is successfully diarized.',
-                        'status'=>'success',
-                        'letter_id'=>$letterId,
-                        'ack_check'=>$request->auto_ack
+                } else {
+                    $recipientDetails = [
+                        $letterId,
+                        $request->recipient_name,
+                        $request->recipient_designation,
+                        $request->recipient_mobile,
+                        $request->recipient_email,
+                        $request->organization,
+                        $request->address
                     ];
-
-                    session()->flash('letter_id', $letterId);
-                    session()->flash('ack_check', $request->auto_ack);
-                    
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    $jData[1] = [
-                        'message'=>'Something went wrong! Please try again.'.$e->getMessage(),
-                        'candidate'=>'',
-                        'status'=>'error'
-                    ];
+                    Recipient::storeRecipient($recipientDetails);
                 }
+                DB::commit();
+                $jData[1] = [
+                    'message' => 'Letter is successfully diarized.',
+                    'status' => 'success',
+                    'letter_id' => $letterId,
+                    'ack_check' => $request->auto_ack
+                ];
 
-                return response()->json($jData,200);
+                session()->flash('letter_id', $letterId);
+                session()->flash('ack_check', $request->auto_ack);
+            } catch (\Exception $e) {
+                DB::rollback();
+                $jData[1] = [
+                    'message' => 'Something went wrong! Please try again.' . $e->getMessage(),
+                    'candidate' => '',
+                    'status' => 'error'
+                ];
+            }
+
+            return response()->json($jData, 200);
         }
     }
 
     public function changeLetterStage(StageLetterRequest $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $jData = [];
             $message = "";
-            if($request->stage == 4){
+            if ($request->stage == 4) {
                 $message = "Letter is successfully marked completed!";
             }
 
-            if($request->stage == 5){
+            if ($request->stage == 5) {
                 $message = "Letter is successfully archived!";
             }
             DB::beginTransaction();
-    
-                try {
 
-                    Letter::changeLetterStage($request->stage_letter,$request->stage);
-                   
-                    DB::commit();
-                    $jData[1] = [
-                        'message'=>$message,
-                        'status'=>'success',
-                    ];
+            try {
 
-                    
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    $jData[1] = [
-                        'message'=>'Something went wrong! Please try again.'.$e->getMessage(),
-                        'candidate'=>'',
-                        'status'=>'error'
-                    ];
-                }
+                Letter::changeLetterStage($request->stage_letter, $request->stage);
 
-                return response()->json($jData,200);
+                DB::commit();
+                $jData[1] = [
+                    'message' => $message,
+                    'status' => 'success',
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                $jData[1] = [
+                    'message' => 'Something went wrong! Please try again.' . $e->getMessage(),
+                    'candidate' => '',
+                    'status' => 'error'
+                ];
+            }
+
+            return response()->json($jData, 200);
         }
     }
 
@@ -171,34 +181,34 @@ class LetterController extends Controller
     public function showLetters()
     {
         $letters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>1
-        ],[]);
-       
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 1
+        ], []);
+
         $actionSents = ActionSent::getForwardedActions();
         $letterIds = [];
         $i = 0;
-        foreach($actionSents AS $value){
+        foreach ($actionSents as $value) {
             $letterIds[$i] = $value['letter_id'];
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept')
-        ],$letterIds);
-        $receiverId = Common::getSingleColumnValue('user_departments',[
-            'department_id'=>session('role_dept'),
-            'user_id'=>Auth::user()->id,
-            'role_id'=>session('role')
-        ],'id');
+            'user_departments.department_id' => session('role_dept')
+        ], $letterIds);
+        $receiverId = Common::getSingleColumnValue('user_departments', [
+            'department_id' => session('role_dept'),
+            'user_id' => Auth::user()->id,
+            'role_id' => session('role')
+        ], 'id');
 
         $inboxLetters = Letter::showInboxLetters([
-            'action_sents.receiver_id'=>$receiverId,
+            'action_sents.receiver_id' => $receiverId,
         ]);
         $archivedLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>5
-        ],[]);
-        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters'));
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 5
+        ], []);
+        return view('diarize.letters', compact('letters', 'sentLetters', 'inboxLetters', 'archivedLetters'));
     }
 
     /**
