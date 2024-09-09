@@ -9,6 +9,11 @@ class AssignDeligate extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'deligate_id',
+        'hod_id',
+    ];
+
     public static function hodDeligateForLetter($letterId){
 
         return AssignDeligate::join('letter_assigns','hod_id','=','receiver_id')

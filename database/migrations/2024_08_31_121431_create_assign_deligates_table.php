@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('deligate_id')->index('user-dept-deligate')->comment('Deligate assigned to a department.');
             $table->unsignedBigInteger('hod_id')->index('user-dept-hod')->comment('HOD of a department to whome deligate is assigned.');
             $table->timestamps();
-            $table->foreign('deligate_id')->references('id')->on('user_departments');
-            $table->foreign('hod_id')->references('id')->on('user_departments');
+            $table->foreign('deligate_id')->references('id')->on('user_departments')->onDelete('cascade');
+            $table->foreign('hod_id')->references('id')->on('user_departments')->onDelete('cascade');
         });
     }
 

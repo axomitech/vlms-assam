@@ -44,4 +44,13 @@ class Department extends Model
         ])->value('abbreviation');
 
     }
+
+    public static function getDepartmentHODs($departmentId) {
+        return User::join('user_departments', 'users.id', '=', 'user_departments.user_id')
+            ->where('user_departments.department_id', $departmentId)
+            ->whereIn('user_departments.role_id', [3,6]) // Fetch HODs and Department Users(role_id = 3,6)
+            ->select('user_departments.id', 'users.name')
+            ->get();
+    }    
+
 }

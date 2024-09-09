@@ -14,9 +14,10 @@
                                     Users
                                 </div>
                                 <div class="col-md-7 text-right">
-                                    <button type="button" class="btn btn-sm col-3" style="background-color: #173f5f;color: white;"
-                                        id="btn-modal" data-toggle="modal" data-target="#addUserModal">Add<i
-                                            class="fas fa-plus-circle" style="color: #24a0ed"></i></button>
+                                    <button type="button" class="btn btn-sm col-3"
+                                        style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal"
+                                        data-target="#addUserModal">Add<i class="fas fa-plus-circle"
+                                            style="color: #24a0ed"></i></button>
 
                                 </div>
                             </div>
@@ -42,7 +43,7 @@
                                                     @foreach ($results as $value)
                                                         <tr>
                                                             <td>{{ $loop->iteration }}</td>
-                                                                <td>{{ $value->u_name }}</td>
+                                                            <td>{{ $value->u_name }}</td>
                                                             <td>{{ $value->u_email }}</td>
                                                             <td>{{ $value->department_name }}</td>
                                                             <td>{{ $value->role_name }}</td>
@@ -181,7 +182,8 @@
                                         <label for="u_name">User Name</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" id="u_name" name="u_name" required>
+                                        <input type="text" class="form-control" id="u_name" name="u_name"
+                                            required>
                                     </div>
                                 </div>
                                 <div class="row mt-2">
@@ -189,25 +191,27 @@
                                         <label for="email">Govt. Email</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            required>
                                     </div>
                                 </div>
                                 @if (session('role') == 5)
-                                <div class="row mt-2">
-                                    <div class="col-md-3">
-                                        <label for="dept_id">Department</label>
+                                    <div class="row mt-2">
+                                        <div class="col-md-3">
+                                            <label for="dept_id">Department</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <select class="form-control" id="dept_id" name="dept_id" required>
+                                                <option value="">Select Department</option>
+                                                @foreach ($departmentsWithoutAdmin as $dept)
+                                                    <option value="{{ $dept->id }}">{{ $dept->department_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-md-9">
-                                        <select class="form-control" id="dept_id" name="dept_id" required>
-                                            <option value="">Select Department</option>
-                                            @foreach ($departmentsWithoutAdmin as $dept)
-                                                <option value="{{ $dept->id }}">{{ $dept->department_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                                 @else
-                                 <input type="hidden" name="dept_id" value="{{ session('role_dept') }}">
+                                    <input type="hidden" name="dept_id" value="{{ session('role_dept') }}">
                                 @endif
                                 <div class="row mt-2">
                                     <div class="col-md-3">
@@ -218,6 +222,20 @@
                                             <option value="">Select Role</option>
                                             @foreach ($rolesForAdmins as $role)
                                                 <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- HOD Selection Dropdown (Initially Hidden) -->
+                                <div class="row mt-2" id="hod_selection_row" style="visibility: hidden;">
+                                    <div class="col-md-3">
+                                        <label for="hod_id">Department User / HOD</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select class="form-control" id="hod_id" name="hod_id">
+                                            <option value="">Select User</option>
+                                            @foreach ($departmentHODs as $hod)
+                                                <option value="{{ $hod->id }}">{{ $hod->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -236,8 +254,8 @@
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div> -->
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div> -->
             </div>
         </div>
     </div>
@@ -270,8 +288,7 @@
                         default_access: newState
                     },
                     success: function(response) {
-                        if (response.success) {
-                        } else {
+                        if (response.success) {} else {
                             alert('Error updating access status.');
                         }
                     },
@@ -298,11 +315,25 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('js/custom/common.js') }}"></script>
     <script>
+        document.getElementById('role_id').addEventListener('change', function() {
+            var selectedRole = this.value;
+            var hodSelectionRow = document.getElementById('hod_selection_row');
+
+            // Check if the selected role is "Delegate" (role_id = 2)
+            if (selectedRole == 2) {
+                hodSelectionRow.style.visibility = 'visible';
+                hodSelectionRow.style.height = 'auto'; // Restore height when visible
+            } else {
+                hodSelectionRow.style.visibility = 'hidden';
+                hodSelectionRow.style.height = '0'; // Hide but keep layout intact
+            }
+        });
+
         $(document).on('click', '.edit-user', function() {
             var userId = $(this).data('id');
             var userName = $(this).data('name');
             var userEmail = $(this).data('email');
-            var deptId = $(this).data('dept-id'); 
+            var deptId = $(this).data('dept-id');
             var roleId = $(this).data('role-id');
 
             $('#edit_user_id').val(userId);

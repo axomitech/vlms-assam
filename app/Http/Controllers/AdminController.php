@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AdminModel;
+use App\Models\AssignDeligate;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
@@ -26,13 +27,13 @@ class AdminController extends Controller
 
         // Fetch the department users only
         $resultDept = AdminModel::get_all_dept_user($currentDept);
-    
+
         // Fetch all users
         $resultsAll = AdminModel::get_all_user_details();
 
         $results = ($currentRole == 4)
-        ? $resultDept
-        : $resultsAll;
+            ? $resultDept
+            : $resultsAll;
 
         // Fetch all departments
         $departments = Department::getAllDepartments();
@@ -46,9 +47,12 @@ class AdminController extends Controller
         // Fetch roles available for super admins - DEPARTMENTAL ADMIN
         $superAdminRoles = Role::getSuperAdminRoles();
 
+        // Fetch Department HODs
+        $departmentHODs = Department::getDepartmentHODs($currentDept);
+
         // Based on the current role, fetch departmental admin roles or super admin roles
         $rolesForAdmins = ($currentRole == 4)
-            ? Role::getDepartmentalAdminRoles()
+            ? AdminModel::getDepartmentalAdminRoles($currentDept)
             : $superAdminRoles;
 
         return view('admin.user', compact(
@@ -57,7 +61,8 @@ class AdminController extends Controller
             'roles',
             'superAdminRoles',
             'departmentsWithoutAdmin',
-            'rolesForAdmins'
+            'rolesForAdmins',
+            'departmentHODs'
         ));
     }
 
@@ -70,6 +75,7 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:60|unique:users',
             'dept_id' => 'required|exists:departments,id',
             'role_id' => 'required|exists:roles,id',
+            'hod_id' => 'required_if:role_id,2|exists:user_departments,id|nullable', // HOD must be selected if role is 2 (Delegate)
         ]);
 
         if ($validator->fails()) {
@@ -88,12 +94,20 @@ class AdminController extends Controller
             ]);
 
             // Associate the user with the department and role
-            UserDepartment::create([
+            $userDepartment = UserDepartment::create([
                 'user_id' => $user->id,
                 'department_id' => $request->dept_id,
                 'role_id' => $request->role_id,
-                'default_access' => true
+                'default_access' => true,
             ]);
+
+            // If role_id is 2 (Delegate), assign the delegate to the HOD
+            if ($request->role_id == 2) {
+                AssignDeligate::create([
+                    'deligate_id' => $userDepartment->id, // Delegate's user_department id
+                    'hod_id' => $request->hod_id,          // HOD's user_department id
+                ]);
+            }
 
             // Commit the transaction
             FacadesDB::commit();
@@ -109,6 +123,7 @@ class AdminController extends Controller
             return back()->with('error', 'Failed to add user. Please try again.');
         }
     }
+
 
     public function edit_user(Request $request)
     {
