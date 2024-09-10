@@ -64,12 +64,12 @@
                                                                     class="btn btn-sm {{ $value->default_access ? 'btn-success' : 'btn-danger' }} toggle-access"
                                                                     data-user-id="{{ $value->u_id }}"
                                                                     data-dept-id="{{ $value->dept_id }}"
-                                                                    data-role-id="{{ $value->role_id }}">
-                                                                    {{ $value->default_access ? 'Active' : 'Inactive' }}
+                                                                    data-role-id="{{ $value->role_id }}"
+                                                                    title="{{ $value->default_access ? 'Active - Click to deactivate' : 'Inactive - Click to activate' }}">
+                                                                    <i
+                                                                        class="fa {{ $value->default_access ? 'fa-unlock' : 'fa-lock' }}"></i>
                                                                 </button>
-
                                                             </td>
-
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -254,8 +254,8 @@
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div> -->
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div> -->
             </div>
         </div>
     </div>
@@ -270,30 +270,82 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('.toggle-access').click(function() {
+            $('.toggle-access').click(function(event) {
+                event
+            .preventDefault(); // Prevent the default behavior (e.g., form submission or link action)
+
                 var userId = $(this).data('user-id');
                 var deptId = $(this).data('dept-id');
                 var roleId = $(this).data('role-id');
-                var currentState = $(this).text().trim() === 'Active';
-                var newState = !currentState;
 
-                $.ajax({
-                    url: "{{ route('user.default.access') }}",
-                    method: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        user_id: userId,
-                        department_id: deptId,
-                        role_id: roleId,
-                        default_access: newState
-                    },
-                    success: function(response) {
-                        if (response.success) {} else {
-                            alert('Error updating access status.');
-                        }
-                    },
-                    error: function(xhr) {
-                        alert('An error occurred.');
+                // Check if the current icon is fa-lock (inactive) or fa-unlock (active)
+                var icon = $(this).find('i');
+                var currentState = icon.hasClass('fa-unlock'); // true if active, false if inactive
+                var newState = !currentState; // Toggle the state
+
+                // Cache the button for further use
+                var button = $(this);
+                var action = newState ? 'activate' : 'deactivate'; // Define action for confirmation message
+
+                // Display SweetAlert2 confirmation dialog
+                Swal.fire({
+                    title: `Are you sure you want to ${action} this user?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: `Yes, ${action} it!`,
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If confirmed, proceed with the AJAX request
+                        $.ajax({
+                            url: "{{ route('user.default.access') }}",
+                            method: "POST",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                user_id: userId,
+                                department_id: deptId,
+                                role_id: roleId,
+                                default_access: newState
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    // Toggle the icon based on new state
+                                    if (newState) {
+                                        icon.removeClass('fa-lock').addClass(
+                                            'fa-unlock'); // Show unlock icon
+                                        button.removeClass('btn-danger').addClass(
+                                            'btn-success'); // Change to green
+                                        button.attr('title',
+                                            'Active - Click to deactivate'
+                                            ); // Update title
+                                    } else {
+                                        icon.removeClass('fa-unlock').addClass(
+                                            'fa-lock'); // Show lock icon
+                                        button.removeClass('btn-success').addClass(
+                                            'btn-danger'); // Change to red
+                                        button.attr('title',
+                                            'Inactive - Click to activate'
+                                            ); // Update title
+                                    }
+                                    // Show success message using SweetAlert2
+                                    Swal.fire(
+                                        'Success!',
+                                        `User has been ${action}d successfully.`,
+                                        'success'
+                                    ).then(() => {
+                                        // Reload the page after the success message
+                                    });
+                                } else {
+                                    Swal.fire('Error!', 'Error updating access status.',
+                                        'error');
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Error!', 'An error occurred.', 'error');
+                            }
+                        });
                     }
                 });
             });

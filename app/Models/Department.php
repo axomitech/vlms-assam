@@ -49,7 +49,7 @@ class Department extends Model
         return User::join('user_departments', 'users.id', '=', 'user_departments.user_id')
             ->where('user_departments.department_id', $departmentId)
             ->whereIn('user_departments.role_id', [3,6]) // Fetch HODs and Department Users(role_id = 3,6)
-            ->select('user_departments.id', 'users.name')
+            ->select('user_departments.id', 'users.name', 'user_departments.role_id')
             ->get();
     }    
 
