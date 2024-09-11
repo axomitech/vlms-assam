@@ -27,7 +27,7 @@ class StoreLetterAssignRequest extends FormRequest
 
             'assignee'=>'required|numeric|min:1|max:'.UserDepartment::max('id'),
             'assign_letter'=>'required|numeric|min:1|max:'.Letter::max('id'),
-            'assign_remarks'=>'required'
+            'assign_remarks'=>'nullable'
         ];
     }
 

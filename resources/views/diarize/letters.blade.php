@@ -337,9 +337,11 @@
                   <div class="form-group">
                     <input type="hidden" name="assign_letter" class="assign_letter" value="">
                     <input type="hidden" name="forward_from" class="forward_from" value="">
+                    @if(session('role') != 1)
                     <label for="assign_remarks" class="col-form-label">Remarks:</label>
                     <textarea class="form-control" id="assign_remarks" name="assign_remarks" rows="4"></textarea>
                     <label class="text text-danger assign_remarks"></label>
+                    @endif
                   </div>
                   <button type="button" class="btn btn-primary save-btn" data-url="{{ route('assign_letter') }}" data-form="#assign-form" data-message="That you want to assign this letter!" id="assign-btn">SEND</button>
                 </form>

@@ -32,4 +32,20 @@ class ActionDepartmentMap extends Model
             'action_status_id'=>$actionStatusDetails[1]
         ]);
    }
+
+   public static function confirmActionCompletion($actionId){
+    $completedActions =  ActionDepartmentMap::where([
+            'letter_action_id'=>$actionId,
+            'action_status_id'=>3
+        ])->count();
+
+        $actionDepartments =  ActionDepartmentMap::where([
+            'letter_action_id'=>$actionId
+        ])->distinct()->count('department_id');
+
+        return [
+            $completedActions,
+            $actionDepartments
+        ];
+   }
 }

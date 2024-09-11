@@ -5,12 +5,10 @@
                   $disabled = "disabled";
               @endphp
               @if($forwardStatus <= 0)
-              @if($finalizeStatus)
                 @php
                   $disabled = "";
                 @endphp
               @endif
-            @endif
 <div class="row">
   
   @if($markComplete > 0)
@@ -27,10 +25,10 @@
   @endphp 
   @if (!$finalizeStatus)
       @if (count($actions) > 0)
-      <form id="finalize-form">
+      {{--<form id="finalize-form">
         <input type="hidden" name="finalize_letter" id="finalize_letter" value="{{$letter_id}}">
       </form>
-      <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to save and send these actions for HOD!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">SAVE & SENT</button>
+      <button type="button" class="btn btn-outline-primary btn-sm save-btn mb-1" data-form="#finalize-form" data-message="That you want to save and send these actions for HOD!" id="save-finalize-btn" data-url="{{route('finalize_letter')}}">SAVE & SENT</button>--}}
       
       @endif
     @else
@@ -38,9 +36,7 @@
       $disable = "disabled";
       @endphp  
     @endif
-  <div class="col-md-2">
-    <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg-action" {{$disable}}>ADD ACTION</button>
-  </div>
+  
   <div class="col-md-2">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
   </div>
@@ -52,7 +48,7 @@
       <div class="card-header">
         <ul class="nav nav-pills nav-fill nav-justified" id="custom-tabs-four-tab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Actions</a>
+            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Action List</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
@@ -63,6 +59,9 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
             <div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg-action" {{$disable}}><i class="fas fa-plus"></i></button>
+              </div>
               <table class="table table-sm table-striped text text-sm text-justify" id="letter-table">
                 <thead>
                     <tr>
