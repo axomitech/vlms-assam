@@ -2,18 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HomeModel;
 use Illuminate\Http\Request;
 use App\Models\Letter;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $letters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept')
-        ],[]);
-        
-        return view('dashboard.dashboard', compact('letters'));
+            'user_departments.department_id' => session('role_dept')
+        ], []);
+        $diarized_count = HomeModel::get_diarized_count();
+        $sent_count = HomeModel::get_sent_count();
+        $archive_count = HomeModel::get_archive_count();
+        $diarized_details = HomeModel::get_diarized_details();
+        $inbox_count = HomeModel::get_inbox_count();
+        $issue_count = HomeModel::get_issue_count();
+
+        $receipt_count = HomeModel::get_receipt_count();
+        $action_count = HomeModel::get_actions_count();
+
+        return view('dashboard.dashboard', compact('letters', 'diarized_count', 'sent_count', 'archive_count', 'diarized_details', 'inbox_count', 'receipt_count', 'issue_count', 'action_count'));
         // return response()->json($data);
     }
     public function dashboard_data()
@@ -37,7 +48,7 @@ class DashboardController extends Controller
 
         $data2 = [
             'labels' => ['In process', 'Not started', 'completed', 'Archived'],
-            'datasets'=> [
+            'datasets' => [
                 [
                     'data' => [12, 5, 10, 5],
                     'backgroundColor' => [
@@ -66,5 +77,28 @@ class DashboardController extends Controller
             'chart1' => $data1,
             'chart2' => $data2
         ]);
+    }
+
+    public function receipt_box()
+    {
+        $categories = HomeModel::get_receipt_count_by_category();
+        return view('dashboard.receipt', compact('categories'));
+    }
+
+    public function issue_box(){
+        $categories = HomeModel::get_issue_count_by_category();
+        return view('dashboard.issue',compact('categories'));
+    }
+
+    public function fetchReceiptByCategory($category_id)
+    {
+        $letters = HomeModel::get_receipt_by_category($category_id);
+        return response()->json($letters);
+    }
+
+    public function fetchIssueByCategory($category_id)
+    {
+        $letters = HomeModel::get_issue_by_category($category_id);
+        return response()->json($letters);
     }
 }

@@ -41,6 +41,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home1', [App\Http\Controllers\HomeController::class, 'box'])->name('home1');
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard-data', [App\Http\Controllers\DashboardController::class, 'dashboard_data'])->name('dashboard-data');
+    Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
+    Route::get('/issue_box', [App\Http\Controllers\DashboardController::class, 'issue_box'])->name('issue_box');
+    Route::get('/receipt/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchReceiptByCategory'])->name('receipt_by_category');Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
+    Route::get('/issue/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchIssueByCategory'])->name('issue_by_category');
+
+
     Route::get('/pdf_genarator/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF'])->name('pdf_genarator');
     Route::get('/pdf_downloadAll/{id}', [App\Http\Controllers\PDFController::class, 'downloadAll'])->name('pdf_downloadAll');
     Route::get('/acknowledge_email/{id}', [App\Http\Controllers\AcknowledgeController::class, 'index'])->name('acknowledge_email');

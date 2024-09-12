@@ -57,7 +57,6 @@ class HomeController extends Controller
             $departmentId = $value['department_id'];
         }
         $this->sessionInitiate($userDepartmentId, $departmentId, $roleId);
-        // return view('home1');
 
         $diarized_count = HomeModel::get_diarized_count();
         $sent_count = HomeModel::get_sent_count();
@@ -66,7 +65,7 @@ class HomeController extends Controller
         $inbox_count = HomeModel::get_inbox_count();
         // print_r($diarized_details);
         // exit;
-        //return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
+        // return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
         return Redirect::away(route('letters'));
     }
 

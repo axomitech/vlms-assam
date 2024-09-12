@@ -1,12 +1,182 @@
 @extends('layouts.app')
 
     @section('content')
-        <div class="row ">
+        <div class="row">
             <div class="col-md-12 text-center">
                 <h4>DASHBOARD</h4>
             </div>
         </div>
         <div class="row mt-1">
+            <div class="box-body col-md-12">
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            @if (session('role') > 0)  
+                                <div class="col-md-4 col-sm-4">
+                                    <!-- small box -->
+                                    <a href="{{route('receipt_box')}}">
+                                    <div class="small-box" style="background-color: #55fe9b;">
+                                        <div class="inner">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h3 style="color:white;">{{ $receipt_count}} </h3>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <h3 style="font-size: 22px;color:white;">Receipt </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <span style="font-size: 40px;color:white;"><i class="fas fa-file-invoice"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <a href="{{route('letters')}}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <!-- small box -->
+                                    <a href="{{route('issue_box')}}">
+                                    <div class="small-box" style="background-color: #e65d4b;">
+                                        <div class="inner">
+                                        <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h3 style="color:white;">{{ $issue_count}} </h3>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <h3 style="font-size: 22px;color:white;">Issue</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <span style="font-size: 40px;color:white;"><i class="fas fa-file"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <a href="{{route('letters')}}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <!-- small box -->
+                                    <a href="{{route('letters')}}">
+                                    <div class="small-box" style="background-color: #f8ed58;">
+                                        <div class="inner">
+                                        <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h3 style="color:white;">{{ $action_count}} </h3>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <h3 style="font-size: 22px;color:white;">Actions </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <span style="font-size: 40px;color:white;"><i class="fas fa-tasks"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <a href="{{route('letters')}}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                    </div>
+                                    </a>
+                                </div>
+                            @endif  
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="box-body col-md-12">
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            @if (session('role') > 0)  
+                                <div class="col-md-4 col-sm-4">
+                                    <!-- small box -->
+                                    <a href="{{route('inbox_letters')}}">
+                                    <div class="small-box" style="background-color: #8355fe;">
+                                        <div class="inner">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h3 style="color:white;">{{ $inbox_count}} </h3>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <h3 style="font-size: 22px;color:white;">Inbox </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <span style="font-size: 40px;color:white;"><i class="far fa-envelope"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <a href="{{route('letters')}}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <!-- small box -->
+                                    <a href="{{route('outbox')}}">
+                                    <div class="small-box" style="background-color: #3CAEA3;">
+                                        <div class="inner">
+                                        <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h3 style="color:white;">{{ $sent_count}} </h3>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <h3 style="font-size: 22px;color:white;">Sent</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <span style="font-size: 40px;color:white;"><i class="fas fa-share-square"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <a href="{{route('letters')}}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <!-- small box -->
+                                    <a href="{{route('letters')}}">
+                                    <div class="small-box" style="background-color: #ff9e69;">
+                                        <div class="inner">
+                                        <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h3 style="color:white;">{{ $archive_count}} </h3>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <h3 style="font-size: 22px;color:white;">Archived </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <span style="font-size: 40px;color:white;"><i class="fas fa-file-archive"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <a href="{{route('letters')}}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                    </div>
+                                    </a>
+                                </div>
+                            @endif  
+                        </div>
+                    </div>
+                </section>
+            </div>
             <div class="col-md-6">
                 <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
                     <div class="box-header">

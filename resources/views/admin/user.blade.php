@@ -240,9 +240,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mt-5">
+                                <div class="row mt-4">
                                     <div class="text-center col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-sm"
+                                        <button type="submit" class="btn btn-primary btn-sm col-3"
                                             style="background-color: #173f5f; color: white;">
                                             Submit
                                         </button>

@@ -39,8 +39,8 @@ class StoreLetterRequest extends FormRequest
             // Conditional validation based on receipt value
             'sender_name' => 'required_if:receipt,1',
             'sender_designation' => 'required_if:receipt,1',
-            'sender_mobile' => 'required_if:receipt,1|string|min:10|max:10',
-            'sender_email' => 'required_if:receipt,1|email',
+            'sender_mobile' => 'required_if:receipt,1|string|min:10|max:10|nullable',
+            'sender_email' => 'required_if:receipt,1|email|nullable',
             'recipient_name' => 'required_if:receipt,0',
             'recipient_designation' => 'required_if:receipt,0',
             'recipient_mobile' => 'required_if:receipt,0|string|min:10|max:10',
