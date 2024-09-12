@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateActionSentRequest;
 use App\Models\LetterActionResponse;
 use App\Models\UserDepartment;
 use App\Models\ActionStatus;
+use App\Models\LetterAction;
 use App\Models\ActionSent;
 use App\Models\Letter;
 use App\Models\Common;
@@ -63,6 +64,7 @@ class ActionSentController extends Controller
         $letterPath = Common::getSingleColumnValue('letters',[
             'id'=>$letterId,
         ],'letter_path');
+        $letterActions = LetterAction::getLetterActions($letterId);
         $actionStatuses = ActionStatus::getAllActionStatus();
         $responses = LetterActionResponse::getResponses($actionSentId);
         $disableResponse = "";
@@ -71,7 +73,7 @@ class ActionSentController extends Controller
                 $disableResponse = "disabled";
             }
         }
-        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId','responses','disableResponse'));
+        return view('hod.respond',compact('actionSentId','letterId','letterPath','actionStatuses','actionDeptId','responses','disableResponse','letterActions','letterActions'));
     }
 
     public function getActionResponses(Request $request){

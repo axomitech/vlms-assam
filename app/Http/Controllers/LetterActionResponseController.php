@@ -43,7 +43,7 @@ class LetterActionResponseController extends Controller
             $actMap = $request->action_map;
             $actDept = $request->action_dept;
             $letter = $request->forward_letter;
-
+            Letter::finalizeLetter($letter);
             for($i = 0; $i < count($actDept); $i++){
 
                 ActionSent::storeActionForward([
@@ -177,6 +177,20 @@ class LetterActionResponseController extends Controller
                         $actionDeptId,
                         $actionStatus
                     ]);
+                    $completedCount = 0;
+                    $actionDepartment = 0;
+                    $responseActions = $request->acts;
+                    for($i = 0; $i < count($responseActions); $i++){
+                        $completeConfirm = ActionDepartmentMap::confirmActionCompletion($responseActions[$i]);
+                        $completedCount += $completeConfirm[0];
+                        $actionDepartment += $completeConfirm[1];
+                    }
+                    if($completedCount == $actionDepartment){
+                    
+                        Letter::changeLetterStage($request->letter,4);
+
+                    }
+
                     DB::commit();
                     $jData[1] = [
                         'message'=>'Response is successfully stored.',

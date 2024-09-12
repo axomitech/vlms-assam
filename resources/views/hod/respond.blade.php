@@ -77,6 +77,13 @@
                     </div>
                     <input type="hidden" name="act_sent" value="{{$actionSentId}}">
                     <input type="hidden" name="act_dept" value="{{$actionDeptId}}">
+                    @foreach ($letterActions as $value)
+
+                    <input type="hidden" name="acts[]" value="{{$value['action_id']}}">
+                      
+                    @endforeach
+                    <input type="hidden" name="letter" value="{{$letterId}}">
+
                     <div class="form-group row">
                      <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_response') }}" data-form="#note-form" data-message="That you want to respond to the forwared actions!" id="save-response-btn">SAVE</button>
                    </div>
