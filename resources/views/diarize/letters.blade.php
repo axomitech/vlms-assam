@@ -33,7 +33,7 @@
                                         <th>Diarize No.</th>
                                         <th>Subject</th>
                                         <th>Letter No.</th>
-                                        <th>Sender</th>
+                                        <th>Name</th>
                                         <th>Category</th>
                                         <th>Letter</th>
                                     </tr>
@@ -65,7 +65,11 @@
                                             </td>
 
                                             <td>{{ $value['letter_no'] }}</td>
-                                            <td>{{ $value['sender_name'] }}</td>
+                                            <td>
+                                                    {{ $value->recipient_name }}
+                                                    {{ $value->sender_name }}
+                                            </td>
+                                            
                                             <td>
                                                 @if ($value['receipt'] == true)
                                                     Receipt

@@ -117,7 +117,7 @@
                                                                     class="text text-danger received_date fw-bold"></label>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label class="form-label fw-bold">Diary Date<span
+                                                                <label class="form-label fw-bold">Diarize Date<span
                                                                         class="text text-danger fw-bold">*</span></label>
                                                                 <input type="date" name="diary_date" id="diary_date"
                                                                     class="form-control form-control-sm"

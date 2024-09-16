@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="row">
         <div class="col-md-12 text-center">
             <button class="btn btn-dark btn-sm" id="resetView" style="float: left; display: none;">
@@ -65,6 +66,81 @@
                 </div> <!-- End of the outer row -->
                 @endif
         </div>
+        <div class="col-md-6 p-5 bg-light mx-auto" style="width:500px; height:500px;">
+            <canvas id="myPieChart"></canvas>
+            <script>
+                // Get data from Laravel
+                const categories = @json($categories);
+
+                // Prepare data for the pie chart
+                const labels = categories.map(item => item.category_name);
+                const dataValues = categories.map(item => item.count);
+
+                // Create the pie chart
+                const ctx = document.getElementById('myPieChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Receipt Count by Category',
+                            data: dataValues,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (context.parsed !== null) {
+                                            label += ': ' + context.parsed + ' Receipts';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            },
+                            datalabels: {
+                                color: '#000',
+                                formatter: (value, context) => {
+                                    let total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                    let percentage = ((value / total) * 100).toFixed(2);
+                                    return `${percentage}%`;
+                                },
+                                anchor: 'end',
+                                align: 'end',
+                                offset: 4,
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+
+        </div>
         </section>
     </div>
     </div>
@@ -84,6 +160,7 @@
                                         <th scope="col"><small><b>Letter No.</b></small></th>
                                         <th scope="col"><small><b>Sender Name</b></small></th>
                                         <th scope="col"><small><b>Received Date</b></small></th>
+                                        <th scope="col"><small><b>Action</b></small></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,31 +192,31 @@
     <script src="{{ asset('js/custom/common.js') }}"></script>
     <script>
         $(document).ready(function() {
-    // Handle card click
-    $('.category-card').on('click', function(e) {
-        e.preventDefault();
+            // Handle card click
+            $('.category-card').on('click', function(e) {
+                e.preventDefault();
 
-        // Get category info
-        let categoryId = $(this).data('category-id');
-        let categoryName = $(this).data('category-name');
+                // Get category info
+                let categoryId = $(this).data('category-id');
+                let categoryName = $(this).data('category-name');
 
-        // Fetch letters using AJAX
-        $.ajax({
-            url: '/receipt/' + categoryId,
-            type: 'GET',
-            success: function(response) {
-                console.log(response);
-                
-                // Show selected category name
-                $('#selectedCategoryName').text('Receipts from ' + categoryName);
+                // Fetch letters using AJAX
+                $.ajax({
+                    url: '/receipt/' + categoryId,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log(response);
 
-                // Populate table with letters
-                let tableBody = '';
-                let serialNumber = 1; // Initialize serial number
+                        // Show selected category name
+                        $('#selectedCategoryName').text('Receipts from ' + categoryName);
 
-                response.forEach(function(letter) {
-                    let truncatedSubject = letter.subject.length > 100
-                        ? `<div class="text-block" id="textBlock${letter.id}">
+                        // Populate table with letters
+                        let tableBody = '';
+                        let serialNumber = 1; // Initialize serial number
+
+                        response.forEach(function(letter) {
+                            let truncatedSubject = letter.subject.length > 100 ?
+                                `<div class="text-block" id="textBlock${letter.id}">
                               <p class="shortText text-justify text-sm">
                                   ${letter.subject.substring(0, 100)}...
                                   <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
@@ -150,53 +227,53 @@
                                       <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
                                   </p>
                               </div>
-                          </div>`
-                        : `<p>${letter.subject}</p>`;
+                          </div>` :
+                                `<p>${letter.subject}</p>`;
 
-                    tableBody += `<tr>
+                            tableBody += `<tr>
                         <td><small>${serialNumber++}</small></td>
                         <td><small>${letter.crn}</small></td>
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.sender_name}</small></td>
                         <td><small>${letter.received_date}</small></td>
+        <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                     </tr>`;
+                        });
+
+                        $('#lettersList tbody').html(tableBody);
+
+                        // Show the table and back button, hide cards
+                        $('#cardsContainer').hide();
+                        $('#lettersTable').show();
+                        $('#resetView').show();
+                    }
                 });
+            });
 
-                $('#lettersList tbody').html(tableBody);
+            // Handle back button click to reset view
+            $('#resetView').on('click', function() {
+                $('#lettersTable').hide();
+                $('#resetView').hide();
+                $('#cardsContainer').show();
+                $('#selectedCategoryName').text('Receipt');
+            });
 
-                // Show the table and back button, hide cards
-                $('#cardsContainer').hide();
-                $('#lettersTable').show();
-                $('#resetView').show();
-            }
+            // Handle Read More/Read Less click
+            $(document).on('click', '.readMore', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                $(`#textBlock${id} .shortText`).hide();
+                $(`#textBlock${id} .longText`).show();
+            });
+
+            $(document).on('click', '.readLess', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                $(`#textBlock${id} .shortText`).show();
+                $(`#textBlock${id} .longText`).hide();
+            });
         });
-    });
-
-    // Handle back button click to reset view
-    $('#resetView').on('click', function() {
-        $('#lettersTable').hide();
-        $('#resetView').hide();
-        $('#cardsContainer').show();
-        $('#selectedCategoryName').text('Receipt');
-    });
-
-    // Handle Read More/Read Less click
-    $(document).on('click', '.readMore', function(e) {
-        e.preventDefault();
-        let id = $(this).data('id');
-        $(`#textBlock${id} .shortText`).hide();
-        $(`#textBlock${id} .longText`).show();
-    });
-
-    $(document).on('click', '.readLess', function(e) {
-        e.preventDefault();
-        let id = $(this).data('id');
-        $(`#textBlock${id} .shortText`).show();
-        $(`#textBlock${id} .longText`).hide();
-    });
-});
-
     </script>
     <script>
         $(function() {

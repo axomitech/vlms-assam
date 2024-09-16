@@ -93,8 +93,85 @@
                         </div>
                     </div>
                 </div>
+                
             </section>
+            
         </div>
+    </div>
+    <div class="col-md-6 p-5 bg-light mx-auto" style="width:500px; height:500px">
+        <canvas id="myPieChart"></canvas>
+        <script>
+            // Get data from Laravel
+            const categories = @json($categories);
+    
+            // Prepare data for the pie chart
+            const labels = categories.map(item => item.category_name);
+            const dataValues = categories.map(item => item.count);
+    
+            // Create the pie chart
+            const ctx = document.getElementById('myPieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Issue Count by Category',
+                        data: dataValues,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (context.parsed !== null) {
+                                        label += ': ' + context.parsed + ' Issues';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            color: '#000',
+                            formatter: (value, context) => {
+                                let total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                let percentage = ((value / total) * 100).toFixed(2);
+                                return `${percentage}%`;
+                            },
+                            anchor: 'end',
+                            align: 'end',
+                            offset: 4,
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    
     </div>
 @endsection
 

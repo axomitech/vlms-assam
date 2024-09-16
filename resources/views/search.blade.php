@@ -144,16 +144,39 @@
             });
         });
     </script>
-    <script>
-       $(function () {
-                $("#letter-table").DataTable({
-                "responsive": true, "lengthChange": false, "autoWidth": false,
-                "buttons": [ "excel", "pdf", "print"]
-                }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
-                
-            });
+   <script>
+    $(document).ready(function() {
+        $('#letter-table').DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "destroy": true,  // Reinitialize if needed
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export Excel',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: 'Export PDF',
+                    className: 'btn btn-danger'
+                },
+                {
+                    extend: 'print',
+                    text: 'Print',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend: 'colvis',
+                    text: 'Column Visibility',
+                    className: 'btn btn-info'
+                }
+            ]
+        }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');  // Adjust the container as per your layout
+    });
+</script>
 
-    </script>
     
 @endsection
 @endsection
