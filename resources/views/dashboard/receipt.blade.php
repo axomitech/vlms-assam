@@ -202,7 +202,7 @@
 
                 // Fetch letters using AJAX
                 $.ajax({
-                    url: '/receipt/' + categoryId,
+                    url: "{{url('/receipt')}}/"+categoryId,
                     type: 'GET',
                     success: function(response) {
                         console.log(response);
