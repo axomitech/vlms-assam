@@ -192,14 +192,7 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item">
-                <a href="{{route('home1')}}" class="nav-link">
-                <i class="nav-icon fas fa-home"></i>
-                  <p>
-                  Home
-                  </p>
-                </a>
-            </li>
+            
             <li class="nav-item">
                 <a href="{{route('dashboard')}}" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
@@ -208,6 +201,14 @@
                   </p>
                 </a>
             </li>
+            <li class="nav-item">
+              <a href="{{route('home1')}}" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+                <p>
+                Letters
+                </p>
+              </a>
+          </li>
             @if (session('role') == 1)  
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -292,7 +293,7 @@
                 </li>
                 @endif
             </ul>
-          </li>
+          </li> --}}
           @if (session('role') > 3)  
 
           <li class="nav-item">
@@ -326,7 +327,7 @@
               <a href="{{route('test')}}" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
                 <p>
-                  logout
+                  Logout
                 </p>
               </a>
           </li>
