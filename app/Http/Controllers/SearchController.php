@@ -38,7 +38,12 @@ class SearchController extends Controller
         $table = '<table class="table table-hover table-striped table-sm table-responsive" id="letter-table">
         <thead>
             <tr>
-                <th>#</th><th style="width:12%">Diary</th><th style="width:50%">Letter</th><th>Sender</th><th>Category</th><th>Actions</th>
+                <th>#</th>
+                <th style="width:12%">Diarize</th>
+                <th style="width:50%">Letter</th>
+                <th>Sender/Recipient</th>
+                <th>Category</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>';
@@ -48,27 +53,33 @@ class SearchController extends Controller
 
         if (!empty($results)) {
             foreach ($results as $result) {
-                $received_date = $result->subject;
                 $has_data = 1;
+
+                // Determine the status for the first column based on receipt (Issue/Receipt)
+                $status = !$result->receipt ? 'Issued' : 'Received';
+
+                // Determine "From" or "To" based on receipt
+                $from_to = !$result->receipt ? 'To' : 'From';
+                $name_designation = !$result->receipt
+                    ? ($result->recipient_name ? $result->recipient_name : 'N/A') . '<br>' . ($result->recipient_designation ? $result->recipient_designation : 'N/A') . '<br>' . ($result->recipient_organization ? $result->recipient_organization : 'N/A')
+                    : ($result->sender_name ? $result->sender_name : 'N/A') . '<br>' . ($result->sender_designation ? $result->sender_designation : 'N/A') . '<br>' . ($result->sender_organization ? $result->sender_organization : 'N/A');
+
                 $table .= '<tr>';
-                $table .= '<td>' . $i++ . '.</td><td><small><b>' . $result->crn . '</b><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>Received</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '</small></td>';
+                $table .= '<td>' . $i++ . '.</td>';
+                $table .= '<td><small><b>' . $result->crn . '</b><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '</small></td>';
                 $table .= '<td><small><i>Subject</i>: ' . $result->subject . '<br><i>Letter No.</i>: ' . $result->letter_no . '<br><i>Letter Date</i>: ' . date_format(date_create($result->letter_date), "d/m/Y") . '</small></td>';
-                $table .= '<td><small><i>From</i>: ' . $result->sender_name . '<br>' . $result->sender_designation . ', ' . $result->organization . '</small></td>';
+                $table .= '<td><small><i>' . $from_to . '</i>: ' . $name_designation . '</small></td>';
                 $table .= '<td><small>' . $result->category_name . '</small></td>';
-                $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->id]) . '"><i class="fas fa-download" style="color: #174060"></i><a></td>';
+                $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->id]) . '"><i class="fas fa-download" style="color: #174060"></i></a></td>';
                 $table .= '</tr>';
             }
         }
 
-        $table .=  '    </tbody>
-                    </table>';
+        $table .= '</tbody></table>';
 
         if ($has_data == 0) {
-            $table = '<h6 style="color:red;"> No results found. Please enter correct combination.</h6>';
+            $table = '<h6 style="color:red;">No results found. Please enter a correct combination.</h6>';
         }
-
-
-
 
         $data = ['diarized_no' => $table];
         return response()->json($data);
