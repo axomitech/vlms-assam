@@ -36,10 +36,11 @@
       $disable = "disabled";
       @endphp  
     @endif
-  
+  @if(count($actions) > 0)
   <div class="col-md-2">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
   </div>
+  @endif
 </div>
 
 <div class="row  bg-danger1">
