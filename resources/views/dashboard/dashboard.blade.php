@@ -99,7 +99,7 @@
                             @if (session('role') > 0)  
                                 <div class="col-md-4 col-sm-4">
                                     <!-- small box -->
-                                    <a href="{{route('inbox_letters')}}">
+                                    <a href="{{ route('letters', ['tab' => 'inbox']) }}">
                                     <div class="small-box" style="background-color: #8355fe;">
                                         <div class="inner">
                                             <div class="row">
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <!-- small box -->
-                                    <a href="{{route('outbox')}}">
+                                    <a href="{{ route('letters', ['tab' => 'sent']) }}">
                                     <div class="small-box" style="background-color: #3CAEA3;">
                                         <div class="inner">
                                         <div class="row">
@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <!-- small box -->
-                                    <a href="{{route('letters')}}">
+                                    <a href="{{ route('letters', ['tab' => 'archive']) }}">
                                     <div class="small-box" style="background-color: #ff9e69;">
                                         <div class="inner">
                                         <div class="row">
@@ -342,7 +342,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            {{-- <div class="col-md-12">
                 <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-100">
                     <!-- <div class="box-header">
                         <div class="box-tools">
@@ -401,7 +401,7 @@
                         </section>                 
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     @endsection
     @section('scripts')

@@ -554,5 +554,24 @@
 
         });
     </script>
+    <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the URL parameter 'tab'
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        // Check if 'tab' exists and switch to the appropriate tab
+        if (tab) {
+            if (tab === 'inbox') {
+                document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+            } else if (tab === 'sent') {
+                document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+            } else if (tab === 'archive') {
+                document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+            }
+        }
+    });
+</script>
 @endsection
 @endsection

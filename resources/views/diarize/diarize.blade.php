@@ -23,8 +23,8 @@
                                                     <li class="nav-item">
                                                         <a class="nav-link active active-link" id="custom-tabs-one-home-tab"
                                                             data-toggle="pill" href="#custom-tabs-one-home" role="tab"
-                                                            aria-controls="custom-tabs-one-home" aria-selected="true">Letter
-                                                            Details</a>
+                                                            aria-controls="custom-tabs-one-home" aria-selected="true"><strong>Letter Details</strong>
+                                                        </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link disabled disabled-link"
@@ -32,9 +32,9 @@
                                                             href="#custom-tabs-one-profile" role="tab"
                                                             aria-controls="custom-tabs-one-profile" aria-selected="false">
                                                             @if ($receipt == 1)
-                                                                Sender Details
+                                                            <strong>Sender Details</strong>
                                                             @else
-                                                                Recipient Details
+                                                            <strong>Recipient Details</strong>
                                                             @endif
                                                         </a>
                                                     </li>
