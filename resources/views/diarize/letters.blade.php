@@ -108,12 +108,6 @@
                                                                 data-placement="top" title="View/Update"></i></a>
                                                     @endif
                                                     &nbsp;
-                                                    <a class="file-btn" data-toggle="collapse" href="#collapseExample"
-                                                        role="button" aria-expanded="false"
-                                                        aria-controls="collapseExample" target="__blank"
-                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
-                                                            class="fas fa-file-pdf text-danger"></i></a>
-                                                    &nbsp;
                                                     <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                         class="action-link"><i
                                                             class="fas fa-envelope-open-text text-success"
@@ -281,12 +275,7 @@
                                                     @endif
                                                 @endif
                                                 @if (session('role') == 3)
-                                                    &nbsp;
-                                                    <a class="file-btn" data-toggle="collapse" href="#collapseExample"
-                                                        role="button" aria-expanded="false"
-                                                        aria-controls="collapseExample" target="__blank"
-                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
-                                                            class="fas fa-file-pdf text-danger"></i></a>
+                                                    
                                                     &nbsp;
                                                     <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                         class="action-link"><i
@@ -381,12 +370,7 @@
                                                             title="View/Update"></i></a>
                                                 @endif
                                                 @if (session('role') == 3)
-                                                    &nbsp;
-                                                    <a class="file-btn" data-toggle="collapse" href="#collapseExample"
-                                                        role="button" aria-expanded="false"
-                                                        aria-controls="collapseExample" target="__blank"
-                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
-                                                            class="fas fa-file-pdf text-danger"></i></a>
+                                                    
                                                     &nbsp;
                                                     <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                         class="action-link"><i

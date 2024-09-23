@@ -36,10 +36,11 @@
       $disable = "disabled";
       @endphp  
     @endif
-  
+  @if(count($actions) > 0)
   <div class="col-md-2">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
   </div>
+  @endif
 </div>
 
 <div class="row  bg-danger1">
@@ -297,7 +298,9 @@
                         <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
                           <option value="">SELECT DEPARTMENT</option>
                           @foreach ($departments as $value)
+                          @if($value['id'] != session('role_dept'))
                           <option value="{{$value['id']}}">{{$value['department_name']}}</option>
+                          @endif
                           @endforeach
                         </select>
                         <label class="text text-danger departments0"></label>

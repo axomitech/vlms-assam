@@ -143,7 +143,9 @@
                         <select class="form-control js-example-basic-multiple" name="departments[]" multiple="multiple">
                           <option value="">SELECT DEPARTMENT</option>
                           @foreach ($departments as $value)
+                          @if($value['id'] != session('role_dept'))
                           <option value="{{$value['id']}}">{{$value['department_name']}}</option>
+                          @endif
                           @endforeach
                         </select>
                         <label class="text text-danger departments0"></label>
