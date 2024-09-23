@@ -173,10 +173,10 @@ class SearchModel extends Model
     public static function get_letter_search($inputData)
     {
         $query = DB::table('letters')
-        ->leftJoin('senders', 'letters.id', '=', 'senders.letter_id')
-        ->leftJoin('recipients', 'letters.id', '=', 'recipients.letter_id')
-        ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
-        ->select('letters.*', 'senders.sender_name', 'senders.sender_designation', 'senders.organization as sender_organization', 'recipients.recipient_name', 'recipients.recipient_designation', 'recipients.organization as recipient_organization', 'letter_categories.category_name');
+            ->leftJoin('senders', 'letters.id', '=', 'senders.letter_id')
+            ->leftJoin('recipients', 'letters.id', '=', 'recipients.letter_id')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->select('letters.*', 'senders.sender_name', 'senders.sender_designation', 'senders.organization as sender_organization', 'recipients.recipient_name', 'recipients.recipient_designation', 'recipients.organization as recipient_organization', 'letter_categories.category_name');
 
         if (isset($inputData['letter_category'])) {
             if ($inputData['letter_category'] === 'receipt') {
@@ -185,7 +185,7 @@ class SearchModel extends Model
                 $query->where('letters.receipt', '=', false);
             }
         }
- 
+
         if (!empty($inputData['letter_no'])) {
             $query->where(DB::raw('lower(letter_no)'), 'like', '%' . strtolower($inputData['letter_no']) . '%');
         }
@@ -201,8 +201,10 @@ class SearchModel extends Model
         if (!empty($inputData['received_from']) && !empty($inputData['received_to'])) {
             $query->whereBetween('received_date', [$inputData['received_from'], $inputData['received_to']]);
         }
-        $query->where('letters.department_id', '=', session('role_dept'));
-
+        // Add department filter (except for system admin with department_id = 0)
+        if (session()->has('role_dept') && session('role_dept') != 0) {
+            $query->where('letters.department_id', '=', session('role_dept'));
+        }
         $query->orderBy('letters.id', 'desc');
 
         return $query->get();
