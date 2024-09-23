@@ -129,7 +129,7 @@
                   <form id="letter-form">
                       <div class="card">
                           <div class="card-body">
-                              <table class="table table-striped table-sm">
+                              <table class="table table-striped table-sm small">
                                   <thead>
                                       <tr>
                                       <th scope="col">Subject</th>
@@ -151,9 +151,9 @@
                                               <td>{{ $result->upload_by}}</td>
                                               <td>{{ $result->upload_date}}</td>
                                               <td>
-                                                  <button type="button" class="btn btn-sm" style="background-color: #ffb308;color: white1;" id="btn-modal{{$result->c_id}}" data-toggle="modal" data-target="viewCorrespondenceModal{{$result->c_id}}">View</button>
+                                                  <button type="button" class="btn btn-sm" style="background-color: #ffb308;color: white1;" id="btn-modal{{$result->c_id}}" data-toggle="modal" data-target="viewCorrespondenceModal{{$result->c_id}}"><i class="fa fa-eye"></i> </button>
                                                   &nbsp;
-                                                  <button type="button" class="btn btn-sm bg-danger"  id="btn-remove{{$result->c_id}}">Remove</button>
+                                                  <button type="button" class="btn btn-sm bg-danger"  id="btn-remove{{$result->c_id}}"><i class="fa fa-trash"></i> </button>
                                               </td>
                                           </tr>
                                           @endforeach
