@@ -187,8 +187,8 @@ class LetterActionResponseController extends Controller
                     }
                     if($completedCount == $actionDepartment){
                     
-                        //Letter::changeLetterStage($request->letter,4);
-                        Letter::changeLetterStage($request->letter,5);
+                        Letter::changeLetterStage($request->letter,4);
+                        //Letter::changeLetterStage($request->letter,5);
 
                     }
 

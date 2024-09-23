@@ -6,7 +6,7 @@
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disableResponse}}>ADD RESPONSE</button>
     <div class="card card-primary card-outline card-outline-tabs">
       <div class="card-body">
-        <table class="table table-sm table-striped table-hover table-responsive text text-sm text-justify" id="response-table">
+        <table class="table table-sm table-striped table-hover" id="response-table">
           <thead>
             <tr class="text-sm">
               <th>Sl no.</th><th>Response</th><th>Response Status</th><th>Response Attached</th>
