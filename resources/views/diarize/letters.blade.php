@@ -118,17 +118,6 @@
                                                         class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"></i></a>
-                                                    @if ($value['stage_status'] == 4)
-                                                        &nbsp;
-                                                        <a href="#" class="action-link save-btn archive"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-url="{{ route('change_stage') }}"
-                                                            data-form="#letter-complete-form"
-                                                            data-message="That you want to archive the letter!"
-                                                            id="save-archive-btn"><i class="fas fa-folder"
-                                                                style="color:#01fd4d;" data-toggle="tooltip"
-                                                                data-placement="top" title="Correspondences"></i></a>
-                                                    @endif
                                                     &nbsp;
                                                     @if ($assignedLetters[$i - 1] > 0)
                                                         <a href="" class="assign-link" data-toggle="modal"
@@ -287,17 +276,7 @@
                                                         class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"></i></a>
-                                                    @if ($value['stage_status'] == 4)
-                                                        &nbsp;
-                                                        <a href="#" class="action-link save-btn archive"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-url="{{ route('change_stage') }}"
-                                                            data-form="#letter-complete-form"
-                                                            data-message="That you want to archive the letter!"
-                                                            id="save-archive-btn"><i class="fas fa-folder"
-                                                                style="color:#01fd4d;" data-toggle="tooltip"
-                                                                data-placement="top" title="Correspondences"></i></a>
-                                                    @endif
+                                                    
                                                 @endif
                                             </td>
                                         </tr>
@@ -382,17 +361,7 @@
                                                         class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"></i></a>
-                                                    @if ($value['stage_status'] == 4)
-                                                        &nbsp;
-                                                        <a href="#" class="action-link save-btn archive"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-url="{{ route('change_stage') }}"
-                                                            data-form="#letter-complete-form"
-                                                            data-message="That you want to archive the letter!"
-                                                            id="save-archive-btn"><i class="fas fa-folder"
-                                                                style="color:#01fd4d;" data-toggle="tooltip"
-                                                                data-placement="top" title="Correspondences"></i></a>
-                                                    @endif
+                                                    
                                                 @endif
                                             </td>
                                         </tr>
@@ -443,9 +412,11 @@
                                                 value="">
                                             <input type="hidden" name="forward_from" class="forward_from"
                                                 value="">
+                                                @if(session('role') != 1)
                                             <label for="assign_remarks" class="col-form-label">Remarks:</label>
                                             <textarea class="form-control" id="assign_remarks" name="assign_remarks" rows="4"></textarea>
                                             <label class="text text-danger assign_remarks"></label>
+                                                @endif
                                         </div>
                                         <button type="button" class="btn btn-primary save-btn"
                                             data-url="{{ route('assign_letter') }}" data-form="#assign-form"
