@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLetterActionRequest;
 use App\Http\Requests\UpdateLetterActionRequest;
+use App\Models\AcknowledgeModel;
 use App\Models\LetterAction;
 use App\Models\Department;
 use App\Models\LetterPriority;
@@ -40,6 +41,8 @@ class LetterActionController extends Controller
         $finalizeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'draft_finalize');
         $completeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'stage_status');
         $forwardStatus = ActionSent::isLetterForwarded($letter_id);
+        $correspondence = AcknowledgeModel::get_correspondence_details($letter_id);
+
         $notes = [];
         $i = 0;
         $actionDepartments = [];
@@ -83,7 +86,7 @@ class LetterActionController extends Controller
             }
         }
         $departments = Department::getAllDepartments();
-        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','departments','completeStatus'));
+        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','departments','completeStatus','correspondence'));
     }
 
     public function letterIndex()

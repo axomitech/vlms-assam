@@ -121,7 +121,56 @@
             </div>
           </div>
           <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-             Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-12 text-left">
+                  <button type="button" class="btn btn-sm" style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal">Add<i class="fas fa-plus-circle" style="color: #24a0ed"></i></button>
+              </div>
+                  <form id="letter-form">
+                      <div class="card">
+                          <div class="card-body">
+                              <table class="table table-striped table-sm">
+                                  <thead>
+                                      <tr>
+                                      <th scope="col">Subject</th>
+                                      <th scope="col">Letter Date</th>
+                                      <th scope="col">Uploaded By</th>
+                                      <th scope="col">Upload Time</th>
+                                      <th scope="col">Actions</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @php
+                                      $i=1;
+                                      @endphp
+                                      @if (count($correspondence) > 0)
+                                          @foreach ($correspondence as $result)
+                                          <tr>
+                                              <td>{{ $i++.'. '.$result->c_title }}</td>
+                                              <td>{{ $result->letter_date}}</td>
+                                              <td>{{ $result->upload_by}}</td>
+                                              <td>{{ $result->upload_date}}</td>
+                                              <td>
+                                                  <button type="button" class="btn btn-sm" style="background-color: #ffb308;color: white1;" id="btn-modal{{$result->c_id}}" data-toggle="modal" data-target="viewCorrespondenceModal{{$result->c_id}}">View</button>
+                                                  &nbsp;
+                                                  <button type="button" class="btn btn-sm bg-danger"  id="btn-remove{{$result->c_id}}">Remove</button>
+                                              </td>
+                                          </tr>
+                                          @endforeach
+                                      @else
+                                          <tr class="text-center">
+                                              <td colspan="5">No file</td>     
+                                          </tr>
+                                      @endif
+                                      
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      <!-- hdhadh -->
+                  </form>
+              </div>
+          </div>
           </div>
         </div>
       </div>
@@ -224,6 +273,89 @@
         </div>
     </div>
 </div> --}}
+<!-- Modal addCorrespondenceModalTitle-->
+<div class="modal fade" id="addCorrespondenceModal" tabindex="-1" role="dialog" aria-labelledby="addCorrespondenceModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addCorrespondenceModalTitle">Upload Correspondence</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body" id="description_view">
+              <div id="parent">
+                  <div id="add">
+                      <form id="uploadForm" class="form-horizontal">
+                          @csrf <!-- CSRF token for Laravel -->
+                          <div class="row">	
+                              <div class="col-md-3">
+                                  <label>Attachment Subject:</label>
+                              </div>
+                              <div class="col-md-6">
+                                  <textarea class="form-control" rows="3" id="attachment_name" name="attachment_name"></textarea>                  
+                              </div>
+                          </div>		
+                          <div class="row mt-3">	
+                              <div class="col-md-3">
+                                  <label>Letter Date:</label>
+                                  <input type="hidden" name="letter_id" value="{{ $letter_id}}">
+                              </div>
+                              <div class="col-md-4">
+                                  <input type="date" class="form-control" id="letter_date" name="letter_date" placeholder="">                 
+                              </div>
+                          </div>		
+                          <div class="row mt-3">	
+                              <div class="col-md-3">
+                                  <label>Upload:</label>
+                              </div>
+                              <div class="col-md-4">
+                              <input  type="file" class="form-control-file" id="attachment_file" name="attachment_file">                
+                              </div>
+                          </div>		
+                          <div class="row mt-5">	
+                              <div class="col-md-7 text-center">
+                                  <button type="button" class="btn btn-primary save-btn btn-sm " data-url="{{ route('store_correspondence') }}" data-form="#uploadForm"
+                                    id="uploadBtn" data-message="Do you want to upload?" style="background-color: #173f5f;color: white;">Submit</button>               
+                              </div>
+                          </div>		
+                          <!-- <div class="row" id="row1">		
+                              <div class=" text-left col-md-5" id="col1">
+                                   <label>Letter Date:</label><br>
+                                  <input type="text" class="form-control" id="attachment_name" name="attachment_name">
+                                  <br>                    
+                              </div>
+                              <div class=" text-left col-sm-5" id="col1">
+                                   <label>Letter Date:</label><br>
+                                   <input type="date" class="form-control" id="letter_date" placeholder="">
+                                  <br>                    
+                              </div>
+                              <input type="hidden" name="letter_id" value="{{ $letter_id}}">
+                              <div class="  col-sm-4" id="col2">
+                                  <label class = "text-left">Upload:</label><br>
+                                  <input  type="file" class="form-control-file" id="attachment_file" name="attachment_file" />
+                                  <br>                   
+                              </div>
+                              <div class=" text-left col-sm-2" id="col3">
+                                  <label >Action:</label><br>
+                                  <button type="button" class="btn btn-primary save-btn btn-sm " data-url="{{ route('store_correspondence') }}" data-form="#uploadForm"
+                                    id="uploadBtn" data-message="Do you want to upload?" style="background-color: #173f5f;color: white;">Submit</button>
+                                  <input type="button" class="btn btn-primary btn-sm " value="Submit" name="Submit"  id="uploadBtn">
+                                  <br>                   
+                              </div>    
+                          </div> -->
+                      </form>
+                  </div>
+              </div>       
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Modal END-->
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -464,5 +596,61 @@
 });
 $('.js-example-basic-multiple').select2();
 </script>
+@if (session('correspondence_upload'))
+      <script>
+        location.reload(true);
+      </script>
+    @endif
+    
+        <script>
+            $('#btn-modal').click(function() {
+                    $('#addCorrespondenceModal').modal({
+                                backdrop: 'static',
+                                keyboard: false
+                    });
+                });
+        </script>
+
+    @foreach ($correspondence as $result)
+        <script>
+            $('#btn-modal{{$result->c_id}}').click(function() {
+
+                // var iframe = modal.find('#annx');
+                    $("#annx").attr('src', '{{config('constants.options.storage_url')}}{{$result->file_path}}');
+
+                    $('#viewCorrespondenceModal').modal({
+                                backdrop: 'static',
+                                keyboard: false
+                    });
+                });
+        </script>
+        <script>
+            $('#btn-remove{{$result->c_id}}').click(function(){
+
+                if(confirm("Do you want to remove?")!=true){
+                    exit();
+                }
+                var formData = {
+                    correspondence_id: {{$result->c_id}},
+                    _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
+                    };
+                // alert(correspondence_id);
+                $.ajax({
+                url: '{{ route('remove_correspondences') }}',
+                type: 'POST',
+                data:formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+                },
+                success: function(response){
+                    alert("Correspondence removed successfully!");
+                    location.reload(true);
+                }
+                });
+            });
+        </script>
+    @endforeach
+
 @endsection
 @endsection
