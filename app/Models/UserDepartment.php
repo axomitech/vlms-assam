@@ -50,13 +50,21 @@ class UserDepartment extends Model
         ])->select('id','department_id','role_id')->get();
     }
 
-    public static function getAllUserDepartment($department){
+    public static function getFirstReceiverDepartment($department){
         return UserDepartment::where('department_id', $department)
         ->join('users','user_departments.user_id','=','users.id')
         ->select('user_departments.id AS user_id','name')
         ->where('first_receiver', true)
         ->where('default_access',true)
         ->where('role_id','>', 1)
+        ->get();
+    }
+    public static function getAllUserDepartment($department,$role){
+        return UserDepartment::where([
+            'department_id'=>$department,
+            'role_id'=>$role
+        ])->join('users','user_departments.user_id','=','users.id')
+        ->select('user_departments.id AS user_id','name')
         ->get();
     }
 }
