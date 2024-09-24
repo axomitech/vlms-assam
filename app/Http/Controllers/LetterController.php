@@ -244,7 +244,8 @@ class LetterController extends Controller
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>5
         ],[]);
-        $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
+        
+        $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'));
 
         return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters'));
     }

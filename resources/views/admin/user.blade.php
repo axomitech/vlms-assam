@@ -55,6 +55,7 @@
                                                                     data-email="{{ $value->u_email }}"
                                                                     data-dept-id="{{ $value->dept_id }}"
                                                                     data-role-id="{{ $value->role_id }}"
+                                                                    data-first-receiver="{{ $value->first_receiver ? 'true' : 'false' }}"
                                                                     style="color:#173f5f;" data-toggle="tooltip"
                                                                     data-placement="top" title="View/Update">
                                                                     <i class="fas fa-edit"></i>
@@ -144,6 +145,17 @@
                                 </select>
                             </div>
                         </div>
+                        <!-- First Receiver Checkbox -->
+                        <div class="row mt-2" id="firstReceiverRow" style="display: none;">
+                            <div class="col-md-2 text-right">
+                                <input type="checkbox" id="edit_first_receiver" name="first_receiver" value="">
+                            </div>
+                            <div class="col-md-10">
+                                <label for="edit_first_receiver">Assign as First Receiver for Diarized Letter</label>
+                            </div>
+                        </div>
+
+
                         <div class="row mt-5">
                             <div class="text-center col-md-12">
                                 <button type="submit" class="btn btn-primary btn-sm" id="updateBtn"
@@ -240,6 +252,16 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <!-- First Receiver Checkbox (Initially Hidden) -->
+                                <div class="form-check mt-2" id="first_receiver_checkbox" style="visibility: hidden;">
+                                    <input class="form-check-input" type="checkbox" id="first_receiver"
+                                        name="first_receiver">
+                                    <label class="form-check-label" for="first_receiver">
+                                        Assign as First Receiver for Diarized Letter
+                                    </label>
+                                </div>
+
                                 <div class="row mt-4">
                                     <div class="text-center col-md-12">
                                         <button type="submit" class="btn btn-primary btn-sm col-3"
@@ -253,12 +275,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    </div> -->
             </div>
         </div>
     </div>
+
 
     <!-- Modal END-->
 
@@ -272,7 +292,7 @@
         $(document).ready(function() {
             $('.toggle-access').click(function(event) {
                 event
-            .preventDefault(); // Prevent the default behavior (e.g., form submission or link action)
+                    .preventDefault(); // Prevent the default behavior (e.g., form submission or link action)
 
                 var userId = $(this).data('user-id');
                 var deptId = $(this).data('dept-id');
@@ -319,7 +339,7 @@
                                             'btn-success'); // Change to green
                                         button.attr('title',
                                             'Active - Click to deactivate'
-                                            ); // Update title
+                                        ); // Update title
                                     } else {
                                         icon.removeClass('fa-unlock').addClass(
                                             'fa-lock'); // Show lock icon
@@ -327,7 +347,7 @@
                                             'btn-danger'); // Change to red
                                         button.attr('title',
                                             'Inactive - Click to activate'
-                                            ); // Update title
+                                        ); // Update title
                                     }
                                     // Show success message using SweetAlert2
                                     Swal.fire(
@@ -370,8 +390,10 @@
         document.getElementById('role_id').addEventListener('change', function() {
             var selectedRole = this.value;
             var hodSelectionRow = document.getElementById('hod_selection_row');
+            var assignCheckboxRow = document.getElementById(
+                'first_receiver_checkbox'); // Row for the "Assign First Receiver" checkbox
 
-            // Check if the selected role is "Delegate" (role_id = 2)
+            // Show or hide the HOD selection based on the selected role
             if (selectedRole == 2) {
                 hodSelectionRow.style.visibility = 'visible';
                 hodSelectionRow.style.height = 'auto'; // Restore height when visible
@@ -379,7 +401,21 @@
                 hodSelectionRow.style.visibility = 'hidden';
                 hodSelectionRow.style.height = '0'; // Hide but keep layout intact
             }
+
+            // Show or hide the "Assign First Receiver" checkbox when role_id > 1
+            if (selectedRole > 1) {
+                assignCheckboxRow.style.visibility = 'visible';
+                assignCheckboxRow.style.height = 'auto'; // Restore height when visible
+            } else {
+                assignCheckboxRow.style.visibility = 'hidden';
+                assignCheckboxRow.style.height = '0'; // Hide but keep layout intact
+            }
         });
+        $(document).on('change', '#edit_first_receiver', function() {
+            // Update the value based on whether the checkbox is checked or not
+            $(this).val(this.checked); // Set the value to 'true' or 'false'
+        });
+
 
         $(document).on('click', '.edit-user', function() {
             var userId = $(this).data('id');
@@ -387,12 +423,27 @@
             var userEmail = $(this).data('email');
             var deptId = $(this).data('dept-id');
             var roleId = $(this).data('role-id');
+            var firstReceiver = $(this).data('first-receiver');
 
             $('#edit_user_id').val(userId);
             $('#edit_u_name').val(userName);
             $('#edit_email').val(userEmail);
             $('#edit_dept_id').val(deptId);
             $('#edit_role_id').val(roleId);
+            $('#edit_first_receiver').val(firstReceiver);
+
+            // Show or hide the checkbox based on role_id
+            if (roleId === 2 || roleId === 3 || roleId === 6) {
+                $('#firstReceiverRow').show(); // Show the checkbox row
+                $('#edit_first_receiver').prop('checked', firstReceiver === true || firstReceiver ===
+                    'true'); // Set the checkbox state
+                $('#edit_first_receiver').val($('#edit_first_receiver').is(
+                    ':checked')); // Update the value attribute
+            } else {
+                $('#firstReceiverRow').hide(); // Hide the checkbox row
+                $('#edit_first_receiver').prop('checked', false); // Uncheck the checkbox
+                $('#edit_first_receiver').val(false); // Ensure value is set to false
+            }
 
             $('#editUserModal').modal('show');
         });

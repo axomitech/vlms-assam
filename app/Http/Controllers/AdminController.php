@@ -92,13 +92,14 @@ class AdminController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make('password'),
             ]);
-
             // Associate the user with the department and role
             $userDepartment = UserDepartment::create([
                 'user_id' => $user->id,
                 'department_id' => $request->dept_id,
                 'role_id' => $request->role_id,
                 'default_access' => true,
+                'first_receiver' => $request->has('first_receiver') ? true : false, // Set first_receiver flag if checkbox is checked
+
             ]);
 
             // If role_id is 2 (Delegate), assign the delegate to the HOD
@@ -140,6 +141,7 @@ class AdminController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+
         // Begin a database transaction
         FacadesDB::beginTransaction();
         try {
@@ -155,13 +157,18 @@ class AdminController extends Controller
             if ($userDepartment) {
                 $userDepartment->department_id = $request->dept_id;
                 $userDepartment->role_id = $request->role_id;
+                $userDepartment->first_receiver = $request->has('first_receiver') ? true : false; // Set first_receiver flag if checkbox is checked
+
                 $userDepartment->save();
             } else {
+                
                 // This block is for sanity check; ideally, the record should exist
                 UserDepartment::create([
                     'user_id' => $user->id,
                     'department_id' => $request->dept_id,
-                    'role_id' => $request->role_id
+                    'role_id' => $request->role_id,
+                    'first_receiver' => $request->has('first_receiver') ? true : false, // Set first_receiver flag if checkbox is checked
+
                 ]);
             }
 

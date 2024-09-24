@@ -13,7 +13,8 @@ class UserDepartment extends Model
         'user_id',
         'department_id',
         'role_id',
-        'default_access'
+        'default_access',
+        'first_receiver'
     ];
 
     public static function roleUser($userId){
@@ -49,12 +50,13 @@ class UserDepartment extends Model
         ])->select('id','department_id','role_id')->get();
     }
 
-    public static function getAllUserDepartment($department,$role){
-        return UserDepartment::where([
-            'department_id'=>$department,
-            'role_id'=>$role
-        ])->join('users','user_departments.user_id','=','users.id')
+    public static function getAllUserDepartment($department){
+        return UserDepartment::where('department_id', $department)
+        ->join('users','user_departments.user_id','=','users.id')
         ->select('user_departments.id AS user_id','name')
+        ->where('first_receiver', true)
+        ->where('default_access',true)
+        ->where('role_id','>', 1)
         ->get();
     }
 }
