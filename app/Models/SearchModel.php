@@ -176,7 +176,7 @@ class SearchModel extends Model
             ->leftJoin('senders', 'letters.id', '=', 'senders.letter_id')
             ->leftJoin('recipients', 'letters.id', '=', 'recipients.letter_id')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
-            ->select('letters.*', 'senders.sender_name', 'senders.sender_designation', 'senders.organization as sender_organization', 'recipients.recipient_name', 'recipients.recipient_designation', 'recipients.organization as recipient_organization', 'letter_categories.category_name');
+            ->select('letters.*','senders.organization as sender_organization', 'recipients.organization as recipient_organization', 'letter_categories.category_name');
 
         if (isset($inputData['letter_category'])) {
             if ($inputData['letter_category'] === 'receipt') {

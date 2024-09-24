@@ -41,9 +41,9 @@ class SearchController extends Controller
                 <th>#</th>
                 <th style="width:12%">Diarize</th>
                 <th style="width:50%">Letter</th>
-                <th>Sender/Recipient</th>
+                <th>Office Details</th>
                 <th>Category</th>
-                <th>Actions</th>
+                <th>Download</th>
             </tr>
         </thead>
         <tbody>';
@@ -61,8 +61,8 @@ class SearchController extends Controller
                 // Determine "From" or "To" based on receipt
                 $from_to = !$result->receipt ? 'To' : 'From';
                 $name_designation = !$result->receipt
-                    ? ($result->recipient_name ? $result->recipient_name : 'N/A') . '<br>' . ($result->recipient_designation ? $result->recipient_designation : 'N/A') . '<br>' . ($result->recipient_organization ? $result->recipient_organization : 'N/A')
-                    : ($result->sender_name ? $result->sender_name : 'N/A') . '<br>' . ($result->sender_designation ? $result->sender_designation : 'N/A') . '<br>' . ($result->sender_organization ? $result->sender_organization : 'N/A');
+                    ? ($result->recipient_organization ? $result->recipient_organization : 'N/A')
+                    : ($result->sender_organization ? $result->sender_organization : 'N/A');
 
                 $table .= '<tr>';
                 $table .= '<td>' . $i++ . '.</td>';

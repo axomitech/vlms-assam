@@ -17,6 +17,7 @@
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
                     <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
+                        @if (session('role') > 1)
                     <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Archived</button>
                     @endif

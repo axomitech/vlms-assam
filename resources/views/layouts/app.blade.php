@@ -192,7 +192,7 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            
+          @if (session('role') > 1)  
             <li class="nav-item">
                 <a href="{{route('dashboard')}}" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
@@ -201,6 +201,7 @@
                   </p>
                 </a>
             </li>
+            @endif
             <li class="nav-item">
               <a href="{{route('home1')}}" class="nav-link">
               <i class="nav-icon fas fa-envelope"></i>
