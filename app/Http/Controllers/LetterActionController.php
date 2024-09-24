@@ -86,7 +86,7 @@ class LetterActionController extends Controller
             }
         }
         $departments = Department::getAllDepartments();
-        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','departments','correspondence'));
+        return view('deligate.actions',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','departments','completeStatus'));
     }
 
     public function letterIndex()

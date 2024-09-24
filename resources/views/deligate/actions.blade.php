@@ -10,16 +10,6 @@
                 @endphp
               @endif
 <div class="row">
-  
-  @if($markComplete > 0)
-  <div class="col-md-2">
-    <form id="letter-complete-form" hidden>
-      <input type="hidden" name="stage_letter" value="{{$letter_id}}">
-      <input type="hidden" name="stage" value="4">
-    </form>
-    <button type="button" class="btn btn-sm btn-outline-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to mark complete the letter!" id="save-complete-btn">Mark Complete</button>
-  </div>
-  @endif
   @php
       $disable = "";
   @endphp 
@@ -37,8 +27,15 @@
       @endphp  
     @endif
   @if(count($actions) > 0)
-  <div class="col-md-2">
+  <div class="col-md-5">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
+    @if($completeStatus == 4)
+    <form id="letter-complete-form" hidden>
+      <input type="hidden" name="stage_letter" value="{{$letter_id}}">
+      <input type="hidden" name="stage" value="5">
+    </form>
+    <button type="button" class="btn btn-sm btn-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-complete-btn">Archive Letter</button>
+  @endif
   </div>
   @endif
 </div>
@@ -488,12 +485,12 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-5">
-              <table class="table table-sm table-hover table-striped table-responsive text text-sm text-justify">
+              <table class="table table-striped">
                 <thead>
                   <tr><th>Responses</th></tr>
                 </thead>
                 <tbody id="note-body">
-                  <tr><td class="text text-danger">No responses received yet!</td></tr>
+                  
                 </tbody>
               </table>
             </div>
@@ -548,14 +545,14 @@
 
   $(document).on('click','.note-link',function(e){
       e.preventDefault();
-      $('.modal-title').text($(this).data('action_text'));
+     $('.modal-title').text($(this).data('action_text'));
       var action = $(this).data('action');
       $.get("{{route('action_notes')}}",{
         'action':action
       },function(j){
         var tr = "";
         var attachment = "";
-        if(j.length > 0){
+       if(j.length > 1){
           for(var i = 1; i < j.length; i++){
           if(j[i].attach != ""){
             attachment = "<a href='#' class='attach' data-attach='"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
@@ -564,6 +561,8 @@
           attachment = "";
           }
             $('#note-body').html(tr);
+          }else{
+            $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }
       });
 
