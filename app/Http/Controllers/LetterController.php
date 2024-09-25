@@ -25,12 +25,13 @@ class LetterController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($receipt)
+    public function index($receipt,$legacy)
     {
         $receipt = decrypt($receipt);
+        $legacy = decrypt($legacy);
         $priorities = LetterPriority::getAllPriorities();
         $letterCategories = LetterCategory::getAllLetterCategories();
-        return view('diarize.diarize', compact('priorities', 'letterCategories', 'receipt'));
+        return view('diarize.diarize', compact('priorities', 'letterCategories', 'receipt','legacy'));
     }
 
     /**
@@ -86,6 +87,8 @@ class LetterController extends Controller
                     $letterPath,
                     $request->auto_ack,
                     $request->receipt,
+                    $request->sub_category,
+                    $request->legacy,
                 ];
 
                 $letterId = Letter::storeLetter($letterDetails);

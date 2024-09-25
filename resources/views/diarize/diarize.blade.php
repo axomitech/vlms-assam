@@ -64,7 +64,7 @@
                                                                 <textarea class="form-control form-control-sm" name="subject" id="subject"></textarea>
                                                                 <label class="text text-danger subject fw-bold"></label>
                                                             </div>
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Letter Category<span
                                                                         class="text text-danger fw-bold">*</span></label>
                                                                 <select class="form-control form-control-sm" name="category"
@@ -78,7 +78,18 @@
                                                                 <label class="text text-danger category fw-bold"></label>
 
                                                             </div>
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-bold">Letter Sub Category<span
+                                                                        class="text text-danger fw-bold">*</span></label>
+                                                                <select class="form-control form-control-sm" name="sub_category"
+                                                                    id="sub_category">
+                                                                    <option value="">Select Sub Category</option>
+                                                                    
+                                                                </select>
+                                                                <label class="text text-danger sub_category fw-bold"></label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Priority<span
                                                                         class="text text-danger fw-bold">*</span></label>
                                                                 <select class="form-control form-control-sm" name="priority"
@@ -92,7 +103,7 @@
                                                                 <label class="text text-danger priority fw-bold"></label>
 
                                                             </div>
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Letter<span
                                                                         class="text text-danger fw-bold">*</span></label>
                                                                 <input type="file" name="letter" id="letter"
@@ -129,6 +140,8 @@
                                                             <div class="col-md-3">
                                                                 <input type="hidden" name="receipt"
                                                                     value="{{ $receipt }}">
+                                                            <input type="hidden" name="legacy"
+                                                                    value="{{ $legacy }}">
                                                                 <button type="button" class="btn btn-warning btn-sm"
                                                                     data-target="#custom-tabs-one-home"
                                                                     id="btn-next">NEXT</button>
@@ -164,8 +177,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-6">
-                                                                    <label class="form-label fw-bold">Mobile<span
-                                                                            class="text text-danger fw-bold">*</span></label>
+                                                                    <label class="form-label fw-bold">Mobile</label>
                                                                     <input type="text" name="sender_mobile"
                                                                         id="sender_mobile"
                                                                         class="form-control form-control-sm"
@@ -174,8 +186,7 @@
                                                                         class="text text-danger sender_mobile fw-bold"></label>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <label class="form-label fw-bold">Email<span
-                                                                            class="text text-danger fw-bold">*</span></label>
+                                                                    <label class="form-label fw-bold">Email</label>
                                                                     <input type="text" name="sender_email"
                                                                         id="sender_email"
                                                                         class="form-control form-control-sm"
@@ -234,7 +245,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <label class="form-label fw-bold">Organization<span
+                                                                <label class="form-label fw-bold">Office Details<span
                                                                         class="text text-danger fw-bold">*</span></label>
                                                                 <textarea class="form-control form-control-sm" name="organization" id="organization"
                                                                     placeholder="eg. Assam Secretariat"></textarea>
@@ -243,8 +254,7 @@
                                                             </div>
 
                                                             <div class="col-md-12">
-                                                                <label class="form-label fw-bold">Address<span
-                                                                        class="text text-danger fw-bold">*</span></label>
+                                                                <label class="form-label fw-bold">Address</label>
                                                                 <textarea class="form-control form-control-sm" name="address" id=address"
                                                                     placeholder="eg. Dispur, Guwahati, Kamrup(M), Assam-781019"></textarea>
                                                                 <label class="text text-danger address fw-bold"></label>
@@ -376,6 +386,21 @@
 
             });
 
+
+        });
+
+        $(document).on('change','#category',function(){
+
+            $.get("{{route('letter_sub_category')}}",{
+                category:$(this).val()
+            },function(j){
+
+                var option = "<option value=''>Select Sub Category</option>";
+                for(var i = 1; i < j.length; i++){
+                    option += "<option value='"+j[i].category_id+"'>"+j[i].category_name+"</option>";
+                }
+                $('#sub_category').html(option);
+            });
 
         });
     </script>

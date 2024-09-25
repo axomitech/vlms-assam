@@ -17,6 +17,7 @@ class Letter extends Model
         $letter = new Letter;
         $letter->user_id = session('role_user');
         $letter->letter_category_id = $letterDetails[0];
+        $letter->letter_sub_category_id = $letterDetails[10];
         $letter->letter_priority_id = $letterDetails[1];
         $letter->letter_no = $letterDetails[5];
         $letter->letter_date = $letterDetails[2];
@@ -28,8 +29,12 @@ class Letter extends Model
         $letter->stage_status = 1;
         $letter->department_id = session('role_dept');
         $letter->receipt = true;
+        $letter->legacy = true;
         if ($letterDetails[9] == 0) {
             $letter->receipt = false;
+        }
+        if ($letterDetails[11] == 0) {
+            $letter->legacy = false;
         }
         $letter->save();
         return $letter->id;
