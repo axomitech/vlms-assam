@@ -30,6 +30,7 @@ class AdminModel extends Model
                 'departments.id as dept_id',
                 'user_departments.id as profile_id',
                 'user_departments.default_access as default_access',
+                'user_departments.first_receiver'
             )
             ->where('user_departments.user_id', '!=', Auth::user()->id)
             ->get();
