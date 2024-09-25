@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
-    Route::get('/diarize/{receipt}', [App\Http\Controllers\LetterController::class, 'index'])->name('diarize');
+    Route::get('/diarize/{receipt}/{legacy}', [App\Http\Controllers\LetterController::class, 'index'])->name('diarize');
     Route::get('/letters', [App\Http\Controllers\LetterController::class, 'showLetters'])->name('letters');
     Route::post('/store_letter', [App\Http\Controllers\LetterController::class, 'store'])->name('store_letter');
     Route::post('/change_stage', [App\Http\Controllers\LetterController::class, 'changeLetterStage'])->name('change_stage');
@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/responds/{sent}/{act}/{letter}',[App\Http\Controllers\ActionSentController::class, 'response'])->name('responds');
     Route::get('/action_response',[App\Http\Controllers\ActionSentController::class, 'getActionResponses'])->name('action_response');
     Route::post('/assign_letter', [App\Http\Controllers\LetterAssignController::class, 'store'])->name('assign_letter');
+    Route::get('/letter_sub_category',[App\Http\Controllers\LetterSubCategoryController::class, 'getLetterSubCategory'])->name('letter_sub_category');
     Route::get("/log", function(){
         Log::channel('i_love_this_logging_thing')->info("Action log debug test", ['log-string' => ['user'=>1], "run"]);
      

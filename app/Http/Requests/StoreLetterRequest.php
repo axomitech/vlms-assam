@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\LetterPriority;
 use App\Models\LetterCategory;
+use App\Models\LetterSubCategory;
 use Carbon\Carbon;
 
 class StoreLetterRequest extends FormRequest
@@ -29,6 +30,7 @@ class StoreLetterRequest extends FormRequest
 
             'priority' => 'required|numeric|min:1|max:' . LetterPriority::max('id'),
             'category' => 'required|numeric|min:1|max:' . LetterCategory::max('id'),
+            'sub_category' => 'required|numeric|min:1|max:' . LetterSubCategory::max('id'),
             'letter' => 'required|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
             'letter_no' => 'required',
             'letter_date' => 'required|date|date_format:Y-m-d|before_or_equal:' . $today,
@@ -36,17 +38,18 @@ class StoreLetterRequest extends FormRequest
             'diary_date' => 'required|date|date_format:Y-m-d|before_or_equal:' . $today,
             'subject' => 'required',
             'receipt' => 'required|in:0,1',
+            'legacy' => 'required|in:0,1',
             // Conditional validation based on receipt value
             'sender_name' => 'required_if:receipt,1',
             'sender_designation' => 'required_if:receipt,1',
-            'sender_mobile' => 'required_if:receipt,1|nullable',
-            'sender_email' => 'required_if:receipt,1|nullable',
+            'sender_mobile' => 'nullable',
+            'sender_email' => 'nullable|email',
             'recipient_name' => 'required_if:receipt,0',
             'recipient_designation' => 'required_if:receipt,0',
-            'recipient_mobile' => 'required_if:receipt,0|nullable',
-            'recipient_email' => 'required_if:receipt,0|nullable',
+            'recipient_mobile' => 'nullable',
+            'recipient_email' => 'nullable|email',
             'organization' => 'required',
-            'address' => 'required',
+            'address' => 'nullable',
         ];
     }
 
@@ -62,6 +65,10 @@ class StoreLetterRequest extends FormRequest
             'category.numeric' => 'Please select a valid letter category.',
             'category.min' => 'Please select a valid letter category.',
             'category.max' => 'Please select a valid letter category.',
+            'sub_category.required' => 'Please select letter sub category.',
+            'sub_category.numeric' => 'Please select a valid letter sub category.',
+            'sub_category.min' => 'Please select a valid letter sub category.',
+            'sub_category.max' => 'Please select a valid letter sub category.',
             'letter.required' => 'Please select a letter file.',
             'letter.mimes' => 'Please select a letter file in jpg,pdf,png or jpeg format.',
             'letter.min' => 'Please select a letter file with minimum size 50Kb.',
