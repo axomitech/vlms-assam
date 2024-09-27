@@ -75,15 +75,23 @@ class Letter extends Model
 
 
 
-    public static function showInboxLetters($condition)
+    public static function showInboxLetters($condition,$assignedLetterIds)
     {
-        return Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
-            ->join('action_sents', 'letters.id', '=', 'action_sents.letter_id')
-            ->where($condition)
-            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
-            ->orderBy('letters.id', 'DESC')
-            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
-            ->get();
+        $receivedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
+        ->join('action_sents', 'letters.id', '=', 'action_sents.letter_id')
+        ->where($condition)
+        ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
+        ->orderBy('letters.id', 'DESC')
+        ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
+        ->get();
+        $assignedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
+        ->join('letter_assigns', 'letters.id', '=', 'letter_assigns.letter_id')
+        ->whereIn('letter_assigns.id',$assignedLetterIds)
+        ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
+        ->orderBy('letters.id', 'DESC')
+        ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
+        ->get();
+        return $assignedLetters->merge($receivedLetters);
     }
 
     public static function generateLetterCrn($crn)

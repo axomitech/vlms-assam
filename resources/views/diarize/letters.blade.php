@@ -9,371 +9,402 @@
         <div class="col-md-12">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @if(session('role') == 1)
                     <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
-                    <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
+                    @else
+                    <button class="nav-link active" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
                     <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
                     <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Archived</button>
+                    @endif
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <div class="box shadow-lg p-3 mb-5 bg-white rounded">
-                        <div class="box-body">
-                            <table class="table table-sm table-hover table-striped letter-table" id="">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6" class="text text-center">Diarized Letters</th>
-                                    </tr>
+               @if(session('role') == 1)
+               <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped letter-table" id="">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text text-center">Diarized Letters</th>
+                                </tr>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diarize No.</th>
+                                    <th>Subject</th>
+                                    <th>Letter No.</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($letters as $value)
                                     <tr class="text text-sm text-justify">
-                                        <th>Sl no.</th>
-                                        <th>Diarize No.</th>
-                                        <th>Subject</th>
-                                        <th>Letter No.</th>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $i = 1;
-                                    @endphp
-                                    @foreach ($letters as $value)
-                                        <tr class="text text-sm text-justify">
-                                            <td>{{ $i }}</td>
-                                            <td> &nbsp;{{ $value['crn'] }}</td>
-                                            <td style="width: 30%;">
-                                                @if (strlen($value['subject']) > 100)
-                                                    <div class="text-block" id="textBlock1">
-                                                        <p class="shortText text-justify text-sm">
-                                                            {{ substr($value['subject'], 0, 100) }}...
-                                                            <a href="#" class="readMore">Read more</a>
+                                        <td>{{ $i }}</td>
+                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
                                                         </p>
-                                                        <div class="longText" style="display: none;">
-                                                            <p class="text-sm text-justify">
-                                                                {{ $value['subject'] }}
-                                                                <a href="#" class="readLess">Read less</a>
-                                                            </p>
-                                                        </div>
-                                                    @else
-                                                        {{ $value['subject'] }}
-                                                @endif
-                                            </td>
-
-                                            <td>{{ $value['letter_no'] }}</td>
-                                            <td>
-                                                    {{ $value->recipient_name }}
-                                                    {{ $value->sender_name }}
-                                            </td>
-                                            
-                                            <td>
-                                                @if ($value['receipt'] == true)
-                                                    Receipt
+                                                    </div>
                                                 @else
-                                                    Issued
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if (session('role') == 1)
-                                                    &nbsp;
-                                                    @if ($assignedLetters[$i - 1] <= 0)
-                                                        <a href="" class="assign-link" data-toggle="modal"
-                                                            data-target=".bd-example-modal-lg"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
-                                                                class="fas fa-paper-plane" style="color:#173f5f;"
-                                                                data-toggle="tooltip" data-placement="top"
-                                                                title="View/Update"></i></a>
-                                                    @endif
-                                                @endif
-                                                @if (session('role') == 2)
-                                                    &nbsp;
-                                                    @if ($delegatgeLetters[$i - 1] > 0)
-                                                        <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                            class="action-link"><i class="fas fa-edit"
-                                                                style="color:#173f5f;" data-toggle="tooltip"
-                                                                data-placement="top" title="View/Update"></i></a>
-                                                    @endif
-                                                @endif
-                                                @if (session('role') == 3)
-                                                    &nbsp;
-                                                    @if ($assignedLetters[$i - 1] > 0)
-                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                            class="action-link"><i class="fas fa-edit"
-                                                                style="color:#173f5f;" data-toggle="tooltip"
-                                                                data-placement="top" title="View/Update"></i></a>
-                                                    @endif
-                                                    &nbsp;
-                                                    <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                        class="action-link"><i
-                                                            class="fas fa-envelope-open-text text-success"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"></i></a>
-                                                    &nbsp;
-                                                    <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                        class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Correspondences"></i></a>
-                                                    &nbsp;
-                                                    @if ($assignedLetters[$i - 1] > 0)
-                                                        <a href="" class="assign-link" data-toggle="modal"
-                                                            data-target=".bd-example-modal-lg"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-forward="{{ $assignedLetters[$i - 1] }}"
-                                                            data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
-                                                                class="fas fa-paper-plane" style="color:#173f5f;"
-                                                                data-toggle="tooltip" data-placement="top"
-                                                                title="View/Update"></i></a>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @php
-                                            $i++;
-                                        @endphp
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                    <div class="box shadow-lg p-3 mb-5 bg-white rounded">
-                        <div class="box-body">
-                            <table class="table table-sm table-hover table-striped" id="letter-table">
-                                <thead>
-                                    <tr class="text text-sm text-justify">
-                                        <th>Sl no.</th>
-                                        <th>Diarize No.</th>
-                                        <th>Subject</th>
-                                        <th>Letter No.</th>
-                                        <th>Sender</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $i = 1;
-                                    @endphp
-                                    @foreach ($inboxLetters as $value)
-                                        <tr class="text text-sm text-justify">
-                                            <td>{{ $i }}</td>
-                                            <td> &nbsp;{{ $value['crn'] }}</td>
-                                            <td style="width: 30%;">
-                                                @if (strlen($value['subject']) > 100)
-                                                    <div class="text-block" id="textBlock1">
-                                                        <p class="shortText text-justify text-sm">
-                                                            {{ substr($value['subject'], 0, 100) }}...
-                                                            <a href="#" class="readMore">Read more</a>
-                                                        </p>
-                                                        <div class="longText" style="display: none;">
-                                                            <p class="text-sm text-justify">
-                                                                {{ $value['subject'] }}
-                                                                <a href="#" class="readLess">Read less</a>
-                                                            </p>
-                                                        </div>
-                                                    @else
-                                                        {{ $value['subject'] }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $value['letter_no'] }}</td>
-                                            <td>{{ $value['sender_name'] }}</td>
-                                            <td>
-                                                @if (session('role') == 3)
-                                                    <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
-                                                        class="action-link"><i
-                                                            class="fas fa-envelope-open-text text-success"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Forwarded actions"></i></a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @php
-                                            $i++;
-                                        @endphp
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                        </td>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                    <div class="box shadow-lg p-3 mb-5 bg-white rounded">
-                        <div class="box-body">
-                            <table class="table table-sm table-hover table-striped letter-table" id="">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6" class="text text-center">Sent Letters</th>
-                                    </tr>
-                                    <tr class="text text-sm text-justify">
-                                        <th>Sl no.</th>
-                                        <th>Diarize No.</th>
-                                        <th>Subject</th>
-                                        <th>Letter No.</th>
-                                        <th>Sender</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $i = 1;
-                                    @endphp
-                                    @foreach ($sentLetters as $value)
-                                        <tr class="text text-sm text-justify">
-                                            <td>{{ $i }}</td>
-                                            <td> &nbsp;{{ $value['crn'] }}</td>
-                                            <td style="width: 30%;">
-                                                @if (strlen($value['subject']) > 100)
-                                                    <div class="text-block" id="textBlock1">
-                                                        <p class="shortText text-justify text-sm">
-                                                            {{ substr($value['subject'], 0, 100) }}...
-                                                            <a href="#" class="readMore">Read more</a>
-                                                        </p>
-                                                        <div class="longText" style="display: none;">
-                                                            <p class="text-sm text-justify">
-                                                                {{ $value['subject'] }}
-                                                                <a href="#" class="readLess">Read less</a>
-                                                            </p>
-                                                        </div>
-                                                    @else
-                                                        {{ $value['subject'] }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $value['letter_no'] }}</td>
-                                            <td>{{ $value['sender_name'] }}</td>
-                                            <td>
-                                                @if (session('role') == 2)
-                                                    &nbsp;
-                                                    <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                        class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                        <td>{{ $value['letter_no'] }}</td>
+                                        <td>
+                                                {{ $value->recipient_name }}
+                                                {{ $value->sender_name }}
+                                        </td>
+                                        
+                                        <td>
+                                            @if ($value['receipt'] == true)
+                                                Receipt
+                                            @else
+                                                Issued
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (session('role') == 1)
+                                                &nbsp;
+                                                @if ($assignedLetters[$i - 1] <= 0)
+                                                    <a href="" class="assign-link" data-toggle="modal"
+                                                        data-target=".bd-example-modal-lg"
+                                                        data-letter="{{ $value['letter_id'] }}"
+                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
+                                                            class="fas fa-paper-plane" style="color:#173f5f;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="View/Update"></i></a>
                                                 @endif
-                                                @if (session('role') == 3)
-                                                    &nbsp;
-                                                    @if ($assignedSentLetters[$i - 1] > 0)
-                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                            class="action-link"><i class="fas fa-edit"
-                                                                style="color:#173f5f;" data-toggle="tooltip"
-                                                                data-placement="top" title="View/Update"></i></a>
-                                                    @endif
-                                                @endif
-                                                @if (session('role') == 3)
-                                                    
-                                                    &nbsp;
-                                                    <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                        class="action-link"><i
-                                                            class="fas fa-envelope-open-text text-success"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"></i></a>
-                                                    &nbsp;
-                                                    <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                        class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Correspondences"></i></a>
-                                                    
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @php
-                                            $i++;
-                                        @endphp
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
-                    <div class="box shadow-lg p-3 mb-5 bg-white rounded">
-                        <div class="box-body">
-                            <table class="table table-sm table-hover table-striped letter-table" id="">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6" class="text text-center">Archived Letters</th>
-                                    </tr>
-                                    <tr class="text text-sm text-justify">
-                                        <th>Sl no.</th>
-                                        <th>Diarize No.</th>
-                                        <th>Subject</th>
-                                        <th>Letter No.</th>
-                                        <th>Sender</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $i = 1;
-                                    @endphp
-                                    @foreach ($archivedLetters as $value)
-                                        <tr class="text text-sm text-justify">
-                                            <td>{{ $i }}</td>
-                                            <td> &nbsp;{{ $value['crn'] }}</td>
-                                            <td style="width: 30%;">
-                                                @if (strlen($value['subject']) > 100)
-                                                    <div class="text-block" id="textBlock1">
-                                                        <p class="shortText text-justify text-sm">
-                                                            {{ substr($value['subject'], 0, 100) }}...
-                                                            <a href="#" class="readMore">Read more</a>
-                                                        </p>
-                                                        <div class="longText" style="display: none;">
-                                                            <p class="text-sm text-justify">
-                                                                {{ $value['subject'] }}
-                                                                <a href="#" class="readLess">Read less</a>
-                                                            </p>
-                                                        </div>
-                                                    @else
-                                                        {{ $value['subject'] }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $value['letter_no'] }}</td>
-                                            <td>{{ $value['sender_name'] }}</td>
-                                            <td>
-                                                @if (session('role') == 2)
-                                                    &nbsp;
+                                            @endif
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                @if ($delegatgeLetters[$i - 1] > 0)
                                                     <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                        class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="View/Update"></i></a>
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
                                                 @endif
-                                                @if (session('role') == 3)
-                                                    &nbsp;
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                @if ($assignedLetters[$i - 1] > 0)
                                                     <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                        class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                &nbsp;
+                                                @if ($assignedLetters[$i - 1] > 0)
+                                                    <a href="" class="assign-link" data-toggle="modal"
+                                                        data-target=".bd-example-modal-lg"
+                                                        data-letter="{{ $value['letter_id'] }}"
+                                                        data-forward="{{ $assignedLetters[$i - 1] }}"
+                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
+                                                            class="fas fa-paper-plane" style="color:#173f5f;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="View/Update"></i></a>
                                                 @endif
-                                                @if (session('role') == 3)
-                                                    
-                                                    &nbsp;
-                                                    <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                        class="action-link"><i
-                                                            class="fas fa-envelope-open-text text-success"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"></i></a>
-                                                    &nbsp;
-                                                    <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                        class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Correspondences"></i></a>
-                                                    
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @php
-                                            $i++;
-                                        @endphp
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
+            @else
+            <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped" id="letter-table">
+                            <thead>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diarize No.</th>
+                                    <th>Subject</th>
+                                    <th>Letter No.</th>
+                                    <th>Sender</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($inboxLetters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $value['letter_no'] }}</td>
+                                        <td>{{ $value['sender_name'] }}</td>
+                                        <td>
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                @if ($assignedSentLetters[$i - 1] > 0)
+                                                    <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                            @if (session('role') == 3)
+                                                
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped letter-table" id="">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text text-center">Sent Letters</th>
+                                </tr>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diarize No.</th>
+                                    <th>Subject</th>
+                                    <th>Letter No.</th>
+                                    <th>Sender</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($sentLetters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $value['letter_no'] }}</td>
+                                        <td>{{ $value['sender_name'] }}</td>
+                                        <td>
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                @if ($assignedSentLetters[$i - 1] > 0)
+                                                    <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                            @if (session('role') == 3)
+                                                
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped letter-table" id="">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text text-center">Archived Letters</th>
+                                </tr>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diarize No.</th>
+                                    <th>Subject</th>
+                                    <th>Letter No.</th>
+                                    <th>Sender</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($archivedLetters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $value['letter_no'] }}</td>
+                                        <td>{{ $value['sender_name'] }}</td>
+                                        <td>
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+               @endif
+               
             </div>
 
         </div>
