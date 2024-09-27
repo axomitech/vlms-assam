@@ -80,7 +80,7 @@
                                                         <a href="" class="assign-link" data-toggle="modal"
                                                             data-target=".bd-example-modal-lg"
                                                             data-letter="{{ $value['letter_id'] }}"
-                                                            data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
+                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}"><i
                                                                 class="fas fa-paper-plane" style="color:#173f5f;"
                                                                 data-toggle="tooltip" data-placement="top"
                                                                 title="View/Update"></i></a>
@@ -120,7 +120,7 @@
                                                             data-target=".bd-example-modal-lg"
                                                             data-letter="{{ $value['letter_id'] }}"
                                                             data-forward="{{ $assignedLetters[$i - 1] }}"
-                                                            data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
+                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}"><i
                                                                 class="fas fa-paper-plane" style="color:#173f5f;"
                                                                 data-toggle="tooltip" data-placement="top"
                                                                 title="View/Update"></i></a>
