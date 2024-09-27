@@ -188,7 +188,8 @@ class LetterController extends Controller
     {
         $letters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>1
+            'stage_status'=>1,
+            'legacy'=>false
         ],[]);
         // return $letters;
         $assignedLetters = [];
@@ -203,10 +204,18 @@ class LetterController extends Controller
                     'letter_id'=>$value['letter_id'],
                     'user_id'=>session('role_user')
                 ];
-            }else if(session('role') == 3 || session('role') == 2){
+            }else if(session('role') == 3){
                 $condition = [
                     'letter_id'=>$value['letter_id'],
                     'receiver_id'=>session('role_user'),
+                    'in_hand'=> true,
+                ];
+            }else if(session('role') == 2){
+                $condition = [
+                    'letter_id'=>$value['letter_id'],
+                    'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
+                        'deligate_id'=>session('role')
+                    ],'hod_id'),
                     'in_hand'=> true,
                 ];
             }
@@ -242,7 +251,7 @@ class LetterController extends Controller
         ],'deligate_id');
         $inboxLetters = Letter::showInboxLetters([
             'action_sents.receiver_id' => $receiverId,
-        ]);
+        ],$assignedLetters);
         $archivedLetters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>5
