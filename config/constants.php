@@ -1,9 +1,8 @@
 <?php
 
-return [
-    'options' => [
-        'storage_url' => 'http://localhost/vlms-app/public/storage/',
-        //'storage_url' => 'http://127.0.0.1:8000/storage/',
-        
-    ]
-];
+if (!function_exists('storageUrl')) {
+    function storageUrl($path)
+    {
+        return asset('storage/' . preg_replace('/^public\//', '', $path));
+    }
+}

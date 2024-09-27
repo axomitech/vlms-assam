@@ -180,7 +180,7 @@
   <div class="col-md-5">
     <div class="card h-100">
       <div class="card-body">
-        <iframe class="w-100" style="height:22.5rem" src="{{config('constants.options.storage_url')}}{{str_replace("public/","",$letterPath)}}">
+        <iframe class="w-100" style="height:22.5rem" src="{{storageUrl($letterPath)}}">
         </iframe>
       </div>
     </div>
@@ -397,7 +397,7 @@
             <div class="col-md-7">
               <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-body">
-                  <iframe src="{{config('constants.options.storage_url')}}{{str_replace("public/","",$letterPath)}}" style="width: 25rem; height:20rem;">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width: 25rem; height:20rem;">
                   </iframe>
                 </div>
               </div>
@@ -454,7 +454,7 @@
             <div cclass="col-md-7">
               <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-body">
-                  <iframe src="{{config('constants.options.storage_url')}}{{str_replace("public/","",$letterPath)}}" style="width: 25rem; height:20rem;">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width: 25rem; height:20rem;">
                   </iframe>
                 </div>
               </div>
@@ -504,7 +504,7 @@
             <div class="col-md-7">
               <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-body">
-                  <iframe src="{{config('constants.options.storage_url')}}{{str_replace("public/","",$letterPath)}}" style="width: 25rem; height:20rem;" id="responseAttached">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width: 25rem; height:20rem;" id="responseAttached">
                   </iframe>
                 </div>
               </div>
