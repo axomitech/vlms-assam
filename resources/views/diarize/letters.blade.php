@@ -9,9 +9,11 @@
         <div class="col-md-12">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @if(session('role') == 1)
                     <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
-                    <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
+                    @else
+                    <button class="nav-link active" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
                     <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
