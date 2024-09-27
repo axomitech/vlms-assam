@@ -234,7 +234,6 @@
                 </li>
               </ul>
             </li>
-            @endif
             <li class="nav-item">
               <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user-cog"></i>
@@ -258,7 +257,8 @@
                 </li>
               </ul>
             </li>
-          <li class="nav-item">
+            @endif
+          {{-- <li class="nav-item">
             <a href="#" class="nav-link">
             <i class="nav-icon fas fa-envelope"></i>
               <p>

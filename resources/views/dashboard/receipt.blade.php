@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="col-md-12 text-center">
-            <button class="btn btn-dark btn-sm" id="resetView" style="float: left; display: none;">
+            <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
             </button>
             <h4 id="selectedCategoryName">Receipt</h4>
@@ -76,6 +76,9 @@
                 const labels = categories.map(item => item.category_name);
                 const dataValues = categories.map(item => item.count);
 
+                // Calculate the total count of receipts
+                const totalCount = dataValues.reduce((acc, val) => acc + val, 0);
+
                 // Create the pie chart
                 const ctx = document.getElementById('myPieChart').getContext('2d');
                 new Chart(ctx, {
@@ -83,7 +86,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Receipt Count by Category',
+                            label: 'Receipt Percentage by Category',
                             data: dataValues,
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
@@ -114,9 +117,10 @@
                                 callbacks: {
                                     label: function(context) {
                                         let label = context.label || '';
-                                        if (context.parsed !== null) {
-                                            label += ': ' + context.parsed + ' Receipts';
-                                        }
+                                        let value = context.raw;
+                                        let percentage = ((value / totalCount) * 100).toFixed(
+                                        2); // Calculate percentage
+                                        label += `: ${percentage}%`;
                                         return label;
                                     }
                                 }
@@ -124,9 +128,8 @@
                             datalabels: {
                                 color: '#000',
                                 formatter: (value, context) => {
-                                    let total = context.dataset.data.reduce((acc, val) => acc + val, 0);
-                                    let percentage = ((value / total) * 100).toFixed(2);
-                                    return `${percentage}%`;
+                                    let percentage = ((value / totalCount) * 100).toFixed(2); // Calculate percentage
+                                    return `${percentage}%`; // Show percentage
                                 },
                                 anchor: 'end',
                                 align: 'end',
@@ -139,8 +142,8 @@
                     }
                 });
             </script>
-
         </div>
+
         </section>
     </div>
     </div>
@@ -160,7 +163,7 @@
                                         <th scope="col"><small><b>Letter No.</b></small></th>
                                         <th scope="col"><small><b>Sender Name</b></small></th>
                                         <th scope="col"><small><b>Received Date</b></small></th>
-                                        <th scope="col"><small><b>Action</b></small></th>
+                                        <th scope="col"><small><b>Download</b></small></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -177,6 +180,8 @@
 
 @section('scripts')
     <!-- DataTables  & Plugins -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -190,44 +195,53 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('js/custom/common.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-3d"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
     <script>
         $(document).ready(function() {
-            // Handle card click
+            // Initialize DataTable
+            const dataTable = $('#lettersList').DataTable({
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: ["excel", "pdf", "print"]
+            });
+
             $('.category-card').on('click', function(e) {
                 e.preventDefault();
 
-                // Get category info
                 let categoryId = $(this).data('category-id');
                 let categoryName = $(this).data('category-name');
+                let url = '{{ route('receipt_by_category', ['category_id' => ':category_id']) }}'.replace(
+                    ':category_id', categoryId);
 
                 // Fetch letters using AJAX
                 $.ajax({
-                    url: "{{url('/receipt')}}/"+categoryId,
+                    url: url,
                     type: 'GET',
                     success: function(response) {
-                        console.log(response);
 
-                        // Show selected category name
                         $('#selectedCategoryName').text('Receipts from ' + categoryName);
-
-                        // Populate table with letters
                         let tableBody = '';
-                        let serialNumber = 1; // Initialize serial number
+                        let serialNumber = 1;
 
+                        // Build table rows
                         response.forEach(function(letter) {
                             let truncatedSubject = letter.subject.length > 100 ?
                                 `<div class="text-block" id="textBlock${letter.id}">
-                              <p class="shortText text-justify text-sm">
-                                  ${letter.subject.substring(0, 100)}...
-                                  <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
-                              </p>
-                              <div class="longText" style="display: none;">
-                                  <p class="text-sm text-justify">
-                                      ${letter.subject}
-                                      <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
-                                  </p>
-                              </div>
-                          </div>` :
+                            <p class="shortText text-justify text-sm">
+                                ${letter.subject.substring(0, 100)}...
+                                <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
+                            </p>
+                            <div class="longText" style="display: none;">
+                                <p class="text-sm text-justify">
+                                    ${letter.subject}
+                                    <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
+                                </p>
+                            </div>
+                        </div>` :
                                 `<p>${letter.subject}</p>`;
 
                             tableBody += `<tr>
@@ -237,26 +251,43 @@
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.sender_name}</small></td>
                         <td><small>${letter.received_date}</small></td>
-        <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
+                        <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                     </tr>`;
                         });
 
-                        $('#lettersList tbody').html(tableBody);
 
-                        // Show the table and back button, hide cards
+                        // Update the DataTable
+                        dataTable.clear(); // Clear the existing data
+                        dataTable.rows.add($(tableBody)); // Add the new data
+                        dataTable.draw(); // Redraw the table
+
+                        // Show the table and hide the cards
                         $('#cardsContainer').hide();
                         $('#lettersTable').show();
                         $('#resetView').show();
+                    },
+                    error: function(xhr, status, error) {
+                        $('#lettersList tbody').html(
+                            '<tr><td colspan="7" class="text-center">Error loading data</td></tr>'
+                        );
                     }
                 });
             });
 
+            const dashboardUrl = "{{ route('dashboard') }}";
+
             // Handle back button click to reset view
             $('#resetView').on('click', function() {
-                $('#lettersTable').hide();
-                $('#resetView').hide();
-                $('#cardsContainer').show();
-                $('#selectedCategoryName').text('Receipt');
+                // Check if the letters table is visible
+                if ($('#lettersTable').is(':visible')) {
+                    // If on the category page, reset to the main view
+                    $('#lettersTable').hide();
+                    $('#cardsContainer').show();
+                    $('#selectedCategoryName').text('Receipt');
+                } else {
+                    // Redirect to the dashboard if on the initial view
+                    window.location.href = dashboardUrl;
+                }
             });
 
             // Handle Read More/Read Less click
@@ -275,17 +306,4 @@
             });
         });
     </script>
-    <script>
-        $(function() {
-            $("#letter-table").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["excel", "pdf", "print"]
-            }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-3d"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 @endsection
