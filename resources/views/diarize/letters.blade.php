@@ -9,18 +9,14 @@
         <div class="col-md-12">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    @if(session('role') == 1)
                     <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
-                    @else
-                    <button class="nav-link active" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
+                    <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
                     <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
-                        @if (session('role') > 1)
                     <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Archived</button>
-                        @endif
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -37,8 +33,9 @@
                                         <th>Diarize No.</th>
                                         <th>Subject</th>
                                         <th>Letter No.</th>
+                                        <th>Name</th>
                                         <th>Category</th>
-                                        <th>Options</th>
+                                        <th>Letter</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,7 +64,12 @@
                                                 @endif
                                             </td>
 
-                                            <td>{{ $value['letter_no'] }}</td>                                            
+                                            <td>{{ $value['letter_no'] }}</td>
+                                            <td>
+                                                    {{ $value->recipient_name }}
+                                                    {{ $value->sender_name }}
+                                            </td>
+                                            
                                             <td>
                                                 @if ($value['receipt'] == true)
                                                     Receipt
@@ -116,6 +118,17 @@
                                                         class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"></i></a>
+                                                    @if ($value['stage_status'] == 4)
+                                                        &nbsp;
+                                                        <a href="#" class="action-link save-btn archive"
+                                                            data-letter="{{ $value['letter_id'] }}"
+                                                            data-url="{{ route('change_stage') }}"
+                                                            data-form="#letter-complete-form"
+                                                            data-message="That you want to archive the letter!"
+                                                            id="save-archive-btn"><i class="fas fa-folder"
+                                                                style="color:#01fd4d;" data-toggle="tooltip"
+                                                                data-placement="top" title="Correspondences"></i></a>
+                                                    @endif
                                                     &nbsp;
                                                     @if ($assignedLetters[$i - 1] > 0)
                                                         <a href="" class="assign-link" data-toggle="modal"
@@ -149,7 +162,8 @@
                                         <th>Diarize No.</th>
                                         <th>Subject</th>
                                         <th>Letter No.</th>
-                                        <th>Options</th>
+                                        <th>Sender</th>
+                                        <th>Letter</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -178,6 +192,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $value['letter_no'] }}</td>
+                                            <td>{{ $value['sender_name'] }}</td>
                                             <td>
                                                 @if (session('role') == 3)
                                                     <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
@@ -211,7 +226,8 @@
                                         <th>Diarize No.</th>
                                         <th>Subject</th>
                                         <th>Letter No.</th>
-                                        <th>Options</th>
+                                        <th>Sender</th>
+                                        <th>Letter</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -240,6 +256,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $value['letter_no'] }}</td>
+                                            <td>{{ $value['sender_name'] }}</td>
                                             <td>
                                                 @if (session('role') == 2)
                                                     &nbsp;
@@ -270,7 +287,17 @@
                                                         class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"></i></a>
-                                                    
+                                                    @if ($value['stage_status'] == 4)
+                                                        &nbsp;
+                                                        <a href="#" class="action-link save-btn archive"
+                                                            data-letter="{{ $value['letter_id'] }}"
+                                                            data-url="{{ route('change_stage') }}"
+                                                            data-form="#letter-complete-form"
+                                                            data-message="That you want to archive the letter!"
+                                                            id="save-archive-btn"><i class="fas fa-folder"
+                                                                style="color:#01fd4d;" data-toggle="tooltip"
+                                                                data-placement="top" title="Correspondences"></i></a>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -296,7 +323,8 @@
                                         <th>Diarize No.</th>
                                         <th>Subject</th>
                                         <th>Letter No.</th>
-                                        <th>Options</th>
+                                        <th>Sender</th>
+                                        <th>Letter</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -325,6 +353,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $value['letter_no'] }}</td>
+                                            <td>{{ $value['sender_name'] }}</td>
                                             <td>
                                                 @if (session('role') == 2)
                                                     &nbsp;
@@ -353,7 +382,17 @@
                                                         class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"></i></a>
-                                                    
+                                                    @if ($value['stage_status'] == 4)
+                                                        &nbsp;
+                                                        <a href="#" class="action-link save-btn archive"
+                                                            data-letter="{{ $value['letter_id'] }}"
+                                                            data-url="{{ route('change_stage') }}"
+                                                            data-form="#letter-complete-form"
+                                                            data-message="That you want to archive the letter!"
+                                                            id="save-archive-btn"><i class="fas fa-folder"
+                                                                style="color:#01fd4d;" data-toggle="tooltip"
+                                                                data-placement="top" title="Correspondences"></i></a>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -404,11 +443,9 @@
                                                 value="">
                                             <input type="hidden" name="forward_from" class="forward_from"
                                                 value="">
-                                                @if(session('role') != 1)
                                             <label for="assign_remarks" class="col-form-label">Remarks:</label>
                                             <textarea class="form-control" id="assign_remarks" name="assign_remarks" rows="4"></textarea>
                                             <label class="text text-danger assign_remarks"></label>
-                                                @endif
                                         </div>
                                         <button type="button" class="btn btn-primary save-btn"
                                             data-url="{{ route('assign_letter') }}" data-form="#assign-form"
