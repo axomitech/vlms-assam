@@ -46,18 +46,25 @@ class Letter extends Model
         $lettersDetails = Letter::leftJoin('senders', 'letters.id', '=', 'senders.letter_id')
             ->leftJoin('recipients', 'letters.id', '=', 'recipients.letter_id')
             ->join('user_departments', 'letters.user_id', '=', 'user_departments.id') // Add the join for user_departments
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Add the join for user_departments
             ->select(
                 'letters.letter_no',
                 'letters.receipt',
                 'letters.subject',
                 'recipients.recipient_name',
                 'senders.sender_name',
+                'senders.sender_designation',
+                'senders.organization',
                 'letters.letter_path',
                 'letters.id AS letter_id',
                 'recipients.organization as recipient_organization',
                 'senders.organization as sender_organization',
                 'letters.crn',
-                'letters.stage_status'
+                'letters.stage_status',
+                'letters.diary_date',
+                'letters.received_date',
+                'letters.letter_date',
+                'letter_categories.category_name'
             )
             ->where($condition);  // Apply the given condition
     

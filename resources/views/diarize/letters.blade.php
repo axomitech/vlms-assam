@@ -27,16 +27,15 @@
                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                     <div class="box-body">
-                        <table class="table table-sm table-hover table-striped letter-table" id="">
+                        <table class="table table-sm table-hover table-striped letter-table" id="inbox-table">
                             <thead>
                                 <tr>
                                     <th colspan="6" class="text text-center">Diarized Letters</th>
                                 </tr>
                                 <tr class="text text-sm text-justify">
                                     <th>Sl no.</th>
-                                    <th>Diarize No.</th>
+                                    <th>Diary</th>
                                     <th>Subject</th>
-                                    <th>Letter No.</th>
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Options</th>
@@ -49,7 +48,10 @@
                                 @foreach ($letters as $value)
                                     <tr class="text text-sm text-justify">
                                         <td>{{ $i }}</td>
-                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td> &nbsp;{{ $value['crn'] }}
+                                            <br>Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                        </td>
                                         <td style="width: 30%;">
                                             @if (strlen($value['subject']) > 100)
                                                 <div class="text-block" id="textBlock1">
@@ -66,14 +68,18 @@
                                                 @else
                                                     {{ $value['subject'] }}
                                             @endif
+                                            <br>Letter No: {{ $value['letter_no'] }}
+                                            <br>Letter Date: {{\Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y')}}
                                         </td>
 
-                                        <td>{{ $value['letter_no'] }}</td>
+                                        
                                         <td>
                                                 {{ $value->recipient_name }}
-                                                {{ $value->sender_name }}
+                                                {{ $value->sender_name }},
+                                                <br>
+                                                {{ $value->sender_designation }},{{$value['organization']}}
                                         </td>
-                                        
+                                        <td>{{ $value['category_name'] }}</td>
                                         <td>
                                             @if ($value['receipt'] == true)
                                                 Receipt
@@ -153,10 +159,10 @@
                             <thead>
                                 <tr class="text text-sm text-justify">
                                     <th>Sl no.</th>
-                                    <th>Diarize No.</th>
+                                    <th>Diary</th>
                                     <th>Subject</th>
-                                    <th>Letter No.</th>
                                     <th>Sender</th>
+                                    <th>Category</th>
                                     <th>Options</th>
                                 </tr>
                             </thead>
@@ -167,7 +173,9 @@
                                 @foreach ($inboxLetters as $value)
                                     <tr class="text text-sm text-justify">
                                         <td>{{ $i }}</td>
-                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td>{{ $value['crn'] }} 
+                                            <br>Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}</td>
                                         <td style="width: 30%;">
                                             @if (strlen($value['subject']) > 100)
                                                 <div class="text-block" id="textBlock1">
@@ -184,9 +192,13 @@
                                                 @else
                                                     {{ $value['subject'] }}
                                             @endif
+                                            <br>Letter No: {{ $value['letter_no'] }}
+                                            <br>Letter Date: {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                         </td>
-                                        <td>{{ $value['letter_no'] }}</td>
-                                        <td>{{ $value['sender_name'] }}</td>
+                                        
+                                        <td>{{ $value['sender_name'] }},<br>
+                                            {{ $value['sender_designation'] }},{{$value['organization']}}</td>
+                                        <td>{{ $value['category_name'] }}</td>
                                         <td>
                                             @if (session('role') == 2)
                                                 &nbsp;
@@ -234,17 +246,17 @@
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                 <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                     <div class="box-body">
-                        <table class="table table-sm table-hover table-striped letter-table" id="">
+                        <table class="table table-sm table-hover table-striped letter-table" id="sent-table">
                             <thead>
                                 <tr>
                                     <th colspan="6" class="text text-center">Sent Letters</th>
                                 </tr>
                                 <tr class="text text-sm text-justify">
                                     <th>Sl no.</th>
-                                    <th>Diarize No.</th>
+                                    <th>Diary</th>
                                     <th>Subject</th>
-                                    <th>Letter No.</th>
                                     <th>Sender</th>
+                                    <th>Category</th>
                                     <th>Options</th>
                                 </tr>
                             </thead>
@@ -255,7 +267,13 @@
                                 @foreach ($sentLetters as $value)
                                     <tr class="text text-sm text-justify">
                                         <td>{{ $i }}</td>
-                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td> 
+                                            {{ $value['crn'] }}
+                                            <br>
+                                            Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>
+                                            Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                        </td>
                                         <td style="width: 30%;">
                                             @if (strlen($value['subject']) > 100)
                                                 <div class="text-block" id="textBlock1">
@@ -272,9 +290,14 @@
                                                 @else
                                                     {{ $value['subject'] }}
                                             @endif
+                                            <br>Letter No: {{ $value['letter_no'] }}
+                                            <br>Letter Date: {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                         </td>
-                                        <td>{{ $value['letter_no'] }}</td>
-                                        <td>{{ $value['sender_name'] }}</td>
+                                        
+                                        <td>{{ $value['sender_name'] }},<br>
+                                            {{ $value['sender_designation'] }},{{$value['organization']}}
+                                        </td>
+                                        <td>{{ $value['category_name'] }}</td>
                                         <td>
                                             @if (session('role') == 2)
                                                 &nbsp;
@@ -321,17 +344,20 @@
             <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
                 <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                     <div class="box-body">
-                        <table class="table table-sm table-hover table-striped letter-table" id="">
+                        <div class="letter-table_wrapper">
+
+                        </div>
+                        <table class="table table-sm table-hover table-striped letter-table" id="archive-table">
                             <thead>
                                 <tr>
                                     <th colspan="6" class="text text-center">Archived Letters</th>
                                 </tr>
                                 <tr class="text text-sm text-justify">
                                     <th>Sl no.</th>
-                                    <th>Diarize No.</th>
+                                    <th>Diary</th>
                                     <th>Subject</th>
-                                    <th>Letter No.</th>
                                     <th>Sender</th>
+                                    <th>Category</th>
                                     <th>Options</th>
                                 </tr>
                             </thead>
@@ -342,7 +368,13 @@
                                 @foreach ($archivedLetters as $value)
                                     <tr class="text text-sm text-justify">
                                         <td>{{ $i }}</td>
-                                        <td> &nbsp;{{ $value['crn'] }}</td>
+                                        <td> 
+                                            {{ $value['crn'] }}
+                                            <br>
+                                            Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>
+                                            Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                        </td>
                                         <td style="width: 30%;">
                                             @if (strlen($value['subject']) > 100)
                                                 <div class="text-block" id="textBlock1">
@@ -359,9 +391,14 @@
                                                 @else
                                                     {{ $value['subject'] }}
                                             @endif
+                                            <br>
+                                            Letter No: {{ $value['letter_no'] }}
+                                            <br>
+                                            Letter Date: {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                         </td>
-                                        <td>{{ $value['letter_no'] }}</td>
-                                        <td>{{ $value['sender_name'] }}</td>
+                                       
+                                        <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{$value['organization']}}</td>
+                                        <td>{{ $value['category_name'] }},{{$value['organization']}}</td>
                                         <td>
                                             @if (session('role') == 2)
                                                 &nbsp;
@@ -504,15 +541,61 @@
     <script src="{{ asset('js/custom/common.js') }}"></script>
     <script>
         $(function() {
-            $(".letter-table").DataTable({
+            $("#archive-table").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": ["excel", "pdf", "print"]
-            }).buttons().container().appendTo('.letter-table_wrapper .col-md-6:eq(0)');
-            $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                },  {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#archive-table_wrapper  .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
             $(".buttons-html5").removeClass('btn-secondary');
-            $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
+
+            $("#sent-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                },  {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#sent-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
+
+            $("#inbox-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                },  {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#inbox-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
             $(".buttons-print").removeClass('btn-secondary');
         });
     </script>
