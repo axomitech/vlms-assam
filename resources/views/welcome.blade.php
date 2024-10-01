@@ -1,73 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
-    <meta charset="utf-8">
-    <title>VIP Letter Management System | Government of Assam</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content=""
-        name="VIP Letter Management System, Assam Secretariat, Assam Janata Bhawan,  Assam Janata Bhavan, Government of Assam, National Informatics Centre, NIC Assam">
-    <meta content=""
-        name="Streamline your correspondence with the VIP Letter Management System by the Government of Assam Secretariat. Efficiently manage and track official letters, ensuring prompt and organized communication for all VIP-related matters. Enhance productivity and transparency with our user-friendly platform. The software is designed and developed by National Informatics Centre, Assam. ">
-    <link href="{{ asset('banoshree/images/favicon.png') }}" rel="icon">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Poppins:wght@200;600;700&display=swap"
-        rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="{{ asset('banoshree/node_modules/animate/animate.min.css') }}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description"
+        content="eDak is a streamlined VIP letter management system developed by the National Informatics Centre for the Chief Minister's Office, Government of Assam. It enhances the efficiency of letter tracking and management, ensuring seamless communication and improved governance for VIP communications. Discover how eDak transforms the way letters are handled in Assam.">
+    <meta name="keywords"
+        content="eDak, VIP letter management system, Chief Minister's Office Assam, Government of Assam, National Informatics Centre, letter tracking, document management, streamlined communication, digital governance, Assam government services, electronic document management, VIP communication system, efficient letter handling">
+    <meta name="author" content="National Informatics Centre, Government of Assam">
+    <link rel="icon" type="image/png" href="{{ asset('banoshree/images/favicon.png') }}">
+    <title>eDAK | Login | Government of Assam </title>
+    <link rel="stylesheet" href="{{ asset('banoshree/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('banoshree/node_modules/boxicons/css/boxicons.min.css') }}">
     <link href="{{ asset('banoshree/node_modules/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('banoshree/css/style.css') }}" rel="stylesheet">
 </head>
 
-<body>
-    <div class="container-fluid bg-primary hero-header mb-1">
-        <div class="row align-items-center">
-            <div class="col-lg-3">
-                <img class="img-fluid" src="{{ asset('banoshree/images/bg.png') }}" alt="">
-            </div>
-            <div class="col-lg-9 text-center text-lg-start">
-                <div class="row">
-                    <div class=" offset-lg-3 col-lg-6">
-                        <h3 class="fw-light text-white animated slideInRight">Government of Assam</h3>
-                        <h1 class="display-4 text-white animated slideInRight">VIP <span
-                                class="fw-light text-dark">Letter<sup><img
-                                        src="{{ asset('banoshree/images/letter_sent.png') }}"
-                                        alt="VIP Letter Management System" height="40"></sup></span> Management
-                            System</h1>
-                        <p class="text-white mb-4 animated slideInRight">Streamlining Correspondance in the Assam
-                            Secretariat</p>
-                        <a href="{{ route('login') }}" class="btn btn-dark py-2 px-4 me-3 animated slideInRight"><i
-                                class="bi bi-lock"></i> Login with Parichay <i class="bi bi-arrow-right"></i> </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid bg-white footer">
-        <div class="container wow fadeIn" data-wow-delay="0.1s">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-
-                        Designed & Developed by <a class="border-bottom" href="https://assam.nic.in">National
-                            Informatics Centre, Assam</a> </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            &copy; <a class="border-bottom" href="#">2024. CM Secretariat, Government of
-                                Assam</a>. All Right Reserved.
+<body id="login-rim-page">
+    <div id="edak-login" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-xl-9 login-bg d-none d-xl-block">
+                <img src="{{ asset('banoshree/images/hcm.svg') }}" alt="eDAK Background Image"
+                    class="img-fluid login-img">
+                <footer class="position-relative">
+                    <div class="row row-cols-1 row-cols-sm-2 g-3">
+                        <div class="col text-muted">
+                            <p>Managed by <a href="https://cm.assam.gov.in/" target="_blank">Chief Minister's Office
+                                    (CMO), Government of Assam</a>
+                            </p>
+                        </div>
+                        <div class="col text-muted d-flex justify-content-start justify-content-sm-end">
+                            <p>Designed &amp; Developed by <a href="https://assam.nic.in/" target="_blank">National
+                                    Informatics Centre (NIC), Assam</a>
+                            </p>
                         </div>
                     </div>
+                </footer>
+            </div>
+            <div
+                class="col-sm-12 col-xl-3 ps-0 pe-0 pb-0 edak-login-form d-flex flex-column align-items-center justify-content-between">
+                <div>
+                    <picture class="d-xxl-none d-xxl-block d-xl-none">
+                        <source srcset="{{ asset('banoshree/images/hcm.svg') }}" type="image/svg"
+                            class="img-fluid d-block d-sm-block d-md-block d-lg-block d-xl-none login-img-mobile">
+                        <img src="{{ asset('banoshree/images/hcm.svg') }}" alt="eDak ackground Image with Photo of HCM"
+                            class="img-fluid d-block d-sm-block d-md-block d-lg-block d-xl-none login-img-mobile">
+                    </picture>
+                    <div>
+                        <h2 class="mt-5 text-center d-none d-xl-block">
+                            <i class='bx bxs-lock-open'></i> Official Login
+                        </h2>
+                        <hr>
+                        <p class="mt-4 text-center">Login with Parichay Single Sign On</p>
+                        <p class="text-center mt-4">
+                            <a href="https://parichay.nic.in/pnv1/assets/login?sid=neuEjS53A8EzHjKLSBuRvLxE3HMA0vLu"
+                                target="_blank">
+                                <img src="{{ asset('banoshree/images/parichay-white.png') }}"
+                                    alt="Login with eParichay Link" class="parichay-login pulse">
+                            </a>
+                        </p>
+                        <h4 class="mt-4 text-center">OR</h4>
+                        <p class="mt-4 mb-4 text-center">Login with your Email and Password</p>
+                        <form class="px-xl-0 px-5" action="{{ route('login') }}" method="post">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="username" class="form-label">Registered Email</label>
+                                <input type="email" class="form-control" placeholder="Email"
+                                    @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
+                                    required autocomplete="email" autofocus>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" placeholder="Password"
+                                    @error('password') is-invalid @enderror" name="password" required
+                                    autocomplete="current-password">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <input type="checkbox" class="form-check-input" id="remember">
+                                <label for="remember" class="form-label">Remember Me</label>
+                            </div>
+                            <button type="submit"
+                                class="btn mb-3 d-grid gap-2 col-12 mx-auto btn-lg text-capitalize">LOGIN </button>
+                            <div class="row">
+                                <div class="col-12 forgotpass">
+                                    <p>Forgot Password? <a href="#">RESET NOW</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <footer
+                        class="mt-30 d-block d-sm-block d-md-block d-lg-block d-xl-none mobile-footer position-relative">
+                        <div class="row row-cols-1 row-cols-sm-2 g-3">
+                            <div class="col">
+                                <p>Designed &amp; Developed by <a href="https://assam.nic.in/" target="_blank">NIC,
+                                        Assam</a>
+                                </p>
+                            </div>
+                            <div class="col d-flex justify-content-start justify-content-sm-end">
+                                <p>Managed by <a href="https://cm.assam.gov.in/" target="_blank">CMO, Government of
+                                        Assam</a>
+                                </p>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    <!-- JS -->
-    <script src="{{ asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('node_modules/wow/wow.min.js') }}"></script>
-    <script src="{{ asset('node_modules/easing/easing.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('banoshree/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>
 
 </html>
