@@ -32,7 +32,7 @@
                       <thead>
                           <tr class="text-sm">
                             <th>Sl no.</th>
-                              <th>Action Forwarded</th><th>From</th><th>Respond</th>
+                              <th>Action Forwarded </th><th>From</th><th>Respond</th>
                           </tr>
                       </thead>
                       <tbody>
