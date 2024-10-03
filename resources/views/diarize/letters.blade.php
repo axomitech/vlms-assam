@@ -496,7 +496,7 @@
 
                         </div>
                         <div cclass="col-md-7">
-                            <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card card-primary card-outline card-outline-tabs plate">
                                 <div class="card-body">
                                     <iframe src="" style="width: 25rem; height:20rem;" id="letter-view">
                                     </iframe>
