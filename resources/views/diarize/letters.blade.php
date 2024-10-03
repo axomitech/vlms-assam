@@ -35,7 +35,7 @@
                                         <th>Letter No.</th>
                                         <th>Name</th>
                                         <th>Category</th>
-                                        <th>Letter</th>
+                                        <th>Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -152,7 +152,7 @@
                                         <th>Subject</th>
                                         <th>Letter No.</th>
                                         <th>Sender</th>
-                                        <th>Letter</th>
+                                        <th>Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -216,7 +216,7 @@
                                         <th>Subject</th>
                                         <th>Letter No.</th>
                                         <th>Sender</th>
-                                        <th>Letter</th>
+                                        <th>Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -303,7 +303,7 @@
                                         <th>Subject</th>
                                         <th>Letter No.</th>
                                         <th>Sender</th>
-                                        <th>Letter</th>
+                                        <th>Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>

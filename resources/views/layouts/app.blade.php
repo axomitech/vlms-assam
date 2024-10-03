@@ -220,13 +220,13 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{ route('diarize',[encrypt(1)]) }}" class="nav-link">
+                  <a href="{{ route('diarize',[encrypt(1),encrypt(0)]) }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Receipt</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('diarize',[encrypt(0)]) }}" class="nav-link">
+                  <a href="{{ route('diarize',[encrypt(0),encrypt(0)]) }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Issue</p>
                   </a>
@@ -234,7 +234,34 @@
               </ul>
             </li>
             @endif
+<<<<<<< HEAD
           {{-- <li class="nav-item">
+=======
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-cog"></i>
+                <p>
+                Legacy Diarize
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(1),encrypt(1)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Receipt</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(0),encrypt(1)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Issue</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          <li class="nav-item">
+>>>>>>> 460addc (Legacy letter and letter sub category and UI modifications.)
             <a href="#" class="nav-link">
             <i class="nav-icon fas fa-envelope"></i>
               <p>
