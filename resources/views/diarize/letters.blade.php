@@ -12,12 +12,12 @@
                     <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
                     <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
+                    <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
                     <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
                     <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Archived</button>
-                    @endif
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -920,61 +920,15 @@
     <script src="{{ asset('js/custom/common.js') }}"></script>
     <script>
         $(function() {
-            $("#archive-table").DataTable({
+            $(".letter-table").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
-                    titleAttr: 'Excel'
-                },  {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
-                    titleAttr: 'PDF'
-                }]
-            }).buttons().container().appendTo('#archive-table_wrapper  .col-md-6:eq(0)');
-            $(".buttons-html5").addClass("btn-sm");
+                "buttons": ["excel", "pdf", "print"]
+            }).buttons().container().appendTo('.letter-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn btn-outline-info ml-1 btn-sm");
             $(".buttons-html5").removeClass('btn-secondary');
-            $(".buttons-print").addClass("btn-sm");
-            $(".buttons-print").removeClass('btn-secondary');
-
-            $("#sent-table").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
-                    titleAttr: 'Excel'
-                },  {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
-                    titleAttr: 'PDF'
-                }]
-            }).buttons().container().appendTo('#sent-table_wrapper .col-md-6:eq(0)');
-            $(".buttons-html5").addClass("btn-sm");
-            $(".buttons-html5").removeClass('btn-secondary');
-            $(".buttons-print").addClass("btn-sm");
-            $(".buttons-print").removeClass('btn-secondary');
-
-            $("#inbox-table").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
-                    titleAttr: 'Excel'
-                },  {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
-                    titleAttr: 'PDF'
-                }]
-            }).buttons().container().appendTo('#inbox-table_wrapper .col-md-6:eq(0)');
-            $(".buttons-html5").addClass("btn-sm");
-            $(".buttons-html5").removeClass('btn-secondary');
-            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").addClass("btn btn-outline-info ml-1 btn-sm");
             $(".buttons-print").removeClass('btn-secondary');
         });
     </script>
@@ -1000,6 +954,27 @@
             $('.assign_letter').val($(this).data('letter'));
             $('.forward_from').val($(this).data('forward'));
 
+        });
+    </script>
+    <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the URL parameter 'tab'
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        // Check if 'tab' exists and switch to the appropriate tab
+        if (tab) {
+            if (tab === 'inbox') {
+                document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+            } else if (tab === 'sent') {
+                document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+            } else if (tab === 'archive') {
+                document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+            }
+        }
+    });
+</script>
         });
     </script>
     <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
