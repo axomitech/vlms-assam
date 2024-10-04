@@ -258,9 +258,6 @@
               </ul>
             </li>
             @endif
-<<<<<<< HEAD
-          {{-- <li class="nav-item">
-=======
             <li class="nav-item">
               <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user-cog"></i>
@@ -285,7 +282,6 @@
               </ul>
             </li>
           <li class="nav-item">
->>>>>>> 460addc (Legacy letter and letter sub category and UI modifications.)
             <a href="#" class="nav-link">
             <i class="nav-icon fas fa-envelope"></i>
               <p>
@@ -321,7 +317,7 @@
                 </li>
                 @endif
             </ul>
-          </li> --}}
+          </li>
           @if (session('role') > 3)  
 
           <li class="nav-item">
