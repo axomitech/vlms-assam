@@ -28,7 +28,15 @@
     @endif
   @if(count($actions) > 0)
   <div class="col-md-5">
+  <div class="col-md-5">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
+    @if($completeStatus == 4)
+    <form id="letter-complete-form" hidden>
+      <input type="hidden" name="stage_letter" value="{{$letter_id}}">
+      <input type="hidden" name="stage" value="5">
+    </form>
+    <button type="button" class="btn btn-sm btn-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-complete-btn">Archive Letter</button>
+  @endif
     @if($completeStatus == 4)
     <form id="letter-complete-form" hidden>
       <input type="hidden" name="stage_letter" value="{{$letter_id}}">
@@ -75,6 +83,11 @@
                       <td colspan="4" class="text text-danger">No response is available.</td>
                     </tr>
                     @else
+                    @if(count($letterActions) == 0)
+                    <tr>
+                      <td colspan="4" class="text text-danger">No response is available.</td>
+                    </tr>
+                    @else
                     @foreach ($letterActions as $value)
                     <tr>
                       <td>
@@ -82,7 +95,46 @@
                       </td>
                         <td>
                           @if(strlen($value['action_description']) > 100)
+                    <tr>
+                      <td>
+                        {{$i}}
+                      </td>
+                        <td>
+                          @if(strlen($value['action_description']) > 100)
 
+                          <div class="text-block" id="textBlock1">
+                            <p class="shortText">
+                              {{substr($value['action_description'], 0, 100)}}... 
+                              <a href="#" class="readMore">Read more</a>
+                            </p>
+                            <div class="longText" style="display: none;">
+                              <p>
+                                {{$value['action_description']}}
+                                <a href="#" class="readLess">Read less</a>
+                              </p>
+                            </div>
+                          
+                          @else
+                            {{$value['action_description']}}
+                          @endif
+                          <br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
+                        <td>
+                          <table class="table-bordered">
+                            @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
+                                  <tr><td>{{$actionDepartments[$i-1][$j]}}</td><td>{{$responsesStatuses[$i-1][$j]}}</td></tr>
+                              @endfor
+                          </table>
+                        </td>
+                        <td>
+                          <a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a>
+                        </td>
+                    </tr>
+                    @php
+                        $i++;
+                    @endphp
+                @endforeach
+                    @endif
+                   
                           <div class="text-block" id="textBlock1">
                             <p class="shortText">
                               {{substr($value['action_description'], 0, 100)}}... 
@@ -493,10 +545,12 @@
           <div class="row">
             <div class="col-md-5">
               <table class="table table-striped">
+              <table class="table table-striped">
                 <thead>
                   <tr><th>Responses</th></tr>
                 </thead>
                 <tbody id="note-body">
+                  
                   
                 </tbody>
               </table>
@@ -553,12 +607,14 @@
   $(document).on('click','.note-link',function(e){
       e.preventDefault();
      $('.modal-title').text($(this).data('action_text'));
+     $('.modal-title').text($(this).data('action_text'));
       var action = $(this).data('action');
       $.get("{{route('action_notes')}}",{
         'action':action
       },function(j){
         var tr = "";
         var attachment = "";
+       if(j.length > 1){
        if(j.length > 1){
           for(var i = 1; i < j.length; i++){
           if(j[i].attach != ""){
@@ -568,6 +624,8 @@
           attachment = "";
           }
             $('#note-body').html(tr);
+          }else{
+            $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }else{
             $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }
