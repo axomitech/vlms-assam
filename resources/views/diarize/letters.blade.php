@@ -12,6 +12,7 @@
                     <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
                     <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
+                    <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
                     <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
@@ -20,6 +21,54 @@
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
+               @if(session('role') == 1)
+               <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped letter-table" id="inbox-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text text-center">Diarized Letters</th>
+                                </tr>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diary</th>
+                                    <th>Subject</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($letters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td> &nbsp;{{ $value['crn'] }}
+                                            <br>Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                        </td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                            <br>Letter No: {{ $value['letter_no'] }}
+                                            <br>Letter Date: {{\Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y')}}
+                                        </td>
                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                     <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="box-body">
@@ -64,6 +113,173 @@
                                                 @endif
                                             </td>
 
+                                        
+                                        <td>
+                                                {{ $value->recipient_name }}
+                                                {{ $value->sender_name }},
+                                                <br>
+                                                {{ $value->sender_designation }},{{$value['organization']}}
+                                        </td>
+                                        <td>{{ $value['category_name'] }}</td>
+                                        <td>
+                                            @if ($value['receipt'] == true)
+                                                Receipt
+                                            @else
+                                                Issued
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (session('role') == 1)
+                                                &nbsp;
+                                                @if ($assignedLetters[$i - 1] <= 0)
+                                                    <a href="" class="assign-link" data-toggle="modal"
+                                                        data-target=".bd-example-modal-lg"
+                                                        data-letter="{{ $value['letter_id'] }}"
+                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
+                                                            class="fas fa-paper-plane" style="color:#173f5f;"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                @if ($delegatgeLetters[$i - 1] > 0)
+                                                    <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                @if ($assignedLetters[$i - 1] > 0)
+                                                    <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                &nbsp;
+                                                @if ($assignedLetters[$i - 1] > 0)
+                                                    <a href="" class="assign-link" data-toggle="modal"
+                                                        data-target=".bd-example-modal-lg"
+                                                        data-letter="{{ $value['letter_id'] }}"
+                                                        data-forward="{{ $assignedLetters[$i - 1] }}"
+                                                        data-letter_path="{{ config('constants.options.storage_url') }}{{ $value['letter_path'] }}"><i
+                                                            class="fas fa-paper-plane" style="color:#173f5f;"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @else
+            <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped" id="letter-table">
+                            <thead>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diary</th>
+                                    <th>Subject</th>
+                                    <th>Sender</th>
+                                    <th>Category</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($inboxLetters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td>{{ $value['crn'] }} 
+                                            <br>Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}</td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                            <br>Letter No: {{ $value['letter_no'] }}
+                                            <br>Letter Date: {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                        </td>
+                                        
+                                        <td>{{ $value['sender_name'] }},<br>
+                                            {{ $value['sender_designation'] }},{{$value['organization']}}</td>
+                                        <td>{{ $value['category_name'] }}</td>
+                                        <td>
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                @if ($assignedSentLetters[$i - 1] > 0)
+                                                    <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                            @if (session('role') == 3)
+                                                
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
                                             <td>{{ $value['letter_no'] }}</td>
                                             <td>
                                                     {{ $value->recipient_name }}
@@ -210,6 +426,208 @@
                                 </tbody>
                             </table>
 
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <table class="table table-sm table-hover table-striped letter-table" id="sent-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text text-center">Sent Letters</th>
+                                </tr>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diary</th>
+                                    <th>Subject</th>
+                                    <th>Sender</th>
+                                    <th>Category</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($sentLetters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td> 
+                                            {{ $value['crn'] }}
+                                            <br>
+                                            Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>
+                                            Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                        </td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                            <br>Letter No: {{ $value['letter_no'] }}
+                                            <br>Letter Date: {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                        </td>
+                                        
+                                        <td>{{ $value['sender_name'] }},<br>
+                                            {{ $value['sender_designation'] }},{{$value['organization']}}
+                                        </td>
+                                        <td>{{ $value['category_name'] }}</td>
+                                        <td>
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                @if ($assignedSentLetters[$i - 1] > 0)
+                                                    <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                        class="action-link"><i class="fas fa-edit"
+                                                            style="color:#173f5f;" data-toggle="tooltip"
+                                                            data-placement="top" title="View/Update"></i></a>
+                                                @endif
+                                            @endif
+                                            @if (session('role') == 3)
+                                                
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
+                <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                    <div class="box-body">
+                        <div class="letter-table_wrapper">
+
+                        </div>
+                        <table class="table table-sm table-hover table-striped letter-table" id="archive-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text text-center">Archived Letters</th>
+                                </tr>
+                                <tr class="text text-sm text-justify">
+                                    <th>Sl no.</th>
+                                    <th>Diary</th>
+                                    <th>Subject</th>
+                                    <th>Sender</th>
+                                    <th>Category</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($archivedLetters as $value)
+                                    <tr class="text text-sm text-justify">
+                                        <td>{{ $i }}</td>
+                                        <td> 
+                                            {{ $value['crn'] }}
+                                            <br>
+                                            Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                            <br>
+                                            Recieved Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                        </td>
+                                        <td style="width: 30%;">
+                                            @if (strlen($value['subject']) > 100)
+                                                <div class="text-block" id="textBlock1">
+                                                    <p class="shortText text-justify text-sm">
+                                                        {{ substr($value['subject'], 0, 100) }}...
+                                                        <a href="#" class="readMore">Read more</a>
+                                                    </p>
+                                                    <div class="longText" style="display: none;">
+                                                        <p class="text-sm text-justify">
+                                                            {{ $value['subject'] }}
+                                                            <a href="#" class="readLess">Read less</a>
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    {{ $value['subject'] }}
+                                            @endif
+                                            <br>
+                                            Letter No: {{ $value['letter_no'] }}
+                                            <br>
+                                            Letter Date: {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                        </td>
+                                       
+                                        <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{$value['organization']}}</td>
+                                        <td>{{ $value['category_name'] }},{{$value['organization']}}</td>
+                                        <td>
+                                            @if (session('role') == 2)
+                                                &nbsp;
+                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                &nbsp;
+                                                <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link"><i class="fas fa-edit" style="color:#173f5f;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="View/Update"></i></a>
+                                            @endif
+                                            @if (session('role') == 3)
+                                                
+                                                &nbsp;
+                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                    class="action-link"><i
+                                                        class="fas fa-envelope-open-text text-success"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Acknowledgement Letter Generation"></i></a>
+                                                &nbsp;
+                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                    class="action-link"><i class="fas fa-file" style="color:#fd9f01;"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Correspondences"></i></a>
+                                                
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+               @endif
+               
                         </div>
                     </div>
                 </div>
@@ -536,6 +954,27 @@
             $('.assign_letter').val($(this).data('letter'));
             $('.forward_from').val($(this).data('forward'));
 
+        });
+    </script>
+    <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the URL parameter 'tab'
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        // Check if 'tab' exists and switch to the appropriate tab
+        if (tab) {
+            if (tab === 'inbox') {
+                document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+            } else if (tab === 'sent') {
+                document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+            } else if (tab === 'archive') {
+                document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+            }
+        }
+    });
+</script>
         });
     </script>
     <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
