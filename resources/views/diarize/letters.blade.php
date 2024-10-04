@@ -38,6 +38,7 @@
                                     <th>Subject</th>
                                     <th>Name</th>
                                     <th>Category</th>
+                                    <th>Letter</th>
                                     <th>Options</th>
                                 </tr>
                             </thead>
