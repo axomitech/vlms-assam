@@ -107,6 +107,8 @@
                                                                     <i class="fas fa-paper-plane ml-1"></i>
                                                                 </span>
                                                             </a>
+                                                            <a href="{{route('edit_diarize',[$value['letter_id']])}}"><i class="fas fa-edit"></i></a>
+
                                                         </div>
                                                     @endif
 
