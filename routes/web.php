@@ -13,6 +13,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
     Route::get('/diarize/{receipt}/{legacy}', [App\Http\Controllers\LetterController::class, 'index'])->name('diarize');
+    Route::get('/edit_diarize/{letter}', [App\Http\Controllers\LetterController::class, 'editDiarized'])->name('edit_diarize');
+    Route::post('/edit_letter/{letter}', [App\Http\Controllers\LetterController::class, 'update'])->name('edit_letter');
     Route::get('/letters', [App\Http\Controllers\LetterController::class, 'showLetters'])->name('letters');
     Route::post('/store_letter', [App\Http\Controllers\LetterController::class, 'store'])->name('store_letter');
     Route::post('/change_stage', [App\Http\Controllers\LetterController::class, 'changeLetterStage'])->name('change_stage');

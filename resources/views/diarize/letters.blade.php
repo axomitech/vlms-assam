@@ -98,6 +98,7 @@
                                                             class="fas fa-paper-plane" style="color:#173f5f;"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="View/Update"></i></a>
+                                                    <a href="{{route('edit_diarize',[$value['letter_id']])}}"><i class="fas fa-edit"></i></a>
                                                 @endif
                                             @endif
                                             @if (session('role') == 2)
