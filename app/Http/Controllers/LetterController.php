@@ -267,6 +267,40 @@ class LetterController extends Controller
         return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters'));
     }
 
+    public function editDiarized($letterId){
+        $letters = Letter::showLetterAndSender([
+            'letters.id'=>$letterId
+        ],[]);
+        $letterData = [];
+        foreach($letters AS $value){
+            $letterData['letter_no'] = $value['letter_no'];
+            $letterData['letter_date'] = $value['letter_date'];
+            $letterData['receipt'] = $value['receipt'];
+            $letterData['subject'] = $value['subject'];
+            $letterData['recipient_name'] = $value['recipient_name'];
+            $letterData['sender_name'] = $value['sender_name'];
+            $letterData['sender_phone'] = $value['sender_phone'];
+            $letterData['sender_email'] = $value['sender_email'];
+            $letterData['address'] = $value['address'];
+            $letterData['sender_designation'] = $value['sender_designation'];
+            $letterData['organization'] = $value['organization'];
+            $letterData['letter_id'] = $value['letter_id'];
+            $letterData['recipient_organization'] = $value['recipient_organization'];
+            $letterData['sender_organization'] = $value['sender_organization'];
+            $letterData['stage_status'] = $value['stage_status'];
+            $letterData['diary_date'] = $value['diary_date'];
+            $letterData['received_date'] = $value['received_date'];
+            $letterData['letter_category_id'] = $value['letter_category_id'];
+            $letterData['letter_sub_category_id'] = $value['letter_sub_category_id'];
+            $letterData['legacy'] = $value['legacy'];
+            $letterData['letter_priority_id'] = $value['letter_priority_id'];
+            
+        }
+        $priorities = LetterPriority::getAllPriorities();
+        $letterCategories = LetterCategory::getAllLetterCategories();
+        return view('diarize.edit_diarize', compact('priorities', 'letterCategories', 'letterData'));
+    }
+
     /**
      * Display the specified resource.
      */
@@ -288,7 +322,101 @@ class LetterController extends Controller
      */
     public function update(UpdateLetterRequest $request, Letter $letter)
     {
-        //
+        if ($request->ajax()) {
+            $jData = [];
+            $letterPath = "";
+            if ($request->hasFile('letter')) {
+
+                if ($request->file('letter')->isValid()) {
+
+                    $letterPath = $request->letter->store('public/letters');
+                } else {
+
+                    $jData[1] = [
+                        'message' => 'The letter upload was unsuccessful! Please try again.',
+                        'candidate' => '',
+                        'status' => 'error'
+                    ];
+                }
+            } else {
+
+                $letterPath = Common::getSingleColumnValue('letters',[
+                    'id'=>$letter->id
+                ],'letter_path');
+            }
+            DB::beginTransaction();
+
+            try {
+                $crn = Common::getSingleColumnValue('letters',[
+                    'id'=>$letter->id
+                ],'crn');
+                $letterDetails = [
+
+                    $request->category,
+                    $request->priority,
+                    $request->letter_date,
+                    $request->received_date,
+                    $request->diary_date,
+                    $request->letter_no,
+                    $request->subject,
+                    $letterPath,
+                    $request->auto_ack,
+                    $request->receipt,
+                    $request->sub_category,
+                    $request->legacy,
+                    $crn,
+                ];
+
+                Letter::updateLetter($letterDetails,$letter);
+                $abbreviation = Department::getDepartmentAbbreviation(session('role_dept'));
+                $year = Carbon::now()->year;
+                
+                if ($request->receipt == 1) {
+                    $senderDetails = [
+
+                        $letter->id,
+                        $request->sender_name,
+                        $request->sender_designation,
+                        $request->sender_mobile,
+                        $request->sender_email,
+                        $request->organization,
+                        $request->address
+
+                    ];
+                    Sender::updateSender($senderDetails);
+                } else {
+                    $recipientDetails = [
+                        $letter->id,
+                        $request->recipient_name,
+                        $request->recipient_designation,
+                        $request->recipient_mobile,
+                        $request->recipient_email,
+                        $request->organization,
+                        $request->address
+                    ];
+                    Recipient::updateRecipient($recipientDetails);
+                }
+                DB::commit();
+                $jData[1] = [
+                    'message' => 'Letter is successfully diarized.',
+                    'status' => 'success',
+                    'letter_id' => $letter->id,
+                    'ack_check' => $request->auto_ack
+                ];
+
+                session()->flash('letter_id', $letter->id);
+                session()->flash('ack_check', $request->auto_ack);
+            } catch (\Exception $e) {
+                DB::rollback();
+                $jData[1] = [
+                    'message' => 'Something went wrong! Please try again.' . $e->getMessage(),
+                    'candidate' => '',
+                    'status' => 'error'
+                ];
+            }
+
+            return response()->json($jData, 200);
+        }
     }
 
     /**
