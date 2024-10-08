@@ -249,7 +249,7 @@
                <div class="collapse" id="collapseExample">
                 <button type="button" class="btn btn-outline-danger btn-sm offset-11 mb-1" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">CLOSE</button>
                 <div class="card card-body" style="height: 50rem;">
-                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 100%;">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width:100%; height: 100%;">
                   </iframe>
                 </div>
               </div>
@@ -311,7 +311,7 @@
                                 <!-- Main row -->
                                 <div class="col-md-12 bg-danger1">
                                   <!-- <div style="width: 60%; margin: auto;"> -->
-                                    <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:22rem; height: 20rem;">
+                                    <iframe src="{{storageUrl($letterPath)}}" style="width:22rem; height: 20rem;">
                                     </iframe>
                               </div>
                             </div><!-- /.container-fluid -->
@@ -674,7 +674,7 @@ $('.js-example-basic-multiple').select2();
             $('#btn-modal{{$result->c_id}}').click(function() {
 
                 // var iframe = modal.find('#annx');
-                    $("#annx").attr('src', '{{config('constants.options.storage_url')}}{{$result->file_path}}');
+                    $("#annx").attr('src', '{{storageUrl($result->file_path)}}');
 
                     $('#viewCorrespondenceModal').modal({
                                 backdrop: 'static',

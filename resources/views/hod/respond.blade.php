@@ -19,7 +19,7 @@
             @foreach ($responses as $value)
             <tr class="text-sm">
               <td>{{$i}}.</td>
-              <td style="width: 45%;"> {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{config('constants.options.storage_url')}}{{$value['response_attachment']}}"><i class="fas fa-file-pdf"></i></a></td>
+              <td style="width: 45%;"> {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{storageUrl($value['response_attachment'])}}"><i class="fas fa-file-pdf"></i></a></td>
             </tr>
             @php
               $i++;
@@ -95,7 +95,7 @@
             <div cclass="col-md-7">
               <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-body">
-                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width: 25rem; height:26.5rem;">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width: 25rem; height:26.5rem;">
                   </iframe>
                 </div>
               </div>

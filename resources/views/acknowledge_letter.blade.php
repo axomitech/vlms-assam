@@ -250,7 +250,7 @@ aria-hidden="true">
             $('#view_letter').click(function() {
 
                 // var iframe = modal.find('#annx');
-                    $("#annx").attr('src', '{{config('constants.options.storage_url')}}{{$letter_path}}');
+                    $("#annx").attr('src', '{{storageUrl($letter_path)}}');
 
                     $('#viewLetterModal').modal({
                                 backdrop: 'static',

@@ -46,7 +46,7 @@
                             @endphp
                               <tr class="text-sm">
                                 <td>{{$i}}</td>
-                                <td style="width: 35%;">{{$value['action_description']}}<br><b>Delivered: {{$timeSpan}}</b></td><td>{{$value['sender_name']}}, {{$value['department_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{config('constants.options.storage_url')}}{{$value['letter_path']}}"><i class="fas fa-file-pdf"></i></a>&emsp;<a href="{{route('responds',[encrypt($value['action_sent_id']),encrypt($value['act_dept_id']),encrypt($value['letter_id'])])}}"><i class="fas fa-pen"></i></a></td>
+                                <td style="width: 35%;">{{$value['action_description']}}<br><b>Delivered: {{$timeSpan}}</b></td><td>{{$value['sender_name']}}, {{$value['department_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{storageUrl($value['letter_path'])}}"><i class="fas fa-file-pdf"></i></a>&emsp;<a href="{{route('responds',[encrypt($value['action_sent_id']),encrypt($value['act_dept_id']),encrypt($value['letter_id'])])}}"><i class="fas fa-pen"></i></a></td>
                               </tr>
                               @php
                                   $i++;

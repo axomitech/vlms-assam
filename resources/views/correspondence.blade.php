@@ -202,7 +202,7 @@ aria-hidden="true">
             $('#btn-modal{{$result->c_id}}').click(function() {
 
                 // var iframe = modal.find('#annx');
-                    $("#annx").attr('src', '{{config('constants.options.storage_url')}}{{$result->file_path}}');
+                    $("#annx").attr('src', '{{storageUrl($result->file_path)}}');
 
                     $('#viewCorrespondenceModal').modal({
                                 backdrop: 'static',
