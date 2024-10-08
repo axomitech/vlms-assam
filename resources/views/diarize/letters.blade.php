@@ -94,22 +94,28 @@
                                                 </td>
                                                 <td>
                                                     @if ($assignedLetters[$i - 1] <= 0)
-                                                        <div class="mb-1">
-                                                            <a href="javascript:void(0);" class="assign-link"
-                                                                data-toggle="modal" data-target=".bd-example-modal-lg"
-                                                                data-letter="{{ $value['letter_id'] }}"
-                                                                data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                <span
-                                                                    class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                    title="Assign Letter"
-                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                    Assign
-                                                                    <i class="fas fa-paper-plane ml-1"></i>
-                                                                </span>
-                                                            </a>
-                                                            <a href="{{route('edit_diarize',[$value['letter_id']])}}"><i class="fas fa-edit"></i></a>
-
-                                                        </div>
+                                                    <div class="mb-1">
+                                                        <!-- Edit Button -->
+                                                        <a href="{{ route('edit_diarize', [$value['letter_id']]) }}" 
+                                                            class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
+                                                            style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-edit mr-1"></i> Edit
+                                                        </a>
+                                                    </div>
+                                                    
+                                                    <div class="mb-1">
+                                                        <!-- Assign Button -->
+                                                        <a href="javascript:void(0);" class="assign-link" 
+                                                            data-toggle="modal" data-target=".bd-example-modal-lg"
+                                                            data-letter="{{ $value['letter_id'] }}" 
+                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                            <span class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                  title="Assign Letter" style="min-height: 30px; font-size: 12px;">
+                                                                Assign <i class="fas fa-paper-plane ml-1"></i>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                    
                                                     @endif
 
 
