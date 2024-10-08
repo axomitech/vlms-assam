@@ -6,11 +6,6 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
-                        <!-- <div class="box-header">
-                                                <div class="box-tools">
-                                                <p style="font-size:18px;font-weight:bold;margin-bottom: 9px; color:#173F5F;">Actions</p>
-                                                </div>
-                                            </div> -->
                         <div class="box-body">
                             <section class="content">
                                 <div class="container-fluid">
