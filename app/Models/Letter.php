@@ -40,6 +40,38 @@ class Letter extends Model
         return $letter->id;
     }
 
+
+    public static function updateLetter($letterDetails,$letter)
+    {
+        $receipt = true;
+        $legacy = true;
+        if ($letterDetails[9] == 0) {
+            $receipt = false;
+        }
+        if ($letterDetails[11] == 0) {
+            $legacy = false;
+        }
+        Letter::where([
+            'id'=>$letter->id
+        ])->update([
+            'letter_category_id' => $letterDetails[0],
+            'letter_sub_category_id' => $letterDetails[10],
+            'letter_priority_id' => $letterDetails[1],
+            'letter_no' => $letterDetails[5],
+            'letter_date' => $letterDetails[2],
+            'received_date' => $letterDetails[3],
+            'diary_date' => $letterDetails[4],
+            'subject' => $letterDetails[6],
+            'letter_path' => $letterDetails[7],
+            'auto_ack' => $letterDetails[8],
+            'stage_status' => 1,
+            'department_id' => session('role_dept'),
+            'receipt' => $receipt,
+            'legacy' => $legacy,
+            'crn' => $letterDetails[12],
+        ]);
+    }
+
     public static function showLetterAndSender($condition, $letters)
     {
         // Join the necessary tables and use CASE to handle conditional selection based on receipt
@@ -59,11 +91,19 @@ class Letter extends Model
                 'letters.id AS letter_id',
                 'recipients.organization as recipient_organization',
                 'senders.organization as sender_organization',
+                'senders.sender_phone',
+                'senders.sender_email',
+                'senders.address',
                 'letters.crn',
                 'letters.stage_status',
                 'letters.diary_date',
                 'letters.received_date',
+                'letters.issue_date',
                 'letters.letter_date',
+                'letters.letter_category_id',
+                'letters.letter_sub_category_id',
+                'letters.legacy',
+                'letters.letter_priority_id',
                 'letter_categories.category_name'
             )
             ->where($condition);  // Apply the given condition

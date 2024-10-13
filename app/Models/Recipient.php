@@ -25,4 +25,21 @@ class Recipient extends Model
         return $recipient->id;
 
     }
+
+    public static function updateRecipient($recipientDetails){
+
+        Recipient::where([
+            'letter_id'=>$recipientDetails[0]
+        ])->update([
+            'recipient_name' => $recipientDetails[1],
+            'recipient_designation' => $recipientDetails[2],
+            'recipient_phone' => $recipientDetails[3],
+            'recipient_email' => $recipientDetails[4],
+            'sms_to' => $recipientDetails[3],
+            'email_to' => $recipientDetails[4],
+            'organization' => $recipientDetails[5],
+            'address' => $recipientDetails[6],
+        ]);
+
+    }
 }

@@ -25,4 +25,21 @@ class Sender extends Model
         return $sender->id;
 
     }
+
+    public static function updateSender($senderDetails){
+        
+        Sender::where([
+            'letter_id'=>$senderDetails[0]
+        ])->update([
+             'sender_name' => $senderDetails[1],
+            'sender_designation' => $senderDetails[2],
+            'sender_phone' => $senderDetails[3],
+            'sender_email' => $senderDetails[4],
+            'sms_to' => $senderDetails[3],
+            'email_to' => $senderDetails[4],
+            'organization' => $senderDetails[5],
+            'address' => $senderDetails[6],
+        ]);
+
+    }
 }
