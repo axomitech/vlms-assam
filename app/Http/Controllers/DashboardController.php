@@ -14,6 +14,23 @@ class DashboardController extends Controller
         $letters = Letter::showLetterAndSender([
             'user_departments.department_id' => session('role_dept')
         ], []);
+        $letter_category = Letter::join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+        ->select('letter_categories.id', 'letter_categories.category_name', DB::raw('COUNT(*) as count'))
+        ->where('letters.department_id', '=', session('role_dept'))
+        ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
+        ->get();
+        $selectedMonth = request('month') ?? 9;  // Get selected month, default to current month
+
+        $receivedLetters = DB::table('letters')
+    ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+    ->selectRaw('letter_categories.category_name, letter_category_id, ceil(extract(day from received_date) / 7) as week_of_month, COUNT(*) as count')
+    ->whereRaw('extract(month from received_date) = ?', [$selectedMonth])
+    ->groupBy('letter_category_id', 'week_of_month', 'letter_categories.category_name')
+    ->get();
+
+        // return $receivedLetters;
+
+
         $diarized_count = HomeModel::get_diarized_count();
         $sent_count = HomeModel::get_sent_count();
         $archive_count = HomeModel::get_archive_count();
@@ -24,7 +41,7 @@ class DashboardController extends Controller
         $receipt_count = HomeModel::get_receipt_count();
         $action_count = HomeModel::get_actions_count();
 
-        return view('dashboard.dashboard', compact('letters', 'diarized_count', 'sent_count', 'archive_count', 'diarized_details', 'inbox_count', 'receipt_count', 'issue_count', 'action_count'));
+        return view('dashboard.dashboard', compact('letters', 'diarized_count', 'sent_count', 'archive_count', 'diarized_details', 'inbox_count', 'receipt_count', 'issue_count', 'action_count','letter_category','receivedLetters'));
         // return response()->json($data);
     }
     public function dashboard_data()
