@@ -277,7 +277,7 @@
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <canvas id="myPieChart" width="200" height="200" style="padding: 40px;"></canvas>
+                    <canvas id="myPieChart" width="200" height="200" style="padding: 30px;"></canvas>
                 </div>
             </div>
 
@@ -487,7 +487,6 @@
             categoryList.appendChild(categoryItem);
         });
 
-        // Overall statistics pie chart
         const receipt_count = {{ $receipt_count }};
         const action_count = {{ $action_count }};
         const issue_count = {{ $issue_count }};
@@ -499,7 +498,6 @@
             data: {
                 labels: ['Received', 'Action', 'Issued', 'Archived'],
                 datasets: [{
-                    label: 'eDak Overview',
                     data: [receipt_count, action_count, issue_count, archive_count],
                     backgroundColor: ['#379FFF', '#42B518', '#DE6909', '#BF9203'],
                 }]
@@ -512,20 +510,25 @@
                         display: false
                     },
                     datalabels: {
-                        anchor: 'end',
-                        align: 'end',
                         formatter: (value, context) => {
                             const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                            return `${((value / total) * 100).toFixed(2)}% →`;
+                            const percentage = ((value / total) * 100).toFixed(
+                            1); // Show percentage to 1 decimal place
+                            return `${percentage}%`; // Show percentage outside the pie
                         },
-                        color: '#fff',
+                        color: '#000',
                         font: {
-                            weight: 'bold',
-                            size: 14
-                        }
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        align: 'end',
+                        anchor: 'end',
+                        offset: 5, // Adjust the position of the percentage labels
+                        padding: 0
                     }
                 }
-            }
+            },
+            plugins: [ChartDataLabels] // Ensure the DataLabels plugin is being used
         });
     </script>
 @endsection
