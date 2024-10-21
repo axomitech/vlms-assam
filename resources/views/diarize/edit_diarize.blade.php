@@ -309,8 +309,8 @@
                                     <div class="row">
                                         <div class="col-md-12" style="height:29rem;">
                                             <div class="fileContent">
-                                                <h5 class="text text-warning mt-5 text-center">Please upload the letter for
-                                                    viewing.</h5>
+                                                <iframe class="w-100" style="height:22.5rem" src="{{storageUrl($letterData['letter_path'])}}">
+                                                </iframe>
                                             </div>
                                         </div>
                                     </div>

@@ -66,7 +66,7 @@ class HomeController extends Controller
         // print_r($diarized_details);
         // exit;
         // return view('home1',compact('diarized_count','diarized_details','sent_count','archive_count','inbox_count'));
-        return Redirect::away(route('letters'));
+        return Redirect::away(route('letters',[encrypt(0)]));
     }
 
     private function sessionInitiate($user, $department, $role)

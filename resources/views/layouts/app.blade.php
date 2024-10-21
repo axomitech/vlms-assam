@@ -209,7 +209,15 @@
                 Letters
                 </p>
               </a>
-          </li>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('letters',[encrypt(1)])}}" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+                <p>
+                Legacy Letters
+                </p>
+              </a>
+            </li>
             @if (session('role') == 1)  
             <li class="nav-item menu-is-opening menu-open">
               <a href="#" class="nav-link">
