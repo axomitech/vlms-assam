@@ -683,7 +683,6 @@
             }
         });
     </script>
-    });
     </script>
     <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
     <script>
