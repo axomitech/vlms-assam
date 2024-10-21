@@ -113,7 +113,7 @@
     
   </div>
   <div class=" col-md-5">
-    <iframe src="{{config('constants.options.storage_url')}}{{str_replace("public/","",$letterPath)}}" style="width:100%; height: 100%;">
+    <iframe src="{{storageUrl($letterPath)}}" style="width:100%; height: 100%;">
     </iframe>
   </div>
 </div>
@@ -163,7 +163,7 @@
             <div cclass="col-md-7">
               <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-body">
-                  <iframe src="{{config('constants.options.storage_url')}}{{str_replace("public/","",$letterPath)}}" style="width: 25rem; height:20rem;">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width: 25rem; height:20rem;">
                   </iframe>
                 </div>
               </div>

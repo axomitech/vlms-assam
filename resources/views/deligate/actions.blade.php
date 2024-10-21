@@ -27,7 +27,7 @@
       @endphp  
     @endif
   @if(count($actions) > 0)
-  <div class="col-md-5">
+  
   <div class="col-md-5">
     <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg" {{$disabled}}>FORWARD</button>
     @if($completeStatus == 4)
@@ -37,16 +37,10 @@
     </form>
     <button type="button" class="btn btn-sm btn-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-complete-btn">Archive Letter</button>
   @endif
-    @if($completeStatus == 4)
-    <form id="letter-complete-form" hidden>
-      <input type="hidden" name="stage_letter" value="{{$letter_id}}">
-      <input type="hidden" name="stage" value="5">
-    </form>
-    <button type="button" class="btn btn-sm btn-danger mb-1 save-btn" data-url="{{ route('change_stage') }}" data-form="#letter-complete-form" data-message="That you want to archive the letter!" id="save-complete-btn">Archive Letter</button>
-  @endif
+    
   </div>
   @endif
-</div>
+
 
 <div class="row  bg-danger1">
   <div class="col-md-7">
@@ -83,18 +77,7 @@
                       <td colspan="4" class="text text-danger">No response is available.</td>
                     </tr>
                     @else
-                    @if(count($letterActions) == 0)
-                    <tr>
-                      <td colspan="4" class="text text-danger">No response is available.</td>
-                    </tr>
-                    @else
                     @foreach ($letterActions as $value)
-                    <tr>
-                      <td>
-                        {{$i}}
-                      </td>
-                        <td>
-                          @if(strlen($value['action_description']) > 100)
                     <tr>
                       <td>
                         {{$i}}
@@ -117,56 +100,25 @@
                           @else
                             {{$value['action_description']}}
                           @endif
-                          <br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
+                          <br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}
+                        </td>
                         <td>
                           <table class="table-bordered">
                             @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
                                   <tr><td>{{$actionDepartments[$i-1][$j]}}</td><td>{{$responsesStatuses[$i-1][$j]}}</td></tr>
-                              @endfor
+                            @endfor
                           </table>
                         </td>
                         <td>
                           <a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a>
                         </td>
                     </tr>
-                    @php
-                        $i++;
-                    @endphp
-                @endforeach
+                      @php
+                          $i++;
+                      @endphp
+                    @endforeach
                     @endif
                    
-                          <div class="text-block" id="textBlock1">
-                            <p class="shortText">
-                              {{substr($value['action_description'], 0, 100)}}... 
-                              <a href="#" class="readMore">Read more</a>
-                            </p>
-                            <div class="longText" style="display: none;">
-                              <p>
-                                {{$value['action_description']}}
-                                <a href="#" class="readLess">Read less</a>
-                              </p>
-                            </div>
-                          
-                          @else
-                            {{$value['action_description']}}
-                          @endif
-                          <br>Dated: {{\Carbon\Carbon::parse($value['action_date'])->format('d/m/Y')}}</td>
-                        <td>
-                          <table class="table-bordered">
-                            @for($j = 0; $j < count($actionDepartments[$i-1]); $j++)
-                                  <tr><td>{{$actionDepartments[$i-1][$j]}}</td><td>{{$responsesStatuses[$i-1][$j]}}</td></tr>
-                              @endfor
-                          </table>
-                        </td>
-                        <td>
-                          <a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a>
-                        </td>
-                    </tr>
-                    @php
-                        $i++;
-                    @endphp
-                @endforeach
-                    @endif
                    
                 </tbody>
               </table>
@@ -249,7 +201,7 @@
                <div class="collapse" id="collapseExample">
                 <button type="button" class="btn btn-outline-danger btn-sm offset-11 mb-1" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">CLOSE</button>
                 <div class="card card-body" style="height: 50rem;">
-                  <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:100%; height: 100%;">
+                  <iframe src="{{storageUrl($letterPath)}}" style="width:100%; height: 100%;">
                   </iframe>
                 </div>
               </div>
@@ -311,7 +263,7 @@
                                 <!-- Main row -->
                                 <div class="col-md-12 bg-danger1">
                                   <!-- <div style="width: 60%; margin: auto;"> -->
-                                    <iframe src="{{config('constants.options.storage_url')}}{{$letterPath}}" style="width:22rem; height: 20rem;">
+                                    <iframe src="{{storageUrl($letterPath)}}" style="width:22rem; height: 20rem;">
                                     </iframe>
                               </div>
                             </div><!-- /.container-fluid -->
@@ -674,7 +626,7 @@ $('.js-example-basic-multiple').select2();
             $('#btn-modal{{$result->c_id}}').click(function() {
 
                 // var iframe = modal.find('#annx');
-                    $("#annx").attr('src', '{{config('constants.options.storage_url')}}{{$result->file_path}}');
+                    $("#annx").attr('src', '{{storageUrl($result->file_path)}}');
 
                     $('#viewCorrespondenceModal').modal({
                                 backdrop: 'static',
