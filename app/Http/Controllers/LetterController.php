@@ -184,12 +184,17 @@ class LetterController extends Controller
     }
 
 
-    public function showLetters()
+    public function showLetters($legacy)
     {
+        $legacy = decrypt($legacy);
+        $legacyStatus = false;
+        if($legacy == 1){
+            $legacyStatus = true;
+        }
         $letters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>1,
-            'legacy'=>false
+            'legacy'=>$legacyStatus
         ],[]);
         // return $letters;
         $assignedLetters = [];
@@ -263,11 +268,11 @@ class LetterController extends Controller
             $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
 
         }
-
-        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters'));
+        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
     }
 
-    public function editDiarized($letterId){
+   public function editDiarized($letterId){
+        $letterId = decrypt($letterId);
         $letters = Letter::showLetterAndSender([
             'letters.id'=>$letterId
         ],[]);
@@ -294,6 +299,7 @@ class LetterController extends Controller
             $letterData['letter_sub_category_id'] = $value['letter_sub_category_id'];
             $letterData['legacy'] = $value['legacy'];
             $letterData['letter_priority_id'] = $value['letter_priority_id'];
+            $letterData['letter_path'] = $value['letter_path'];
             
         }
         $priorities = LetterPriority::getAllPriorities();

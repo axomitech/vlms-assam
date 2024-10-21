@@ -106,6 +106,103 @@
 
             </a>
 
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{asset('dist/img/ashoka.jpg')}}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">
+
+           {{Auth::user()->name}}
+              
+          
+          </a>
+        </div>
+      </div>
+
+      
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          @if (session('role') > 1)  
+            <li class="nav-item">
+                <a href="{{route('dashboard')}}" class="nav-link">
+                  <i class="nav-icon fas fa-th"></i>
+                  <p>
+                  Dashboard
+                  </p>
+                </a>
+            </li>
+            @endif
+            <li class="nav-item">
+              <a href="{{route('home1')}}" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+                <p>
+                Letters
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('letters',[encrypt(1)])}}" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+                <p>
+                Legacy Letters
+                </p>
+              </a>
+            </li>
+            @if (session('role') == 1)  
+            <li class="nav-item menu-is-opening menu-open">
+              <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-cog"></i>
+                <p>
+                Diarize
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(1),encrypt(0)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Receipt</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(0),encrypt(0)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Issue</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item  menu-is-opening menu-open">
+              <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-cog"></i>
+                <p>
+                Legacy Diarize
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(1),encrypt(1)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Receipt</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('diarize',[encrypt(0),encrypt(1)]) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Issue</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            @endif
+          {{-- <li class="nav-item">
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar Menu -->

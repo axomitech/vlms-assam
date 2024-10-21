@@ -104,7 +104,8 @@ class Letter extends Model
                 'letters.letter_sub_category_id',
                 'letters.legacy',
                 'letters.letter_priority_id',
-                'letter_categories.category_name'
+                'letter_categories.category_name',
+                'letters.letter_path'
             )
             ->where($condition);  // Apply the given condition
     
@@ -128,17 +129,18 @@ class Letter extends Model
         ->join('action_sents', 'letters.id', '=', 'action_sents.letter_id')
         ->where($condition)
         ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
-        ->orderBy('letters.id', 'DESC')
+        ->orderBy('letters.id', 'ASC')
         ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
         ->get();
         $assignedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
         ->join('letter_assigns', 'letters.id', '=', 'letter_assigns.letter_id')
         ->whereIn('letter_assigns.id',$assignedLetterIds)
         ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
-        ->orderBy('letters.id', 'DESC')
+        ->orderBy('letters.id', 'ASC')
         ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
         ->get();
-        return $assignedLetters->merge($receivedLetters);
+        //return $assignedLetters->merge($receivedLetters);
+        return $receivedLetters;
     }
 
     public static function generateLetterCrn($crn)
