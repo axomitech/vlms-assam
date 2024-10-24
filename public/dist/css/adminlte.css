@@ -12610,6 +12610,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 [class*="sidebar-dark"] .user-panel {
   border-bottom: 1px solid #4f5962;
+  border-top: 1px solid #4f5962;
 }
 
 [class*="sidebar-light"] .user-panel {
@@ -53009,3 +53010,15 @@ a.text-muted:hover {
   border-color: #4b545c !important;
 }
 /*# sourceMappingURL=adminlte.css.map */
+
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
