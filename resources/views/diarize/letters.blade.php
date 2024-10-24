@@ -688,10 +688,8 @@
     <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get the URL parameter 'tab'
-            const urlParams = new URLSearchParams(window.location.search);
-            const tab = urlParams.get('tab');
-
+            const segments = window.location.href.split("/");
+            const tab = segments[segments.length-1];
             // Check if 'tab' exists and switch to the appropriate tab
             if (tab) {
                 if (tab === 'inbox') {
