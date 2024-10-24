@@ -367,7 +367,7 @@
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex" style="border-top: 1px solid #4f5962;">
                     <div class="info">
-                        <a href="#" class="d-block">
+                        <a href="#" class="d-block mt-3">
                             {{ Auth::user()->name }} <br>
                             {{ Auth::user()->email }}
                         </a>
