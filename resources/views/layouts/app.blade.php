@@ -149,27 +149,69 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         @if (session('role') > 1)
-                            <li class="nav-item">
-                                <a href="{{ route('dashboard') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Dashboard
-                                    </p>
-                                </a>
-                            </li>
-                        @endif
-                        <li class="nav-item">
-                            <a href="{{ route('home1') }}" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
-                                    Letters
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('dashboard') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-dashboard' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('letters', [encrypt(1)]) }}" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
+                        
+                        @endif
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-inbox' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Inbox
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-send' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Sent Items
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-edit' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Issued Items
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-message-alt-check' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Action Taken
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-archive-in' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Archived
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bxs-report' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
+                                    Reports
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('letters', [encrypt(1)]) }}" class="nav-link d-flex align-items-center">
+                                <i class='bx bx-history' style="font-size: 24px;"></i>
+                                <p style="margin: 0; padding-left: 8px;">
                                     Legacy Letters
                                 </p>
                             </a>
