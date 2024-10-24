@@ -95,7 +95,7 @@
                                 <div class="row">
                                     <!-- small box for Inbox -->
                                     <div class="col-lg-6">
-                                        <a href="{{ route('letters', ['tab' => 'inbox']) }}">
+                                        <a href="{{ route('letters', [encrypt(0),'tab'=>'inbox']) }}" data-tab="inbox">
                                             <div class="small-box"
                                                 style="background-color: #EFF8FF; padding:15px; border-radius:1rem;">
                                                 <div class="inner">
@@ -124,7 +124,7 @@
 
                                     <!-- small box for Sent -->
                                     <div class="col-lg-6">
-                                        <a href="{{ route('letters', ['tab' => 'sent']) }}">
+                                        <a href="{{ route('letters', [encrypt(0),'tab'=>'sent']) }}" data-tab="sent">
                                             <div class="small-box"
                                                 style="background-color: #EFF8FF; padding:15px; border-radius:1rem;">
                                                 <div class="inner">
@@ -164,7 +164,7 @@
                         @if (session('role') > 0)
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
-                                <a href="{{ route('letters', ['tab' => 'inbox']) }}">
+                                <a href="{{ route('letters', [encrypt(0)]) }}" data-tab="inbox">
                                     <div class="small-box"
                                         style="background-color: #42B518; padding:15px; border-radius:1rem;">
                                         <div class="inner">
@@ -187,13 +187,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <a href="{{ route('letters') }}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                        {{-- <a href="{{ route('letters') }}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> --}}
                                     </div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
-                                <a href="{{ route('letters', ['tab' => 'archive']) }}">
+                                <a href="{{ route('letters', [encrypt(0),'archive']) }}">
                                     <div class="small-box"
                                         style="background-color: #BF9203; padding:15px; border-radius:1rem;">
                                         <div class="inner">
@@ -216,7 +216,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <a href="{{ route('letters') }}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> -->
+                                        {{--<a href="{{ route('letters') }}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> --}}
                                     </div>
                                 </a>
                             </div>

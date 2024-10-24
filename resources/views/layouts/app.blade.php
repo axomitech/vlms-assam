@@ -29,6 +29,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap" rel="stylesheet">
+    <style>
+        .sidebar a {
+            color: #fff !important;
+        }
+
+        body {
+    font-family: 'Poppins', sans-serif;
+}
+
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -39,33 +52,39 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="display: flex; align-items: center;">
-                        <div style="width: 36px; height: 36px; background-color: #ECF0F3; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 10px;">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"
+                        style="display: flex; align-items: center;">
+                        <div
+                            style="width: 36px; height: 36px; background-color: #ECF0F3; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 10px;">
                             <i class="fas fa-arrow-left" style="color: #333;"></i>
                         </div>
-                    </a>                </li>
+                    </a>
+                </li>
                 <!-- Spacer Item -->
                 <li class="nav-item" style="width: 250px;"> <!-- Adjust width as needed -->
                     <a class="nav-link" href="#" style="pointer-events: none;"></a> <!-- Non-clickable -->
                 </li>
             </ul>
-        
+
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto d-flex align-items-center" style="flex-grow: 1;">
                 <!-- Navbar Search -->
                 <li class="nav-item" style="flex-grow: 1; position: relative;">
-                    <input type="text" class="form-control" placeholder="Search for a DAK.." style="width: 100%; background-color: #ECF0F3; padding: 8px 12px; border-radius: 0.5rem; padding-right: 40px; border: 1px solid white;">
-                    <a class="nav-link" data-widget="navbar-search1" href="{{ route('search') }}" role="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                    <input type="text" class="form-control" placeholder="Search for a DAK.."
+                        style="width: 100%; background-color: #ECF0F3; padding: 8px 12px; border-radius: 0.5rem; padding-right: 40px; border: 1px solid white;">
+                    <a class="nav-link" data-widget="navbar-search1" href="{{ route('search') }}" role="button"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
                         <i class="fas fa-search"></i>
                     </a>
                 </li>
-        
+
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <div class="user-panel pb-3 mb-5">
                             <div class="image">
-                                <img src="{{ asset('dist/img/ashoka.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                                <img src="{{ asset('dist/img/ashoka.jpg') }}" class="img-circle elevation-2"
+                                    alt="User Image">
                                 &nbsp;{{ Auth::user()->name }}
                             </div>
                         </div>
@@ -89,7 +108,7 @@
                 </li>
             </ul>
         </nav>
-        
+
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
@@ -106,103 +125,104 @@
 
             </a>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{asset('dist/img/ashoka.jpg')}}" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class=" mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        {{-- <img src="{{asset('dist/img/ashoka.jpg')}}" class="img-circle elevation-2" alt="User Image"> --}}
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">
 
-           {{Auth::user()->name}}
-              
-          
-          </a>
-        </div>
-      </div>
+                            {{-- {{Auth::user()->name}} --}}
 
-      
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          @if (session('role') > 1)  
-            <li class="nav-item">
-                <a href="{{route('dashboard')}}" class="nav-link">
-                  <i class="nav-icon fas fa-th"></i>
-                  <p>
-                  Dashboard
-                  </p>
-                </a>
-            </li>
-            @endif
-            <li class="nav-item">
-              <a href="{{route('home1')}}" class="nav-link">
-              <i class="nav-icon fas fa-envelope"></i>
-                <p>
-                Letters
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('letters',[encrypt(1)])}}" class="nav-link">
-              <i class="nav-icon fas fa-envelope"></i>
-                <p>
-                Legacy Letters
-                </p>
-              </a>
-            </li>
-            @if (session('role') == 1)  
-            <li class="nav-item menu-is-opening menu-open">
-              <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-cog"></i>
-                <p>
-                Diarize
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{{ route('diarize',[encrypt(1),encrypt(0)]) }}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Receipt</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{{ route('diarize',[encrypt(0),encrypt(0)]) }}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Issue</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item  menu-is-opening menu-open">
-              <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-cog"></i>
-                <p>
-                Legacy Diarize
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{{ route('diarize',[encrypt(1),encrypt(1)]) }}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Receipt</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{{ route('diarize',[encrypt(0),encrypt(1)]) }}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Issue</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            @endif
-          {{-- <li class="nav-item">
+                        </a>
+                    </div>
+                </div>
+
+
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        @if (session('role') > 1)
+                            <li class="nav-item">
+                                <a href="{{ route('dashboard') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Dashboard
+                                    </p>
+                                </a>
+                            </li>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('home1') }}" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>
+                                    Letters
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('letters', [encrypt(1)]) }}" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>
+                                    Legacy Letters
+                                </p>
+                            </a>
+                        </li>
+                        @if (session('role') == 1)
+                            <li class="nav-item menu-is-opening menu-open">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-user-cog"></i>
+                                    <p>
+                                        Diarize
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ route('diarize', [encrypt(1), encrypt(0)]) }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Receipt</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('diarize', [encrypt(0), encrypt(0)]) }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Issue</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item  menu-is-opening menu-open">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-user-cog"></i>
+                                    <p>
+                                        Legacy Diarize
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ route('diarize', [encrypt(1), encrypt(1)]) }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Receipt</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('diarize', [encrypt(0), encrypt(1)]) }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Issue</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+                        {{-- <li class="nav-item">
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar Menu -->
@@ -345,7 +365,7 @@
                 </nav>
                 <!-- /.sidebar-menu -->
                 <!-- Sidebar user (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex" style="border-top: 1px solid #4f5962;">
                     <div class="info">
                         <a href="#" class="d-block">
                             {{ Auth::user()->name }} <br>
@@ -356,8 +376,9 @@
                 <nav>
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-item">
-                            <a href="{{ route('test') }}" class="nav-link" style="background-color: #B58C18;">
+                        <li class="nav-item p-3">
+                            <a href="{{ route('test') }}" class="nav-link"
+                                style="background-color: #B58C18; width:90%; border-radius:0.75rem">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>
                                     Logout
