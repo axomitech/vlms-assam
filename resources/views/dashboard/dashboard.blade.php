@@ -38,7 +38,8 @@
                                 <!-- small box -->
                                 <a href="{{ route('receipt_box') }}">
                                     <div class="small-box"
-                                        style="background-color: #379FFF; padding:15px; border-radius:1rem;">
+                                    style="background: linear-gradient(45deg, #206fb9, #3FA9FF); padding:15px; border-radius:1rem;">
+                                    
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -66,7 +67,7 @@
                                 <!-- small box for Issued -->
                                 <a href="{{ route('issue_box') }}">
                                     <div class="small-box"
-                                        style="background-color: #DE6909; padding:15px; border-radius:1rem;">
+                                        style="background: linear-gradient(45deg, #bd5d0e, #e66e0d);; padding:15px; border-radius:1rem;">
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -97,7 +98,7 @@
                                     <div class="col-lg-6">
                                         <a href="{{ route('letters', [encrypt(0),'tab'=>'inbox']) }}" data-tab="inbox">
                                             <div class="small-box"
-                                                style="background-color: #EFF8FF; padding:15px; border-radius:1rem;">
+                                                style="background: linear-gradient(45deg, #d3e0eb, #EFF8FF); padding:15px; border-radius:1rem;">
                                                 <div class="inner">
                                                     <div class="row">
                                                         <div class="col-lg-8">
@@ -126,7 +127,7 @@
                                     <div class="col-lg-6">
                                         <a href="{{ route('letters', [encrypt(0),'tab'=>'sent']) }}" data-tab="sent">
                                             <div class="small-box"
-                                                style="background-color: #EFF8FF; padding:15px; border-radius:1rem;">
+                                                style="background: linear-gradient(45deg, #d3e0eb, #EFF8FF); padding:15px; border-radius:1rem;">
                                                 <div class="inner">
                                                     <div class="row">
                                                         <div class="col-lg-8">
@@ -166,7 +167,7 @@
                                 <!-- small box -->
                                 <a href="{{ route('letters', [encrypt(0)]) }}" data-tab="inbox">
                                     <div class="small-box"
-                                        style="background-color: #42B518; padding:15px; border-radius:1rem;">
+                                        style="background: linear-gradient(45deg, #39a013, #4fd61e); padding:15px; border-radius:1rem;">
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -195,7 +196,7 @@
                                 <!-- small box -->
                                 <a href="{{ route('letters', [encrypt(0),'archive']) }}">
                                     <div class="small-box"
-                                        style="background-color: #BF9203; padding:15px; border-radius:1rem;">
+                                        style="background:  linear-gradient(45deg, #a17e0a, #d8a706); padding:15px; border-radius:1rem;">
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
