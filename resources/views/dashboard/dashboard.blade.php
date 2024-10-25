@@ -355,14 +355,20 @@
         const ctxWeekChart = document.getElementById('weekBarChart').getContext('2d');
 
         const categoryColors = {
-            1: '#FF6384',
-            2: '#36A2EB',
-            4: '#FFCE56',
-            6: '#4BC0C0',
-            7: '#9966FF',
-            8: '#FF9F40',
-            9: '#E7E9ED'
+            1: '#E55674',  
+            2: '#3090CF',  
+            3: '#E07D38',  
+            4: '#E6B84B',  
+            5: '#D0D2D7',  
+            6: '#42A7A7',  
+            7: '#8759E6',  
+            8: '#CC8136',  
+            9: '#CACCCF',  
+            10: '#CC5170', 
+            11: '#285CAB'  
         };
+
+
 
         const datasetMap = {};
         let totalCount = 0; // Variable to hold total count of letters
@@ -445,9 +451,7 @@
         const ctxDakPieChart = document.getElementById('dakPieChart').getContext('2d');
         const categoryNames = dakData.map(item => item.category_name);
         const categoryCounts = dakData.map(item => item.count);
-        const colors = ['#379FFF', '#42B518', '#DE6909', '#BF9203', '#8A2BE2', '#FF6347', '#FFD700', '#20B2AA', '#FF69B4',
-            '#6A5ACD', '#FF4500'
-        ];
+        const colors = ['#3189E6','#3A9E17','#C75F08','#AC8303','#7A26CB','#E65A40','#E6C200','#1D9E98','#E660A2','#5F52B5','#E63F00'];
 
         const dakPieChart = new Chart(ctxDakPieChart, {
             type: 'pie',
