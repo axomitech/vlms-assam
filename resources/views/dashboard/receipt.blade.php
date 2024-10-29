@@ -1,15 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-
+    @php
+        $hour = \Carbon\Carbon::now()->format('H');
+        if ($hour < 12) {
+            $greeting = 'Good Morning';
+            $icon = 'bx bxs-sun'; // Morning sun icon
+        } elseif ($hour < 18) {
+            $greeting = 'Good Afternoon';
+            $icon = 'fas fa-cloud-sun'; // Afternoon icon with sun and cloud
+        } else {
+            $greeting = 'Good Evening';
+            $icon = 'bx bxs-moon'; // Evening moon icon
+        }
+    @endphp
     <div class="row">
+        <div class="col-md-6 mb-2">
+            <h6><i class='{{ $icon }}'></i>
+                {{ $greeting }} {{ Auth::user()->name }}</h6>
+        </div>
+        <div class="col-md-6 text-right">
+            <h6> <i class='bx bxs-calendar'></i> Today is {{ \Carbon\Carbon::now()->format('j F Y (l)') }}</h6>
+        </div>
+    </div>
+
+    <div class="row mt-3">
         <div class="col-md-12 text-center">
             <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
             </button>
-            <h4 id="selectedCategoryName">Receipt</h4>
+            <h4 id="selectedCategoryName"><strong>Receipts</strong></h4>
         </div>
     </div>
+
+
 
     <!-- Cards row -->
     <div class="row mt-1" id="cardsContainer">
@@ -17,93 +41,158 @@
             <section class="content">
                 <div class="container-fluid">
                     @if (session('role') > 0)
-                        @php
-                            $colors = ['#55fe9b', '#f39c12', '#00c0ef', '#dd4b39', '#00a65a', '#3c8dbc', '#f56954'];
-                            $i = 0;
-                        @endphp
-
                         <!-- Start the outer row -->
                         <div class="row">
                             @foreach ($categories as $category)
                                 <!-- Create a new row after every 3 cards -->
-                                @if ($loop->index % 3 == 0 && !$loop->first)
+                                @if ($loop->index % 4 == 0 && !$loop->first)
                         </div>
                         <div class="row">
                     @endif
 
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-md-3 col-sm-6 mt-3">
                         <a href="#" class="category-card" data-category-id="{{ $category->id }}"
                             data-category-name="{{ $category->category_name }}">
-                            <div class="small-box" style="background-color: {{ $colors[$i % count($colors)] }};">
-                                <div class="inner">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <h3 style="color:white;">{{ $category->count }} </h3>
-                                                </div>
-                                                <div class="col-lg-12">
-                                                    <h3 style="font-size: 22px;color:white;">
-                                                        {{ $category->category_name }} </h3>
-                                                </div>
-                                            </div>
+                            <div class="small-box"
+                                style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
+                                <div class="inner p-3"
+                                    style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
+                                    <!-- Icon in the top-left corner -->
+                                    <span
+                                        style="position: absolute; top: 10px; left: 10px; color: black; background-color: #e9e2e2; padding: 5px; border-radius: 1rem;">
+                                        <img src="{{ asset('banoshree/images/' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $category->category_name)) . '.png') }}"
+                                            alt="Dak Received" style="width: 48px; height: 38px;">
+
+                                    </span>
+                                    <!-- Content container for count and category name -->
+                                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+
+                                        <!-- Count in the center -->
+                                        <div class="count" style="color: #026FCC; font-size: 32px; font-weight: bold;">
+                                            <strong>{{ $category->count }}</strong>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <span style="font-size: 40px;color:white;">
-                                                <i class="fas fa-file-invoice"></i>
-                                            </span>
+
+                                        <!-- Category name at the bottom center -->
+                                        <div class="category-name mt-auto text-center"
+                                            style="font-size: 16px; color: black;">
+                                            <strong>{{ $category->category_name }}</strong>
                                         </div>
+
                                     </div>
                                 </div>
+
                             </div>
                         </a>
                     </div>
-
-                    @php
-                        $i++;
-                    @endphp
                     @endforeach
                 </div> <!-- End of the outer row -->
                 @endif
         </div>
-        <div class="col-md-6 p-5 bg-light mx-auto" style="width:500px; height:500px;">
-            <canvas id="myPieChart"></canvas>
+        <div class="container-fluid p-4">
+            <div class="row">
+                <div class="col-md-12 p-5 bg-white"
+                    style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
+                    <!-- Full width -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Flex container for heading and month select -->
+                        <h5 class="px-5"><strong>Receipts Summary</strong></h5>
+                        <select id="monthSelect" class="form-select" style="width: 200px;">
+                            <option value="1" selected>January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <hr style="border-top: 2px solid #ccc !important;">
+                    <!-- Horizontal line below heading and month select -->
+                    <div class="d-flex align-items-start mt-3"> <!-- Use align-items-start for vertical alignment -->
+                        <div class="donut-chart-container me-4" style="position: relative; width: 280px; height: 280px;">
+                            <canvas id="myDonutChart"></canvas>
+                            <div
+                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                <p><strong>Total Receipts</strong></p>
+                                <h4 id="totalCount" style="margin: 0; font-weight:bold;"></h4>
+                            </div>
+                        </div>
+                        <div class="labels-container d-flex flex-grow-1 justify-content-between" style="margin-left: 10%;">
+                            <!-- Stretch to fill space -->
+                            <div class="text-center">
+                                <p
+                                    style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                    Labels</p> <!-- Bottom border for header -->
+                                <ul id="labelList"
+                                    style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: left;"></ul>
+                                <!-- Left align labels -->
+                            </div>
+                            <div class="text-center">
+                                <p
+                                    style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                    Nos</p> <!-- Bottom border for header -->
+                                <ul id="countList"
+                                    style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
+                                <!-- Right align counts -->
+                            </div>
+                            <div class="text-center">
+                                <p
+                                    style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                    %</p> <!-- Bottom border for header -->
+                                <ul id="percentList"
+                                    style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
+                                <!-- Right align percentages -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <script>
                 // Get data from Laravel
                 const categories = @json($categories);
 
-                // Prepare data for the pie chart
+                // Prepare data for the donut chart
                 const labels = categories.map(item => item.category_name);
                 const dataValues = categories.map(item => item.count);
 
                 // Calculate the total count of receipts
                 const totalCount = dataValues.reduce((acc, val) => acc + val, 0);
 
-                // Create the pie chart
-                const ctx = document.getElementById('myPieChart').getContext('2d');
+                // Display the total count
+                document.getElementById('totalCount').innerText = totalCount;
+
+                // Create the donut chart
+                const ctx = document.getElementById('myDonutChart').getContext('2d');
+                const backgroundColors = [
+                    'rgba(255, 0, 0, 0.8)', // Bright Red
+                    'rgba(0, 255, 0, 0.8)', // Bright Green
+                    'rgba(0, 0, 255, 0.8)', // Bright Blue
+                    'rgba(255, 165, 0, 0.8)', // Bright Orange
+                    'rgba(255, 255, 0, 0.8)', // Bright Yellow
+                    'rgba(75, 0, 130, 0.8)', // Indigo
+                    'rgba(238, 130, 238, 0.8)', // Violet
+                    'rgba(0, 255, 255, 0.8)', // Aqua
+                    'rgba(255, 105, 180, 0.8)', // Hot Pink
+                    'rgba(0, 128, 128, 0.8)', // Teal
+                    'rgba(255, 69, 0, 0.8)' // Orange Red
+                ];
+
                 new Chart(ctx, {
-                    type: 'pie',
+                    type: 'doughnut',
                     data: {
                         labels: labels,
                         datasets: [{
                             label: 'Receipt Percentage by Category',
                             data: dataValues,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
+                            backgroundColor: backgroundColors,
+                            borderColor: backgroundColors.map(color => color.replace(/0.2/,
+                                '1')), // Darken the border color
                             borderWidth: 1
                         }]
                     },
@@ -111,44 +200,54 @@
                         responsive: true,
                         plugins: {
                             legend: {
-                                position: 'top',
+                                display: false // Disable the legend
                             },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
                                         let label = context.label || '';
                                         let value = context.raw;
-                                        let percentage = ((value / totalCount) * 100).toFixed(
-                                        2); // Calculate percentage
+                                        let percentage = ((value / totalCount) * 100).toFixed(2);
                                         label += `: ${percentage}%`;
                                         return label;
                                     }
-                                }
-                            },
-                            datalabels: {
-                                color: '#000',
-                                formatter: (value, context) => {
-                                    let percentage = ((value / totalCount) * 100).toFixed(2); // Calculate percentage
-                                    return `${percentage}%`; // Show percentage
-                                },
-                                anchor: 'end',
-                                align: 'end',
-                                offset: 4,
-                                font: {
-                                    weight: 'bold'
                                 }
                             }
                         }
                     }
                 });
+
+                // Populate labels, counts, and percentages
+                categories.forEach((item, index) => {
+                    const labelItem = document.createElement('li');
+                    labelItem.innerHTML =
+                        `<span style="display:inline-block; width: 12px; height: 12px; background-color: ${backgroundColors[index % backgroundColors.length]}; border-radius: 50%; margin-right: 5px;"></span>${item.category_name}`;
+                    labelItem.style.fontWeight = 'bold'; // Make bold
+                    labelItem.style.marginBottom = '5px'; // Add space between labels
+                    document.getElementById('labelList').appendChild(labelItem);
+
+                    const countItem = document.createElement('li');
+                    countItem.textContent = item.count;
+                    countItem.style.fontWeight = 'bold'; // Make bold
+                    countItem.style.marginBottom = '5px'; // Add space between counts
+                    document.getElementById('countList').appendChild(countItem);
+
+                    const percentItem = document.createElement('li');
+                    const percentage = ((item.count / totalCount) * 100).toFixed(2);
+                    percentItem.textContent = percentage + '%';
+                    percentItem.style.fontWeight = 'bold'; // Make bold
+                    percentItem.style.marginBottom = '5px'; // Add space between percentages
+                    document.getElementById('percentList').appendChild(percentItem);
+                });
             </script>
         </div>
+
 
         </section>
     </div>
     </div>
 
-    <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
+    <div class="box shadow-lg p-3 mb-5 mt-3 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
         <div class="box-body">
             <section class="content">
                 <div class="container-fluid">
@@ -223,7 +322,9 @@
                     type: 'GET',
                     success: function(response) {
 
-                        $('#selectedCategoryName').text('Receipts from ' + categoryName);
+
+                        $('#selectedCategoryName').html('<strong>Receipts from ' +
+                            categoryName + '</strong>');
                         let tableBody = '';
                         let serialNumber = 1;
 
@@ -283,7 +384,7 @@
                     // If on the category page, reset to the main view
                     $('#lettersTable').hide();
                     $('#cardsContainer').show();
-                    $('#selectedCategoryName').text('Receipt');
+                    $('#selectedCategoryName').html('<strong>Receipts</strong>');
                 } else {
                     // Redirect to the dashboard if on the initial view
                     window.location.href = dashboardUrl;

@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 @php
     $hour = \Carbon\Carbon::now()->format('H');
     if ($hour < 12) {
@@ -11,9 +13,6 @@
         $icon = 'bx bxs-moon'; // Evening moon icon
     }
 @endphp
-
-@extends('layouts.app')
-@section('content')
     <div class="row">
         <div class="col-md-6 mb-2">
             <h6><i class='{{ $icon }}'></i>
