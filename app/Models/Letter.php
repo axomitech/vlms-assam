@@ -139,8 +139,8 @@ class Letter extends Model
         ->orderBy('letters.id', 'ASC')
         ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
         ->get();
-        //return $assignedLetters->merge($receivedLetters);
-        return $receivedLetters;
+        return $assignedLetters->merge($receivedLetters);
+        //return $receivedLetters;
     }
 
     public static function generateLetterCrn($crn)
