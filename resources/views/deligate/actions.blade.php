@@ -42,16 +42,16 @@
   @endif
 
 
-<div class="row  bg-danger1">
+<div class="row col-md-12 bg-danger1">
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs h-100">
       <div class="card-header">
         <ul class="nav nav-pills nav-fill nav-justified" id="custom-tabs-four-tab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Action List</a>
+            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true"><strong>Action List</strong></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
+            <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false"><strong>Correspondence</strong></a>
           </li>
         </ul>
       </div>
@@ -128,7 +128,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="col-md-12 text-left">
-                  <button type="button" class="btn btn-sm" style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal">Add<i class="fas fa-plus-circle" style="color: #24a0ed"></i></button>
+                  {{-- <button type="button" class="btn btn-sm" style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal">Add<i class="fas fa-plus-circle" style="color: #24a0ed"></i></button> --}}
+                  <button type="button" class="btn btn-warning btn-sm mb-1" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal"><i class="fas fa-plus"></i></button>
+
               </div>
                   <form id="letter-form">
                       <div class="card">
@@ -282,12 +284,12 @@
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title" id="addCorrespondenceModalTitle">Upload Correspondence</h5>
+              <h5 class="modal-title" id="addCorrespondenceModalTitle"><strong>Upload Correspondence</strong></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body" id="description_view">
+          <div class="modal-body p-4" id="description_view">
               <div id="parent">
                   <div id="add">
                       <form id="uploadForm" class="form-horizontal">

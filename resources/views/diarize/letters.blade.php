@@ -10,16 +10,16 @@
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     @if (session('role') == 1)
-                        <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
-                            type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
+                        <button class="nav-link btn-lg active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
+                            type="button" role="tab" aria-controls="nav-home" aria-selected="true"><strong>Diarized</strong></button>
                     @else
-                        <button class="nav-link active" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
-                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
-                        <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
-                            type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
-                        <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
+                        <button class="nav-link btn-lg active" id="nav-inbox-tab" data-toggle="tab" data-target="#nav-profile"
+                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><strong>Inbox</strong></button>
+                        <button class="nav-link btn-lg" id="nav-sent-tab" data-toggle="tab" data-target="#nav-contact"
+                            type="button" role="tab" aria-controls="nav-contact" aria-selected="false"><strong>Sent</strong></button>
+                        <button class="nav-link btn-lg" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
                             type="button" role="tab" aria-controls="nav-profile"
-                            aria-selected="false">Archived</button>
+                            aria-selected="false"><strong>Archived</strong></button>
                     @endif
                 </div>
             </nav>
@@ -131,7 +131,7 @@
                     </div>
                 @else
                     <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
-                        aria-labelledby="nav-profile-tab">
+                        aria-labelledby="nav-inbox-tab">
                         <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                             <div class="box-body">
                                 <table class="table table-sm table-hover table-striped" id="letter-table">
@@ -257,7 +257,7 @@
             </div>
         </div>
     </div>
-    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-sent-tab">
         <div class="box shadow-lg p-3 mb-5 bg-white rounded">
             <div class="box-body">
                 <table class="table table-sm table-hover table-striped letter-table" id="sent-table">
@@ -674,9 +674,9 @@
             // Check if 'tab' exists and switch to the appropriate tab
             if (tab) {
                 if (tab === 'inbox') {
-                    document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+                    document.getElementById('nav-inbox-tab').click(); // Switch to Inbox tab
                 } else if (tab === 'sent') {
-                    document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+                    document.getElementById('nav-sent-tab').click(); // Switch to Sent tab
                 } else if (tab === 'archive') {
                     document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
                 }
@@ -692,9 +692,9 @@
             // Check if 'tab' exists and switch to the appropriate tab
             if (tab) {
                 if (tab === 'inbox') {
-                    document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+                    document.getElementById('nav-inbox-tab').click(); // Switch to Inbox tab
                 } else if (tab === 'sent') {
-                    document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+                    document.getElementById('nav-sent-tab').click(); // Switch to Sent tab
                 } else if (tab === 'archive') {
                     document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
                 }

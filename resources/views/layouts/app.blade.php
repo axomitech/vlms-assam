@@ -168,15 +168,16 @@
                             </a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                            <a href="{{ route('letters', [encrypt(0),'tab'=>'sent']) }}" class="nav-link d-flex align-items-center">
                                 <i class='bx bxs-send' style="font-size: 24px;"></i>
                                 <p style="margin: 0; padding-left: 8px;">
                                     Sent Items
                                 </p>
                             </a>
                         </li>
+                        
                         <li class="nav-item mb-2">
-                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                            <a href="{{ route('issue_box') }}" class="nav-link d-flex align-items-center">
                                 <i class='bx bxs-edit' style="font-size: 24px;"></i>
                                 <p style="margin: 0; padding-left: 8px;">
                                     Issued Items
@@ -192,7 +193,7 @@
                             </a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                            <a href="{{ route('letters', [encrypt(0),'tab'=>'archive']) }}" class="nav-link d-flex align-items-center">
                                 <i class='bx bxs-archive-in' style="font-size: 24px;"></i>
                                 <p style="margin: 0; padding-left: 8px;">
                                     Archived
