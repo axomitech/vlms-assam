@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="row">
+            <div class="row  d-flex align-items-stretch">
                 <div class="col-md-6">
                     <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
                         <div class="box-body">
@@ -307,9 +307,9 @@
                                 <div class="container-fluid">
                                     <!-- Main row -->
                                     <div class="row">
-                                        <div class="col-md-12" style="height:29rem;">
+                                        <div class="col-md-12" style="height:34rem;">
                                             <div class="fileContent">
-                                                <iframe class="w-100" style="height:22.5rem" src="{{storageUrl($letterData['letter_path'])}}">
+                                                <iframe class="w-100" style="height:32rem" src="{{storageUrl($letterData['letter_path'])}}">
                                                 </iframe>
                                             </div>
                                         </div>

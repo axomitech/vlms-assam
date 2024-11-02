@@ -11,12 +11,15 @@
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     @if (session('role') == 1)
                         <button class="nav-link btn-lg active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
-                            type="button" role="tab" aria-controls="nav-home" aria-selected="true"><strong>Diarized</strong></button>
+                            type="button" role="tab" aria-controls="nav-home"
+                            aria-selected="true"><strong>Diarized</strong></button>
                     @else
-                        <button class="nav-link btn-lg active" id="nav-inbox-tab" data-toggle="tab" data-target="#nav-profile"
-                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><strong>Inbox</strong></button>
+                        <button class="nav-link btn-lg active" id="nav-inbox-tab" data-toggle="tab"
+                            data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                            aria-selected="false"><strong>Inbox</strong></button>
                         <button class="nav-link btn-lg" id="nav-sent-tab" data-toggle="tab" data-target="#nav-contact"
-                            type="button" role="tab" aria-controls="nav-contact" aria-selected="false"><strong>Sent</strong></button>
+                            type="button" role="tab" aria-controls="nav-contact"
+                            aria-selected="false"><strong>Sent</strong></button>
                         <button class="nav-link btn-lg" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
                             type="button" role="tab" aria-controls="nav-profile"
                             aria-selected="false"><strong>Archived</strong></button>
@@ -51,8 +54,7 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td> &nbsp;{{ $value['crn'] }}
-                                                    <br>Diarize
-                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
                                                 </td>
@@ -94,26 +96,33 @@
                                                 </td>
                                                 <td>
                                                     @if ($assignedLetters[$i - 1] <= 0)
-                                                       
-                                                       <div class="mb-1">
-                                                        @if($legacy == 0)
-                                                        <a href="javascript:void(0);" class="assign-link"
-                                                            data-toggle="modal" data-target=".bd-example-modal-lg"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                            <span
-                                                                class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                title="Assign Letter"
-                                                                style="min-height: 30px; font-size: 12px;">
-                                                                Assign
-                                                                <i class="fas fa-paper-plane ml-1"></i>
-                                                            </span>
-                                                        </a>
-                                                        @endif
-                                                        <a href="{{route('edit_diarize',[encrypt($value['letter_id'])])}}"><i class="fas fa-edit"></i></a>
+                                                        <div class="mb-1">
+                                                            @if ($legacy == 0)
+                                                                <a href="javascript:void(0);" class="assign-link"
+                                                                    data-toggle="modal" data-target=".bd-example-modal-lg"
+                                                                    data-letter="{{ $value['letter_id'] }}"
+                                                                    data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                    <span
+                                                                        class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                        title="Assign Letter"
+                                                                        style="min-height: 30px; font-size: 12px;">
+                                                                        Assign
+                                                                        <i class="fas fa-paper-plane ml-1"></i>
+                                                                    </span>
+                                                                </a>
+                                                            @endif
+                                                            <a
+                                                                href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
+                                                                <span
+                                                                    class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
+                                                                    title="Edit Letter"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    Edit
+                                                                    <i class="fas fa-edit ml-1"></i>
+                                                                </span>
+                                                            </a>
 
-                                                    </div>
-                                                       
+                                                        </div>
                                                     @endif
 
 
@@ -130,8 +139,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
-                        aria-labelledby="nav-inbox-tab">
+                    <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-inbox-tab">
                         <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                             <div class="box-body">
                                 <table class="table table-sm table-hover table-striped" id="letter-table">
@@ -200,20 +208,20 @@
                                                         &nbsp;
                                                 <td>
                                                     @isset($assignedSentLetters[$i - 1])
-                                                    @if ($assignedSentLetters[$i - 1] > 0)
-                                                    <div class="mb-1">
-                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                            class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Add Action Points"
-                                                            style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-edit mr-1"></i> Add Actions
-                                                        </a>
-                                                    </div>
-                                                @else
-                                                @endif    
+                                                        @if ($assignedSentLetters[$i - 1] > 0)
+                                                            <div class="mb-1">
+                                                                <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    title="Add Action Points"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    <i class="fas fa-edit mr-1"></i> Add Actions
+                                                                </a>
+                                                            </div>
+                                                        @else
+                                                        @endif
                                                     @endisset
-                                                  
+
                                                     <div class="mb-1">
                                                         <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                             class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
@@ -231,7 +239,7 @@
                                                             style="min-height: 30px; font-size: 12px;">
                                                             <i class="fas fa-envelope-open-text mr-1"></i> Respond
                                                         </a>
-                                                        
+
                                                     </div>
                                                     <div class="mb-1">
                                                         <a href="{{ route('correspondences', [$value['letter_id']]) }}"
@@ -442,7 +450,7 @@
                                             </a>
                                         </div>
                                     @endif
-                                
+
                                     @if (session('role') == 3)
                                         <div class="mb-1">
                                             <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
@@ -452,16 +460,17 @@
                                                 <i class="fas fa-edit mr-1"></i> View/Update
                                             </a>
                                         </div>
-                                
+
                                         <div class="mb-1">
                                             <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                 class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="Acknowledgement Letter Generation"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Acknowledgement Letter Generation"
                                                 style="min-height: 30px; font-size: 12px;">
                                                 <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
                                             </a>
                                         </div>
-                                
+
                                         <div class="mb-1">
                                             <a href="{{ route('correspondences', [$value['letter_id']]) }}"
                                                 class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
@@ -472,7 +481,7 @@
                                         </div>
                                     @endif
                                 </td>
-                                
+
                             </tr>
                             @php
                                 $i++;
@@ -494,7 +503,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Send Letter</h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><strong>Send Letter</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -688,7 +697,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const segments = window.location.href.split("/");
-            const tab = segments[segments.length-1];
+            const tab = segments[segments.length - 1];
             // Check if 'tab' exists and switch to the appropriate tab
             if (tab) {
                 if (tab === 'inbox') {
