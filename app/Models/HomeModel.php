@@ -121,11 +121,37 @@ class HomeModel extends Model
             ->get();
     }
 
+    public static function get_action_count_by_category()
+    {
+        return DB::table('letters')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->join('letter_actions', 'letters.id', '=', 'letter_actions.letter_id')
+            ->join('action_department_maps', 'letter_actions.id', '=', 'action_department_maps.letter_action_id')
+            ->select('letter_categories.id', 'letter_categories.category_name', DB::raw('COUNT(letters.id) as count'))
+            ->where('action_department_maps.department_id', session('role_dept'))
+            ->where('action_department_maps.action_status_id', 3)
+            ->groupBy('letter_categories.id', 'letter_categories.category_name')
+            ->get();
+    }
+
+
+    public static function get_action_by_category($category_id)
+    {
+        return DB::table('letters')
+        ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+        ->join('letter_actions', 'letters.id', '=', 'letter_actions.letter_id')
+        ->join('action_department_maps', 'letter_actions.id', '=', 'action_department_maps.letter_action_id')
+        ->where('action_department_maps.department_id', session('role_dept'))
+        ->where('action_department_maps.action_status_id', 3)
+        ->where('letters.letter_category_id', $category_id)
+        ->get();
+    }
 
     public static function get_actions_count()
     {
         return DB::table('action_department_maps')
             ->where('department_id', '=', session('role_dept'))
+            ->where('action_status_id', 3)
             ->count();
     }
 }

@@ -164,7 +164,7 @@
                         @if (session('role') > 0)
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
-                                <a href="{{ route('letters', [encrypt(0)]) }}" data-tab="inbox">
+                                <a href="{{ route('action_box') }}">
                                     <div class="small-box"
                                         style="background: linear-gradient(45deg, #39a013, #4fd61e); padding:15px; border-radius:1rem;">
                                         <div class="inner">

@@ -183,7 +183,7 @@
                                 </a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <a href="{{ route('action_box') }}" class="nav-link d-flex align-items-center">
                                     <i class='bx bxs-message-alt-check' style="font-size: 24px;"></i>
                                     <p style="margin: 0; padding-left: 8px;">
                                         Action Taken

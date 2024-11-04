@@ -29,7 +29,7 @@
             <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
             </button>
-            <h4 id="selectedCategoryName"><strong>Receipts</strong></h4>
+            <h4 id="selectedCategoryName"><strong>Actions</strong></h4>
         </div>
     </div>
 
@@ -93,7 +93,7 @@
                     <!-- Full width -->
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Flex container for heading and month select -->
-                        <h5 class="px-5"><strong>Receipts Summary</strong></h5>
+                        <h5 class="px-5"><strong>Actions Summary</strong></h5>
                         <select id="monthSelect" class="form-select" style="width: 200px;">
                             <option value="1" selected>January</option>
                             <option value="2">February</option>
@@ -116,7 +116,7 @@
                             <canvas id="myDonutChart"></canvas>
                             <div
                                 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                                <p><strong>Total Receipts</strong></p>
+                                <p><strong>Total Actions</strong></p>
                                 <h4 id="totalCount" style="margin: 0; font-weight:bold;"></h4>
                             </div>
                         </div>
@@ -311,7 +311,7 @@
 
                 let categoryId = $(this).data('category-id');
                 let categoryName = $(this).data('category-name');
-                let url = '{{ route('receipt_by_category', ['category_id' => ':category_id']) }}'.replace(
+                let url = '{{ route('action_by_category', ['category_id' => ':category_id']) }}'.replace(
                     ':category_id', categoryId);
 
                 // Fetch letters using AJAX
@@ -321,7 +321,7 @@
                     success: function(response) {
 
 
-                        $('#selectedCategoryName').html('<strong>Receipts from ' +
+                        $('#selectedCategoryName').html('<strong>Actions from ' +
                             categoryName + '</strong>');
                         let tableBody = '';
                         let serialNumber = 1;
@@ -381,7 +381,7 @@
                     // If on the category page, reset to the main view
                     $('#lettersTable').hide();
                     $('#cardsContainer').show();
-                    $('#selectedCategoryName').html('<strong>Receipts</strong>');
+                    $('#selectedCategoryName').html('<strong>Actions</strong>');
                 } else {
                     // Redirect to the dashboard if on the initial view
                     window.location.href = dashboardUrl;

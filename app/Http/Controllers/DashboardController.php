@@ -102,6 +102,12 @@ class DashboardController extends Controller
         $categories = HomeModel::get_receipt_count_by_category();
         return view('dashboard.receipt', compact('categories'));
     }
+    
+    public function action_box()
+    {
+        $categories = HomeModel::get_action_count_by_category();
+        return view('dashboard.action', compact('categories'));
+    }
 
     public function issue_box(){
         $categories = HomeModel::get_issue_count_by_category();
@@ -117,6 +123,12 @@ class DashboardController extends Controller
     public function fetchIssueByCategory($category_id)
     {
         $letters = HomeModel::get_issue_by_category($category_id);
+        return response()->json($letters);
+    }
+
+    public function fetchActionByCategory($category_id)
+    {
+        $letters = HomeModel::get_action_by_category($category_id);
         return response()->json($letters);
     }
 }
