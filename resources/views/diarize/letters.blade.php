@@ -95,7 +95,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($assignedLetters[$i - 1] <= 0)
+                                                    @if ($assignedLetters[$i - 1] > 0)
                                                         <div class="mb-1">
                                                             @if ($legacy == 0)
                                                                 <a href="javascript:void(0);" class="assign-link"
@@ -207,8 +207,38 @@
                                                     @if (session('role') == 3)
                                                         &nbsp;
                                                 <td>
-                                                    @isset($assignedSentLetters[$i - 1])
-                                                        @if ($assignedSentLetters[$i - 1] > 0)
+                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                    <div class="mb-1">
+                                                        @if ($legacy == 0)
+                                                            <a href="javascript:void(0);" class="assign-link"
+                                                                data-toggle="modal" data-target=".bd-example-modal-lg"
+                                                                data-letter="{{ $value['letter_id'] }}"
+                                                                data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                <span
+                                                                    class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                    title="Assign Letter"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    Assign
+                                                                    <i class="fas fa-paper-plane ml-1"></i>
+                                                                </span>
+                                                            </a>
+                                                        @endif
+                                                        <a
+                                                            href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
+                                                            <span
+                                                                class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
+                                                                title="Edit Letter"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                Edit
+                                                                <i class="fas fa-edit ml-1"></i>
+                                                            </span>
+                                                        </a>
+
+                                                    </div>
+                                                @endif
+                                                @if($value['stage_status'] < 3)
+                                                    @isset($assignedLetters[$i - 1])
+                                                        @if ($assignedLetters[$i - 1] > 0)
                                                             <div class="mb-1">
                                                                 <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                                     class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
@@ -221,7 +251,7 @@
                                                         @else
                                                         @endif
                                                     @endisset
-
+                                                    @endif
                                                     <div class="mb-1">
                                                         <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                             class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
@@ -337,13 +367,17 @@
 
                                     @if (session('role') == 3)
                                         <div class="mb-1">
-                                            @if ($assignedSentLetters[$i - 1] > 0)
+                                            @if($value['stage_status'] < 3)
+                                            @isset($assignedLetters[$i - 1])
+                                            @if ($assignedLetters[$i - 1] > 0)
                                                 <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                     class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                     data-toggle="tooltip" data-placement="top" title="Add Actions"
                                                     style="min-height: 30px; font-size: 12px;">
                                                     <i class="fas fa-edit mr-1"></i> Add Actions
                                                 </a>
+                                            @endif
+                                            @endisset
                                             @endif
                                         </div>
 
