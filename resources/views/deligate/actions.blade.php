@@ -568,7 +568,7 @@
       },function(j){
         var tr = "";
         var attachment = "";
-       if(j.length > 1){
+       
        if(j.length > 1){
           for(var i = 1; i < j.length; i++){
           if(j[i].attach != ""){
@@ -578,8 +578,6 @@
           attachment = "";
           }
             $('#note-body').html(tr);
-          }else{
-            $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }else{
             $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }

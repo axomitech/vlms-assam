@@ -211,6 +211,8 @@
                                                     @if (session('role') == 3)
                                                         &nbsp;
                                                 <td>
+                                                    @isset($assignedLetters[$i - 1])
+                                                   
                                                     @if ($assignedLetters[$i - 1] > 0)
                                                     <div class="mb-1">
                                                         @if ($legacy == 0)
@@ -240,6 +242,9 @@
 
                                                     </div>
                                                 @endif
+                                                     
+                                                @endisset
+                                                
                                                 @if($value['stage_status'] < 3)
                                                     @isset($assignedLetters[$i - 1])
                                                         @if ($assignedLetters[$i - 1] > 0)
@@ -369,7 +374,14 @@
 
                                     @if (session('role') == 3)
                                         <div class="mb-1">
+                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                    data-toggle="tooltip" data-placement="top" title="Add Actions"
+                                                    style="min-height: 30px; font-size: 12px;">
+                                                    <i class="fas fa-edit mr-1"></i> Add Actions
+                                                </a>
                                             @if($value['stage_status'] < 3)
+                                            
                                             @isset($assignedLetters[$i - 1])
                                             @if ($assignedLetters[$i - 1] > 0)
                                                 <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
