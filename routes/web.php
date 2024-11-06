@@ -7,7 +7,12 @@ Route::get('/', function () {
 });
 Route::post('/register_user', [App\Http\Controllers\RegisterVlmsUser::class, 'registerUser'])->name('register_user');
 
-Auth::routes();
+//Auth::routes();
+Auth::routes([
+    'register' => false, // Registration Routes...
+    'reset' => false, // Password Reset Routes...
+    'verify' => false, // Email Verification Routes...
+  ]);
 Route::middleware(['auth'])->group(function () {
     
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

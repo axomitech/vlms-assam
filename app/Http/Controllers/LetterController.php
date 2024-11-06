@@ -268,7 +268,17 @@ class LetterController extends Controller
             $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
 
         }
-        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+
+        if($legacy <= 0){
+
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+
+
+        }else{
+            
+        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+
+        }
     }
 
    public function editDiarized($letterId){
