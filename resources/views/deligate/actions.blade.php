@@ -110,7 +110,7 @@
                           </table>
                         </td>
                         <td>
-                          <a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a>
+                          <a href="" class="note-link btn btn-sm btn-info" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}">View <i class="fas fa-eye"></i><a>
                         </td>
                     </tr>
                       @php
@@ -560,7 +560,6 @@
 
   $(document).on('click','.note-link',function(e){
       e.preventDefault();
-     $('.modal-title').text($(this).data('action_text'));
      $('.modal-title').text($(this).data('action_text'));
       var action = $(this).data('action');
       $.get("{{route('action_notes')}}",{
