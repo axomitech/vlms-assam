@@ -196,7 +196,6 @@ class LetterController extends Controller
             'stage_status'=>1,
             'legacy'=>$legacyStatus
         ],[]);
-        // return $letters;
         $assignedLetters = [];
         $assignedSentLetters = [];
         $delegatgeLetters = [];

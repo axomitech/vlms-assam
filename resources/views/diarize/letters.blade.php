@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+.custom-dropdown-width {
+    min-width: 200px; /* Adjust width to fit longest item */
+    margin-right: 60px; /* Adds space from left edge */
+}
+
+
+</style>
     <form id="letter-complete-form">
         <input type="hidden" id="stage_letter" name="stage_letter">
         <input type="hidden" id="stage" name="stage" value="5">
@@ -54,7 +62,8 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td> &nbsp;{{ $value['crn'] }}
-                                                    <br>Diarize Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>Diarize
+                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
                                                 </td>
@@ -157,7 +166,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       
+
                                         @php
                                             $i = 1;
                                         @endphp
@@ -195,106 +204,64 @@
                                                     {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
-                                                        @if (session('role') == 2)
-                                                            <div class="mb-1">
-                                                                <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="View/Update"
-                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                    <i class="fas fa-edit mr-1"></i> View/Update
-                                                                </a>
-                                                            </div>
-                                                        @endif
-
-
-                                                    @if (session('role') == 3)
-                                                        &nbsp;
-                                                    @isset($assignedLetters[$i - 1])
-                                                   
-                                                    @if ($assignedLetters[$i - 1] > 0)
-                                                    <div class="mb-1">
-                                                        @if ($legacy == 0)
-                                                            <a href="javascript:void(0);" class="assign-link"
-                                                                data-toggle="modal" data-target=".bd-example-modal-lg"
-                                                                data-letter="{{ $value['letter_id'] }}"
-                                                                data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                <span
-                                                                    class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                    title="Assign Letter"
-                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                    Assign
-                                                                    <i class="fas fa-paper-plane ml-1"></i>
-                                                                </span>
+                                                    @if (session('role') == 2)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}" class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center" style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
                                                             </a>
-                                                        @endif
-                                                        <a
-                                                            href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
-                                                            <span
-                                                                class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
-                                                                title="Edit Letter"
-                                                                style="min-height: 30px; font-size: 12px;">
-                                                                Edit
-                                                                <i class="fas fa-edit ml-1"></i>
-                                                            </span>
-                                                        </a>
-
-                                                    </div>
-                                                @endif
-                                                     
-                                                @endisset
-                                                
-                                                @if($value['stage_status'] < 3)
-                                                    @isset($assignedLetters[$i - 1])
-                                                        @if ($assignedLetters[$i - 1] > 0)
-                                                            <div class="mb-1">
-                                                                <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="Add Action Points"
-                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                    <i class="fas fa-edit mr-1"></i> Add Actions
-                                                                </a>
-                                                            </div>
-                                                        @else
-                                                        @endif
-                                                    @endisset
+                                                        </div>
                                                     @endif
-                                                    <div class="mb-1">
-                                                        <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                            class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"
-                                                            style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
-                                                        </a>
-                                                    </div>
-                                                    <div class="mb-1">
-                                                        <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
-                                                            class="action-link btn btn-sm btn-info w-100 d-flex align-items-center justify-content-center"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"
-                                                            style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-envelope-open-text mr-1"></i> Respond
-                                                        </a>
-
-                                                            </div>
-                                                            <div class="mb-1">
-                                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                                    class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="Correspondences"
-                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                    <i class="fas fa-file-alt mr-1"></i> Correspondences
+                                                
+                                                    @if (session('role') == 3)
+                                                        <div class="btn-group w-100 mt-2">
+                                                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-height: 30px; font-size: 12px;">
+                                                                Actions
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-left custom-dropdown-width" style="font-size: 12px;">
+                                                                @isset($assignedLetters[$i - 1])
+                                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                                        @if ($legacy == 0)
+                                                                            <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                                Assign <i class="fas fa-paper-plane ml-1"></i>
+                                                                            </a>
+                                                                        @endif
+                                                                        <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                            Edit <i class="fas fa-edit ml-1"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                @endisset
+                                                
+                                                                @if ($value['stage_status'] < 3)
+                                                                    @isset($assignedLetters[$i - 1])
+                                                                        @if ($assignedLetters[$i - 1] > 0)
+                                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                                Add Actions <i class="fas fa-list ml-1"></i>
+                                                                            </a>
+                                                                        @endif
+                                                                    @endisset
+                                                                @endif
+                                                
+                                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                    Acknowledge <i class="fas fa-envelope-open-text ml-1"></i>
+                                                                </a>
+                                                
+                                                                <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                    Respond <i class="fas fa-reply ml-1"></i>
+                                                                </a>
+                                                
+                                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                    Correspondences <i class="fas fa-file-alt ml-1"></i>
                                                                 </a>
                                                             </div>
-                                                        @endif
+                                                        </div>
+                                                    @endif
                                                 </td>
-                                       
+                                                
+
                                             </tr>
                                         @endforeach
                                         @php
-                                                $i++;
+                                            $i++;
                                         @endphp
                                     </tbody>
                                 </table>
@@ -364,40 +331,43 @@
                                                         <div class="mb-1">
                                                             <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
                                                                 class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                data-toggle="tooltip" data-placement="top" title="View/Update"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
                                                                 style="min-height: 30px; font-size: 12px;">
                                                                 <i class="fas fa-edit mr-1"></i> View/Update
                                                             </a>
                                                         </div>
                                                     @endif
 
-                                    @if (session('role') == 3)
-                                        <div class="mb-1">
-                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                    data-toggle="tooltip" data-placement="top" title="Add Actions"
-                                                    style="min-height: 30px; font-size: 12px;">
-                                                    <i class="fas fa-edit mr-1"></i> Add Actions
-                                                </a>
-                                            @if($value['stage_status'] < 3)
-                                            
-                                            @isset($assignedLetters[$i - 1])
-                                            @if ($assignedLetters[$i - 1] > 0)
-                                                <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                    data-toggle="tooltip" data-placement="top" title="Add Actions"
-                                                    style="min-height: 30px; font-size: 12px;">
-                                                    <i class="fas fa-edit mr-1"></i> Add Actions
-                                                </a>
-                                            @endif
-                                            @endisset
-                                            @endif
-                                        </div>
+                                                    @if (session('role') == 3)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Add Actions"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> Add Actions
+                                                            </a>
+                                                            @if ($value['stage_status'] < 3)
+                                                                @isset($assignedLetters[$i - 1])
+                                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                            class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title="Add Actions"
+                                                                            style="min-height: 30px; font-size: 12px;">
+                                                                            <i class="fas fa-edit mr-1"></i> Add Actions
+                                                                        </a>
+                                                                    @endif
+                                                                @endisset
+                                                            @endif
+                                                        </div>
 
                                                         <div class="mb-1">
                                                             <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                                 class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
-                                                                data-toggle="tooltip" data-placement="top" title="Acknowledge"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledge"
                                                                 style="min-height: 30px; font-size: 12px;">
                                                                 <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
                                                             </a>
@@ -406,7 +376,8 @@
                                                         <div class="mb-1">
                                                             <a href="{{ route('correspondences', [$value['letter_id']]) }}"
                                                                 class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
-                                                                data-toggle="tooltip" data-placement="top" title="Correspondences"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
                                                                 style="min-height: 30px; font-size: 12px;">
                                                                 <i class="fas fa-file mr-1"></i> Correspondences
                                                             </a>
@@ -491,7 +462,8 @@
                                                         <div class="mb-1">
                                                             <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
                                                                 class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                data-toggle="tooltip" data-placement="top" title="View/Update"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
                                                                 style="min-height: 30px; font-size: 12px;">
                                                                 <i class="fas fa-edit mr-1"></i> View/Update
                                                             </a>
@@ -502,7 +474,8 @@
                                                         <div class="mb-1">
                                                             <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                                 class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                data-toggle="tooltip" data-placement="top" title="View/Update"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
                                                                 style="min-height: 30px; font-size: 12px;">
                                                                 <i class="fas fa-edit mr-1"></i> View/Update
                                                             </a>
@@ -521,7 +494,8 @@
                                                         <div class="mb-1">
                                                             <a href="{{ route('correspondences', [$value['letter_id']]) }}"
                                                                 class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
-                                                                data-toggle="tooltip" data-placement="top" title="Correspondences"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
                                                                 style="min-height: 30px; font-size: 12px;">
                                                                 <i class="fas fa-file mr-1"></i> Correspondences
                                                             </a>

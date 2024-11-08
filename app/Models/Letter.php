@@ -41,7 +41,7 @@ class Letter extends Model
     }
 
 
-    public static function updateLetter($letterDetails,$letter)
+    public static function updateLetter($letterDetails, $letter)
     {
         $receipt = true;
         $legacy = true;
@@ -52,7 +52,7 @@ class Letter extends Model
             $legacy = false;
         }
         Letter::where([
-            'id'=>$letter->id
+            'id' => $letter->id
         ])->update([
             'letter_category_id' => $letterDetails[0],
             'letter_sub_category_id' => $letterDetails[10],
@@ -108,40 +108,44 @@ class Letter extends Model
                 'letters.letter_path'
             )
             ->where($condition);  // Apply the given condition
-    
+
         // If letters array is not empty, filter the results further with whereIn
         if (count($letters) > 0) {
             $lettersDetails = $lettersDetails->whereIn('letters.id', $letters);
         }
-    
+
         // Order by letters.id in descending order
         $lettersDetails = $lettersDetails->orderBy('letters.id', 'DESC')->get();
-    
+
         return $lettersDetails;
     }
-    
 
 
 
-    public static function showInboxLetters($condition,$assignedLetterIds)
+
+    public static function showInboxLetters($condition, $assignedLetterIds)
     {
         $receivedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
-        ->join('action_sents', 'letters.id', '=', 'action_sents.letter_id')
-        ->where($condition)
-        ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
-        ->orderBy('letters.id', 'ASC')
-        ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
-        ->get();
+            ->join('action_sents', 'letters.id', '=', 'action_sents.letter_id')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Join for letter categories
+            ->where($condition)
+            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name')
+            ->orderBy('letters.id', 'ASC')
+            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
+            ->get();
+
         $assignedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
-        ->join('letter_assigns', 'letters.id', '=', 'letter_assigns.letter_id')
-        ->whereIn('letter_assigns.id',$assignedLetterIds)
-        ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status')
-        ->orderBy('letters.id', 'ASC')
-        ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status')
-        ->get();
+            ->join('letter_assigns', 'letters.id', '=', 'letter_assigns.letter_id')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Join for letter categories
+            ->whereIn('letter_assigns.id', $assignedLetterIds)
+            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name')
+            ->orderBy('letters.id', 'ASC')
+            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
+            ->get();
+
         return $assignedLetters->merge($receivedLetters);
-        //return $receivedLetters;
     }
+
 
     public static function generateLetterCrn($crn)
     {
