@@ -31,7 +31,7 @@
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                             <div class="box-body">
-                                <table class="table table-sm table-hover table-striped letter-table" id="inbox-table">
+                                <table class="table table-sm table-hover table-striped letter-table" id="diarized-table">
                                     <thead>
                                         <tr>
                                             <th colspan="6" class="text text-center">Diarized Letters</th>
@@ -210,7 +210,6 @@
 
                                                     @if (session('role') == 3)
                                                         &nbsp;
-                                                <td>
                                                     @isset($assignedLetters[$i - 1])
                                                    
                                                     @if ($assignedLetters[$i - 1] > 0)
@@ -688,6 +687,25 @@
                     titleAttr: 'PDF'
                 }]
             }).buttons().container().appendTo('#inbox-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
+
+            $("#diarized-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                }, {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#diarized-table_wrapper .col-md-6:eq(0)');
             $(".buttons-html5").addClass("btn-sm");
             $(".buttons-html5").removeClass('btn-secondary');
             $(".buttons-print").addClass("btn-sm");
