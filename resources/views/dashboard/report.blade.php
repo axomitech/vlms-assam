@@ -334,7 +334,8 @@
     <script>
         // Function to fetch and display the selected category's content
         function showCategoryData(category) {
-            fetch(`/getCategoryData?category=${category}`)
+            
+            fetch(`{{ url('') }}/getCategoryData?category=${category}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("categoryContent").innerHTML = ""; // Clear existing content
