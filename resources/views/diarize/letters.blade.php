@@ -130,12 +130,8 @@
                                                                     <i class="fas fa-edit ml-1"></i>
                                                                 </span>
                                                             </a>
-
                                                         </div>
                                                     @endif
-
-
-
                                                 </td>
                                             </tr>
                                             @php
@@ -166,7 +162,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
                                         @php
                                             $i = 1;
                                         @endphp

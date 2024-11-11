@@ -200,7 +200,7 @@
                                 </a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                <a href="{{ route('reports') }}" class="nav-link d-flex align-items-center">
                                     <i class='bx bxs-report' style="font-size: 24px;"></i>
                                     <p style="margin: 0; padding-left: 8px;">
                                         Reports

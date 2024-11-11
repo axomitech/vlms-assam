@@ -58,6 +58,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
     Route::get('/issue/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchIssueByCategory'])->name('issue_by_category');
 
+    //Report Controller
+    Route::get('/report', [App\Http\Controllers\ReportController::class, 'cat_wise_diarize_assign_forwarded'])->name('reports');
+    Route::get('/getCategoryData', [App\Http\Controllers\ReportController::class, 'getCategoryData']);
+
 
     Route::get('/pdf_genarator/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF'])->name('pdf_genarator');
     Route::get('/pdf_downloadAll/{id}', [App\Http\Controllers\PDFController::class, 'downloadAll'])->name('pdf_downloadAll');
