@@ -344,7 +344,7 @@
                     data.forEach(item => {
                         // Generate image URL dynamically based on category_name
                         const imageUrl =
-                            `/banoshree/images/${item.category_name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}.png`;
+                            `{{ url('') }}/banoshree/images/${item.category_name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}.png`;
 
                         // Construct the card HTML
                         const cardHtml = `
