@@ -104,35 +104,37 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($assignedLetters[$i - 1] > 0)
-                                                        <div class="mb-1">
-                                                            @if ($legacy == 0)
-                                                                <a href="javascript:void(0);" class="assign-link"
-                                                                    data-toggle="modal" data-target=".bd-example-modal-lg"
-                                                                    data-letter="{{ $value['letter_id'] }}"
-                                                                    data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                    <span
-                                                                        class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                        title="Assign Letter"
-                                                                        style="min-height: 30px; font-size: 12px;">
-                                                                        Assign
-                                                                        <i class="fas fa-paper-plane ml-1"></i>
-                                                                    </span>
-                                                                </a>
-                                                            @endif
-                                                            <a
-                                                                href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
-                                                                <span
-                                                                    class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
-                                                                    title="Edit Letter"
-                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                    Edit
-                                                                    <i class="fas fa-edit ml-1"></i>
-                                                                </span>
-                                                            </a>
+                                                   @if(session('role') == 1)
+                                                   @if (!$assignedLetters[$i - 1])
+                                                   <div class="mb-1">
+                                                       @if ($legacy == 0)
+                                                           <a href="javascript:void(0);" class="assign-link"
+                                                               data-toggle="modal" data-target=".bd-example-modal-lg"
+                                                               data-letter="{{ $value['letter_id'] }}"
+                                                               data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                               <span
+                                                                   class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                   title="Assign Letter"
+                                                                   style="min-height: 30px; font-size: 12px;">
+                                                                   Assign
+                                                                   <i class="fas fa-paper-plane ml-1"></i>
+                                                               </span>
+                                                           </a>
+                                                       @endif
+                                                       <a
+                                                           href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
+                                                           <span
+                                                               class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
+                                                               title="Edit Letter"
+                                                               style="min-height: 30px; font-size: 12px;">
+                                                               Edit
+                                                               <i class="fas fa-edit ml-1"></i>
+                                                           </span>
+                                                       </a>
 
-                                                        </div>
-                                                    @endif
+                                                   </div>
+                                               @endif
+                                                   @endif
 
 
 
@@ -211,7 +213,7 @@
                                                             </a>
                                                         </div>
                                                     @endif
-                                                
+                                                    
                                                     @if (session('role') == 3)
                                                         <div class="btn-group w-100 mt-2">
                                                             <button type="button" class="btn btn-sm btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-height: 30px; font-size: 12px;">
@@ -327,6 +329,7 @@
                                                 </td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
+                                                   
                                                     @if (session('role') == 2)
                                                         <div class="mb-1">
                                                             <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
@@ -338,7 +341,15 @@
                                                             </a>
                                                         </div>
                                                     @endif
-
+                                                    @if(session('role') == 1)
+                                                                    <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    title="Add Actions"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    <i class="fas fa-edit mr-1"></i> Add Actions
+                                                                    </a>
+                                                    @endif    
                                                     @if (session('role') == 3)
                                                         <div class="mb-1">
                                                             <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
@@ -349,6 +360,7 @@
                                                                 <i class="fas fa-edit mr-1"></i> Add Actions
                                                             </a>
                                                             @if ($value['stage_status'] < 3)
+                                                                
                                                                 @isset($assignedLetters[$i - 1])
                                                                     @if ($assignedLetters[$i - 1] > 0)
                                                                         <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"

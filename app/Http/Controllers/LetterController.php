@@ -269,7 +269,6 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-
             return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
 
 
