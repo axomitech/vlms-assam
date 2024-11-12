@@ -571,7 +571,7 @@
        if(j.length > 1){
           for(var i = 1; i < j.length; i++){
           if(j[i].attach != ""){
-            attachment = "<a href='#' class='attach' data-attach='"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
+            attachment = "<a href='#' class='attach' data-attach='{{str_replace('public','storage/app/',url(''))}}"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
           }
           tr += "<tr><td><b>"+j[i].name+"</b> : "+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"&nbsp;"+attachment+"</b></td></tr>";
           attachment = "";
