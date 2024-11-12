@@ -1,18 +1,54 @@
 @extends('layouts.app')
-@section('content')
-@php
-    $hour = \Carbon\Carbon::now()->format('H');
-    if ($hour < 12) {
-        $greeting = 'Good Morning';
-        $icon = 'bx bxs-sun'; // Morning sun icon
-    } elseif ($hour < 18) {
-        $greeting = 'Good Afternoon';
-        $icon = 'fas fa-cloud-sun'; // Afternoon icon with sun and cloud
-    } else {
-        $greeting = 'Good Evening';
-        $icon = 'bx bxs-moon'; // Evening moon icon
+<style>
+    .pattern-background::before,
+    .pattern-background::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.082);
+        /* Slightly increased opacity for better visibility */
+        box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
+        /* Adjusted for more subtle shadow effect */
     }
-@endphp
+
+    /* Top-left Circle */
+    .pattern-background::before {
+        top: -25px;
+        /* Slightly adjusted positioning */
+        left: -25px;
+        /* Slightly adjusted positioning */
+        width: 90px;
+        /* Increased size for a more pronounced effect */
+        height: 90px;
+        /* Increased size for consistency */
+    }
+
+    /* Bottom-right Circle */
+    .pattern-background::after {
+        bottom: -25px;
+        /* Slightly adjusted positioning */
+        right: -25px;
+        /* Slightly adjusted positioning */
+        width: 110px;
+        /* Increased size for a more balanced look */
+        height: 110px;
+        /* Increased size for consistency */
+    }
+</style>
+@section('content')
+    @php
+        $hour = \Carbon\Carbon::now()->format('H');
+        if ($hour < 12) {
+            $greeting = 'Good Morning';
+            $icon = 'bx bxs-sun'; // Morning sun icon
+        } elseif ($hour < 18) {
+            $greeting = 'Good Afternoon';
+            $icon = 'fas fa-cloud-sun'; // Afternoon icon with sun and cloud
+        } else {
+            $greeting = 'Good Evening';
+            $icon = 'bx bxs-moon'; // Evening moon icon
+        }
+    @endphp
     <div class="row">
         <div class="col-md-6 mb-2">
             <h6><i class='{{ $icon }}'></i>
@@ -36,9 +72,9 @@
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
                                 <a href="{{ route('receipt_box') }}">
-                                    <div class="small-box"
-                                    style="background: linear-gradient(45deg, #206fb9, #3FA9FF); padding:15px; border-radius:1rem;">
-                                    
+                                    <div class="small-box pattern-background"
+                                        style="background: #206fb9; padding:15px; border-radius:1rem;">
+
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -65,8 +101,8 @@
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box for Issued -->
                                 <a href="{{ route('issue_box') }}">
-                                    <div class="small-box"
-                                        style="background: linear-gradient(45deg, #bd5d0e, #e66e0d);; padding:15px; border-radius:1rem;">
+                                    <div class="small-box pattern-background"
+                                        style="background:#e66e0d; padding:15px; border-radius:1rem;">
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -95,9 +131,9 @@
                                 <div class="row">
                                     <!-- small box for Inbox -->
                                     <div class="col-lg-6">
-                                        <a href="{{ route('letters', [encrypt(0),'tab'=>'inbox']) }}" data-tab="inbox">
-                                            <div class="small-box"
-                                                style="background: linear-gradient(45deg, #d3e0eb, #EFF8FF); padding:15px; border-radius:1rem;">
+                                        <a href="{{ route('letters', [encrypt(0), 'tab' => 'inbox']) }}" data-tab="inbox">
+                                            <div class="small-box pattern-background"
+                                                style="background: #d3e0eb; padding:15px; border-radius:1rem;">
                                                 <div class="inner">
                                                     <div class="row">
                                                         <div class="col-lg-8">
@@ -124,9 +160,9 @@
 
                                     <!-- small box for Sent -->
                                     <div class="col-lg-6">
-                                        <a href="{{ route('letters', [encrypt(0),'tab'=>'sent']) }}" data-tab="sent">
-                                            <div class="small-box"
-                                                style="background: linear-gradient(45deg, #d3e0eb, #EFF8FF); padding:15px; border-radius:1rem;">
+                                        <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                            <div class="small-box pattern-background"
+                                                style="background:#d3e0eb; padding:15px; border-radius:1rem;">
                                                 <div class="inner">
                                                     <div class="row">
                                                         <div class="col-lg-8">
@@ -165,8 +201,8 @@
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
                                 <a href="{{ route('action_box') }}">
-                                    <div class="small-box"
-                                        style="background: linear-gradient(45deg, #39a013, #4fd61e); padding:15px; border-radius:1rem;">
+                                    <div class="small-box pattern-background"
+                                        style="background:#39a013; padding:15px; border-radius:1rem;">
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -193,9 +229,9 @@
                             </div>
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
-                                <a href="{{ route('letters', [encrypt(0),'archive']) }}">
-                                    <div class="small-box"
-                                        style="background:  linear-gradient(45deg, #a17e0a, #d8a706); padding:15px; border-radius:1rem;">
+                                <a href="{{ route('letters', [encrypt(0), 'archive']) }}">
+                                    <div class="small-box pattern-background"
+                                        style="background: #d8a706; padding:15px; border-radius:1rem;">
                                         <div class="inner">
                                             <div class="row">
                                                 <div class="col-lg-8">
@@ -216,7 +252,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{--<a href="{{ route('letters') }}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> --}}
+                                        {{-- <a href="{{ route('letters') }}" class="small-box-footer">Diarized<i class="fas fa-arrow-circle-right"></i></a> --}}
                                     </div>
                                 </a>
                             </div>
@@ -354,17 +390,17 @@
         const ctxWeekChart = document.getElementById('weekBarChart').getContext('2d');
 
         const categoryColors = {
-            1: '#E55674',  
-            2: '#3090CF',  
-            3: '#E07D38',  
-            4: '#E6B84B',  
-            5: '#D0D2D7',  
-            6: '#42A7A7',  
-            7: '#8759E6',  
-            8: '#CC8136',  
-            9: '#CACCCF',  
-            10: '#CC5170', 
-            11: '#285CAB'  
+            1: '#E55674',
+            2: '#3090CF',
+            3: '#E07D38',
+            4: '#E6B84B',
+            5: '#D0D2D7',
+            6: '#42A7A7',
+            7: '#8759E6',
+            8: '#CC8136',
+            9: '#CACCCF',
+            10: '#CC5170',
+            11: '#285CAB'
         };
 
 
@@ -450,7 +486,9 @@
         const ctxDakPieChart = document.getElementById('dakPieChart').getContext('2d');
         const categoryNames = dakData.map(item => item.category_name);
         const categoryCounts = dakData.map(item => item.count);
-        const colors = ['#3189E6','#3A9E17','#C75F08','#AC8303','#7A26CB','#E65A40','#E6C200','#1D9E98','#E660A2','#5F52B5','#E63F00'];
+        const colors = ['#3189E6', '#3A9E17', '#C75F08', '#AC8303', '#7A26CB', '#E65A40', '#E6C200', '#1D9E98', '#E660A2',
+            '#5F52B5', '#E63F00'
+        ];
 
         const dakPieChart = new Chart(ctxDakPieChart, {
             type: 'pie',
@@ -517,7 +555,7 @@
                         formatter: (value, context) => {
                             const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(
-                            1); // Show percentage to 1 decimal place
+                                1); // Show percentage to 1 decimal place
                             return `${percentage}%`; // Show percentage outside the pie
                         },
                         color: '#000',
