@@ -350,8 +350,8 @@
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.sender_name}</small></td>
                         <td><small>${letter.received_date}</small></td>
-                         <td><small> <a href="" class="note-link btn btn-sm btn-info" data-action="" data-toggle="modal" data-target="#noteModal" data-action_text="">View <i class="fas fa-eye"></i><a>
-                        </small></td>
+                          <a href="" class="note-link btn btn-sm btn-info" data-action="" data-toggle="modal" data-target="#noteModal" data-action_text="">View <i class="fas fa-eye"></i><a>
+                        <td><small></small></td>
                     </tr>`;
                         });
 
