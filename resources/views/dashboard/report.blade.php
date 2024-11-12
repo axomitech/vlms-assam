@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-@include('layouts.header')
+    @include('layouts.header')
 
 
     <div class="row mt-3">
@@ -177,7 +177,7 @@
 @endsection
 
 @section('scripts')
-@include('layout.scripts')
+    @include('layouts.scripts')
 
     <script>
         $(document).ready(function() {
@@ -342,18 +342,37 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        // Highlight the active box
+        // Function to highlight the active box and add "Active" label
         function setActiveBox(activeId) {
             const boxes = ["diarizedBox", "assignedBox", "forwardedBox"];
+
+            // Loop through all boxes to remove the "active-box" class and active label
             boxes.forEach(id => {
                 const boxElement = document.getElementById(id);
                 if (boxElement) {
                     boxElement.classList.remove("active-box");
+
+                    // Remove any existing active label
+                    const activeLabel = boxElement.querySelector('.active-label');
+                    if (activeLabel) {
+                        activeLabel.remove();
+                    }
                 }
             });
+
+            // Add "active-box" class and "Active" label to the selected box
             const activeBoxElement = document.getElementById(activeId);
             if (activeBoxElement) {
                 activeBoxElement.classList.add("active-box");
+
+                // Add the "Active" label at the bottom-right corner
+                const activeLabelHtml = `
+            <div class="active-label">
+                <span class="circle"></span>
+                Active
+            </div>
+        `;
+                activeBoxElement.insertAdjacentHTML('beforeend', activeLabelHtml);
                 console.log(`Active box set to: ${activeId}`); // Debugging
             }
         }

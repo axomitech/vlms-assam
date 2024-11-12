@@ -55830,14 +55830,41 @@ a.text-muted:hover {
 
 /*# sourceMappingURL=adminlte.min.css.map */
 
-   /* Active box styling */
-    .active-box {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        background-color: #7fb7eb;
-        /* Optional: subtle background change */
-    }
+.active-box {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #7fb7eb;
+    position: relative;
+    /* To position the "Active" label correctly */
+}
 
-    #loading-overlay {
+/* Style for the "Active" label with the green circle */
+.active-label {
+    position: absolute;
+    bottom: 10px;
+    /* Adjust positioning */
+    right: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #333;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.8);
+    /* Subtle background for readability */
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.active-label .circle {
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    /* Green color for the active status */
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+
+#loading-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -55845,16 +55872,20 @@ a.text-muted:hover {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    flex-direction: column; /* Ensure the spinner and text are stacked vertically */
+    flex-direction: column;
+    /* Ensure the spinner and text are stacked vertically */
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    color: white; /* Ensure the text is visible */
+    color: white;
+    /* Ensure the text is visible */
 }
 
 .spinner {
-    border: 4px solid #f3f3f3; /* Light gray */
-    border-top: 4px solid #3498db; /* Blue */
+    border: 4px solid #f3f3f3;
+    /* Light gray */
+    border-top: 4px solid #3498db;
+    /* Blue */
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -55862,47 +55893,53 @@ a.text-muted:hover {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 #loading-overlay p {
     margin-top: 10px;
     font-size: 18px;
-    color: white; /* Ensure text color is visible on the overlay */
+    color: white;
+    /* Ensure text color is visible on the overlay */
 }
 
-  .pattern-background::before,
-    .pattern-background::after {
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.082);
-        /* Slightly increased opacity for better visibility */
-        box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
-        /* Adjusted for more subtle shadow effect */
-    }
+.pattern-background::before,
+.pattern-background::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.082);
+    /* Slightly increased opacity for better visibility */
+    box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
+    /* Adjusted for more subtle shadow effect */
+}
 
-    /* Top-left Circle */
-    .pattern-background::before {
-        top: -25px;
-        /* Slightly adjusted positioning */
-        left: -25px;
-        /* Slightly adjusted positioning */
-        width: 90px;
-        /* Increased size for a more pronounced effect */
-        height: 90px;
-        /* Increased size for consistency */
-    }
+/* Top-left Circle */
+.pattern-background::before {
+    top: -25px;
+    /* Slightly adjusted positioning */
+    left: -25px;
+    /* Slightly adjusted positioning */
+    width: 90px;
+    /* Increased size for a more pronounced effect */
+    height: 90px;
+    /* Increased size for consistency */
+}
 
-    /* Bottom-right Circle */
-    .pattern-background::after {
-        bottom: -25px;
-        /* Slightly adjusted positioning */
-        right: -25px;
-        /* Slightly adjusted positioning */
-        width: 110px;
-        /* Increased size for a more balanced look */
-        height: 110px;
-        /* Increased size for consistency */
-    }
+/* Bottom-right Circle */
+.pattern-background::after {
+    bottom: -25px;
+    /* Slightly adjusted positioning */
+    right: -25px;
+    /* Slightly adjusted positioning */
+    width: 110px;
+    /* Increased size for a more balanced look */
+    height: 110px;
+    /* Increased size for consistency */
+}
