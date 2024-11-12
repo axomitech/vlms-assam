@@ -3,6 +3,11 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" style="display:none;">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
         <div class="card">
             <div class="card-header">
                 <div class="row">
@@ -85,6 +90,7 @@ aria-hidden="true">
   <!-- Modal END-->
 
 @section('scripts')
+@include('layouts.scripts')
     <script src="{{asset('js/custom/common.js')}}"></script>
     <script type="text/javascript" src="{{ asset('tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
     <script>
@@ -173,6 +179,7 @@ aria-hidden="true">
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                 };
                 // alert(formData);
+                showLoading();
                 // Ajax request
                 $.ajax({
                     type: 'POST',
@@ -185,10 +192,13 @@ aria-hidden="true">
                         alert("Letter saved successfully!");
                         $('.saved_span').text(response.last_saved);
                         // Optionally, display a success message or redirect
+                        hideLoading();
                     },
                     error: function(xhr, status, error) {
                         // Handle error
                         console.error('Error:', error);
+                        hideLoading();
+
                     }
                 });
             });
@@ -206,6 +216,7 @@ aria-hidden="true">
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                 };
                 alert(formData);
+                showLoading();
                 // Ajax request
                 $.ajax({
                     type: 'POST',
@@ -218,10 +229,13 @@ aria-hidden="true">
                         alert("Letter PDF successfully!");
                         // $('.saved_span').text(response.last_saved);
                         // Optionally, display a success message or redirect
+                        hideLoading();
+
                     },
                     error: function(xhr, status, error) {
                         // Handle error
                         console.error('Error:', error);
+                        hideLoading();
                     }
                 });
             });
@@ -232,6 +246,7 @@ aria-hidden="true">
             var form = $('#uploadForm')[0];
             var formData = new FormData(form);
             alert(formData);
+            showLoading();
             $.ajax({
             url: '{{ route('store_correspondence') }}',
             type: 'POST',
@@ -239,7 +254,8 @@ aria-hidden="true">
             processData: false,
             contentType: false,
             success: function(response){
-            
+                hideLoading();
+
             location.reload(true);
 
             }

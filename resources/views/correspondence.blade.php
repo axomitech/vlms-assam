@@ -14,6 +14,11 @@
                     </div>
                 </div>
             </div>
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" style="display:none;">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
 
             <div class="card-body">
                
@@ -177,6 +182,7 @@ aria-hidden="true">
   <!-- Modal END-->
 
 @section('scripts')
+@include('layouts.scripts')
     <script src="{{asset('js/custom/common.js')}}"></script>
     <!-- Bootstrap JS and dependencies -->
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -221,6 +227,7 @@ aria-hidden="true">
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                     };
                 // alert(correspondence_id);
+                showLoading();
                 $.ajax({
                 url: '{{ route('remove_correspondences') }}',
                 type: 'POST',
@@ -232,6 +239,8 @@ aria-hidden="true">
                 success: function(response){
                     alert("Correspondence removed successfully!");
                     location.reload(true);
+                    hideLoading();
+
                 }
                 });
             });

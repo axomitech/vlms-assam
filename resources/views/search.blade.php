@@ -5,6 +5,11 @@
         <div class="col-md-12 ">
             <div class="card">
                 <div class="card-body">
+                    <!-- Loading Overlay -->
+                    <div id="loading-overlay" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading...</p>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 ">
                             <form id="letter-form">
@@ -102,20 +107,7 @@
         </div>
     </div>
 @section('scripts')
-    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('js/custom/common.js') }}"></script>
-
+@include('layouts.scripts')
     <script>
         $(document).ready(function() {
 
@@ -144,6 +136,7 @@
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                 };
                 // Ajax request
+                showLoading();
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('submit.search') }}', // Replace with your server-side script URL
@@ -157,10 +150,12 @@
                         $('#letter-table').DataTable({
                             "destroy": true, //use for reinitialize datatable
                         });
+                        hideLoading();
                     },
                     error: function(xhr, status, error) {
                         // Handle error
                         console.error('Error:', error);
+                        hideLoading();
                     }
                 });
             });

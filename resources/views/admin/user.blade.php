@@ -22,6 +22,11 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Loading Overlay -->
+                    <div id="loading-overlay" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading...</p>
+                    </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
@@ -283,6 +288,7 @@
     <!-- Modal END-->
 
 @section('scripts')
+@include('layouts.scripts')
     <script>
         $(document).on('click', '.file-btn', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
@@ -319,6 +325,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // If confirmed, proceed with the AJAX request
+                        showLoading();
                         $.ajax({
                             url: "{{ route('user.default.access') }}",
                             method: "POST",
@@ -340,6 +347,7 @@
                                         button.attr('title',
                                             'Active - Click to deactivate'
                                         ); // Update title
+                                        hideLoading();
                                     } else {
                                         icon.removeClass('fa-unlock').addClass(
                                             'fa-lock'); // Show lock icon
@@ -348,6 +356,7 @@
                                         button.attr('title',
                                             'Inactive - Click to activate'
                                         ); // Update title
+                                        hideLoading();
                                     }
                                     // Show success message using SweetAlert2
                                     Swal.fire(
@@ -358,11 +367,14 @@
                                         // Reload the page after the success message
                                     });
                                 } else {
+                                    hideLoading();
                                     Swal.fire('Error!', 'Error updating access status.',
                                         'error');
+
                                 }
                             },
                             error: function(xhr) {
+                                hideLoading();
                                 Swal.fire('Error!', 'An error occurred.', 'error');
                             }
                         });
@@ -371,21 +383,6 @@
             });
         });
     </script>
-
-    <!-- DataTables  & Plugins -->
-    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('js/custom/common.js') }}"></script>
     <script>
         document.getElementById('role_id').addEventListener('change', function() {
             var selectedRole = this.value;
