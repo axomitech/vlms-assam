@@ -38,6 +38,11 @@
         <div class="box-body col-md-12">
             <section class="content">
                 <div class="container-fluid">
+                    <!-- Loading Overlay -->
+                    <div id="loading-overlay" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading...</p>
+                    </div>
                     @if (session('role') > 0)
                         <!-- Start the outer row -->
                         <div class="row">
@@ -295,6 +300,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-3d"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script>
+         // Show the loading overlay
+         function showLoading() {
+            $('#loading-overlay').show(); // Show loading spinner and text
+        }
+
+        // Hide the loading overlay
+        function hideLoading() {
+            $('#loading-overlay').hide(); // Hide loading spinner and text
+        }
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -314,6 +330,7 @@
                 let url = '{{ route('action_by_category', ['category_id' => ':category_id']) }}'.replace(
                     ':category_id', categoryId);
 
+                showLoading();
                 // Fetch letters using AJAX
                 $.ajax({
                     url: url,
@@ -364,11 +381,13 @@
                         $('#cardsContainer').hide();
                         $('#lettersTable').show();
                         $('#resetView').show();
+                        hideLoading();
                     },
                     error: function(xhr, status, error) {
                         $('#lettersList tbody').html(
                             '<tr><td colspan="7" class="text-center">Error loading data</td></tr>'
                         );
+                        hideLoading();
                     }
                 });
             });

@@ -1,40 +1,4 @@
 @extends('layouts.app')
-<style>
-    .pattern-background::before,
-    .pattern-background::after {
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.082);
-        /* Slightly increased opacity for better visibility */
-        box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
-        /* Adjusted for more subtle shadow effect */
-    }
-
-    /* Top-left Circle */
-    .pattern-background::before {
-        top: -25px;
-        /* Slightly adjusted positioning */
-        left: -25px;
-        /* Slightly adjusted positioning */
-        width: 90px;
-        /* Increased size for a more pronounced effect */
-        height: 90px;
-        /* Increased size for consistency */
-    }
-
-    /* Bottom-right Circle */
-    .pattern-background::after {
-        bottom: -25px;
-        /* Slightly adjusted positioning */
-        right: -25px;
-        /* Slightly adjusted positioning */
-        width: 110px;
-        /* Increased size for a more balanced look */
-        height: 110px;
-        /* Increased size for consistency */
-    }
-</style>
 @section('content')
     @php
         $hour = \Carbon\Carbon::now()->format('H');

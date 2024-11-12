@@ -1,15 +1,4 @@
 @extends('layouts.app')
-
-<style>
-    /* Active box styling */
-    .active-box {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        background-color: #7fb7eb;
-        /* Optional: subtle background change */
-    }
-
-</style>
-
 @section('content')
     @php
         $hour = \Carbon\Carbon::now()->format('H');
@@ -47,6 +36,12 @@
         <div class="box-body col-md-12">
             <section class="content">
                 <div class="container-fluid">
+                    <!-- Loading Overlay -->
+                    <div id="loading-overlay" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading...</p>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-4 col-sm-6 mt-3">
                             <a href="#" class="category-card"data-category="diarized">
@@ -309,8 +304,8 @@
                 //     $('#cardsContainer').show();
                 //     $('#selectedCategoryName').html('<strong>Receipts</strong>');
                 // } else {
-                    // Redirect to the dashboard if on the initial view
-                    window.location.href = dashboardUrl;
+                // Redirect to the dashboard if on the initial view
+                window.location.href = dashboardUrl;
                 // }
             });
 
@@ -334,7 +329,9 @@
     <script>
         // Function to fetch and display the selected category's content
         function showCategoryData(category) {
-            
+            // Show the loading overlay when the request starts
+            document.getElementById('loading-overlay').style.display = 'flex';
+
             fetch(`{{ url('') }}/getCategoryData?category=${category}`)
                 .then(response => response.json())
                 .then(data => {
@@ -386,7 +383,11 @@
                         `<strong>${capitalizeFirstLetter(category)} Report Category-Wise</strong>`;
 
                 })
-                .catch(error => console.error("Error fetching category data:", error));
+                .catch(error => console.error("Error fetching category data:", error))
+                .finally(() => {
+                    // Hide the loading overlay once the request is completed (either success or failure)
+                    document.getElementById('loading-overlay').style.display = 'none';
+                });
         }
 
         // Capitalize function
