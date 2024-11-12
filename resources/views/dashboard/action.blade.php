@@ -257,6 +257,44 @@
             </section>
         </div>
     </div>
+    <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text text-sm text-justify" id="noteModalLabel">File Preview</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-5">
+                  <table class="table table-striped">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr><th>Responses</th></tr>
+                    </thead>
+                    <tbody id="note-body">
+                      
+                      
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-7">
+                  <div class="card card-primary card-outline card-outline-tabs">
+                    <div class="card-body">
+                      <iframe src="" style="width: 25rem; height:20rem;" id="responseAttached">
+                      </iframe>
+                    </div>
+                  </div>
+                </div>
+               </div>
+               
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection
 
 @section('scripts')
@@ -316,9 +354,9 @@
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.sender_name}</small></td>
+                          
                         <td><small>${letter.received_date}</small></td>
-                         <td><small> <a href="" class="note-link btn btn-sm btn-info" data-action="" data-toggle="modal" data-target="#noteModal" data-action_text="">View <i class="fas fa-eye"></i><a>
-                        </small></td>
+                        <td><small><a href="" class="note-link btn btn-sm btn-info" data-action="${letter.letter_action_id}" data-toggle="modal" data-target="#noteModal" data-action_text="${letter.action_description}">View <i class="fas fa-eye"></i><a></small></td>
                     </tr>`;
                         });
 
@@ -359,5 +397,34 @@
             });
 
         });
+
+        $(document).on('click','.note-link',function(e){
+      e.preventDefault();
+     $('.modal-title').text($(this).data('action_text'));
+      var action = $(this).data('action');
+      $.get("{{route('action_notes')}}",{
+        'action':action
+      },function(j){
+        var tr = "";
+        var attachment = "";
+       
+       if(j.length > 1){
+          for(var i = 1; i < j.length; i++){
+          if(j[i].attach != ""){
+            attachment = "<a href='#' class='attach' data-attach='{{str_replace('public','storage/app/',url(''))}}"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
+          }
+          tr += "<tr><td><b>"+j[i].name+"</b> : "+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"&nbsp;"+attachment+"</b></td></tr>";
+          attachment = "";
+          }
+            $('#note-body').html(tr);
+          }else{
+            $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
+          }
+      });
+
+  })
+  $(document).on('click','.attach',function(){
+    $('#responseAttached').attr('src',$(this).data('attach'));
+  });
     </script>
 @endsection

@@ -141,6 +141,7 @@ class HomeModel extends Model
         ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
         ->join('letter_actions', 'letters.id', '=', 'letter_actions.letter_id')
         ->join('action_department_maps', 'letter_actions.id', '=', 'action_department_maps.letter_action_id')
+        ->join('senders', 'letters.id', '=', 'senders.letter_id')
         ->where('action_department_maps.department_id', session('role_dept'))
         ->where('action_department_maps.action_status_id', 3)
         ->where('letters.letter_category_id', $category_id)
