@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    @include('layouts.header')
-
+@include('layouts.header')
 
     <div class="row mt-3">
         <div class="col-md-12 text-center">
@@ -24,7 +23,7 @@
 
                     <div class="row">
                         <div class="col-md-4 col-sm-6 mt-3">
-                            <a href="#" class="category-card"data-category="diarized">
+                            <a href="#" data-category="diarized">
                                 <div class="small-box"
                                     style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
                                     <div class="inner p-3"
@@ -58,7 +57,7 @@
                             </a>
                         </div>
                         <div class="col-md-4 col-sm-6 mt-3">
-                            <a href="#" class="category-card" data-category="assigned">
+                            <a href="#"  data-category="assigned">
                                 <div class="small-box"
                                     style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
                                     <div class="inner p-3"
@@ -92,7 +91,7 @@
                             </a>
                         </div>
                         <div class="col-md-4 col-sm-6 mt-3">
-                            <a href="#" class="category-card" data-category="forwarded">
+                            <a href="#"  data-category="forwarded">
                                 <div class="small-box"
                                     style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
                                     <div class="inner p-3"
@@ -146,7 +145,7 @@
         </div>
     </div>
 
-    {{-- <div class="box shadow-lg p-3 mb-5 mt-3 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
+    <div class="box shadow-lg p-3 mb-5 mt-3 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
         <div class="box-body">
             <section class="content">
                 <div class="container-fluid">
@@ -173,104 +172,103 @@
                 </div>
             </section>
         </div>
-    </div> --}}
+    </div>
 @endsection
 
 @section('scripts')
     @include('layouts.scripts')
 
     <script>
-        $(document).ready(function() {
-            // Initialize DataTable
-            const dataTable = $('#lettersList').DataTable({
-                responsive: true,
-                lengthChange: false,
-                autoWidth: false,
-                buttons: ["excel", "pdf", "print"]
-            });
+       $(document).ready(function() {
+    // Initialize DataTable
+    const dataTable = $('#lettersList').DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: ["excel", "pdf", "print"]
+    });
 
-            // $('.category-card').on('click', function(e) {
-            //     e.preventDefault();
+    // Fetch and display category data when category card is clicked
+    $(document).on('click', '.category-card', function(e) {
+        e.preventDefault();        
+        let categoryId = $(this).data('category-id');
+        let categoryName = $(this).data('category-name');
+        let category = $(this).data('category');
+        console.log(categoryId);
+        console.log(category);
+        let url = '{{ route('report_by_category', ['category_id' => ':category_id', 'category' => ':category']) }}'
+            .replace(':category_id', categoryId)
+            .replace(':category', category);
+            console.log(url);
+            
+        // Fetch letters using AJAX
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                $('#selectedCategoryName').html('<strong>Receipts from ' + categoryName + '</strong>');
+                let tableBody = '';
+                let serialNumber = 1;
 
-            //     let categoryId = $(this).data('category-id');
-            //     let categoryName = $(this).data('category-name');
-            //     let url = '{{ route('receipt_by_category', ['category_id' => ':category_id']) }}'.replace(
-            //         ':category_id', categoryId);
+                // Build table rows for DataTable
+                response.forEach(function(letter) {
+                    let truncatedSubject = letter.subject.length > 100 ?
+                        `<div class="text-block" id="textBlock${letter.id}">
+                            <p class="shortText text-justify text-sm">
+                                ${letter.subject.substring(0, 100)}...
+                                <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
+                            </p>
+                            <div class="longText" style="display: none;">
+                                <p class="text-sm text-justify">
+                                    ${letter.subject}
+                                    <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
+                                </p>
+                            </div>
+                        </div>` :
+                        `<p>${letter.subject}</p>`;
 
-            //     // Fetch letters using AJAX
-            //     $.ajax({
-            //         url: url,
-            //         type: 'GET',
-            //         success: function(response) {
+                    tableBody += `<tr>
+                        <td><small>${serialNumber++}</small></td>
+                        <td><small>${letter.crn}</small></td>
+                        <td style="width: 30%;">${truncatedSubject}</td>
+                        <td><small>${letter.letter_no}</small></td>
+                        <td><small>${letter.sender_name}</small></td>
+                        <td><small>${letter.received_date}</small></td>
+                        <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
+                    </tr>`;
+                });
 
+                // Update the DataTable
+                dataTable.clear();  // Clear existing data
+                dataTable.rows.add($(tableBody));  // Add the new rows
+                dataTable.draw();  // Redraw the table
 
-            //             $('#selectedCategoryName').html('<strong>Receipts from ' +
-            //                 categoryName + '</strong>');
-            //             let tableBody = '';
-            //             let serialNumber = 1;
+                // Show/hide views
+                $('#cardsContainer').hide();
+                $('#lettersTable').show();
+                $('#resetView').show();
+                hideLoading();
+            },
+            error: function(xhr, status, error) {
+                $('#lettersList tbody').html('<tr><td colspan="7" class="text-center">Error loading data</td></tr>');
+                hideLoading();
 
-            //             // Build table rows
-            //             response.forEach(function(letter) {
-            //                 let truncatedSubject = letter.subject.length > 100 ?
-            //                     `<div class="text-block" id="textBlock${letter.id}">
-        //                 <p class="shortText text-justify text-sm">
-        //                     ${letter.subject.substring(0, 100)}...
-        //                     <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
-        //                 </p>
-        //                 <div class="longText" style="display: none;">
-        //                     <p class="text-sm text-justify">
-        //                         ${letter.subject}
-        //                         <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
-        //                     </p>
-        //                 </div>
-        //             </div>` :
-            //                     `<p>${letter.subject}</p>`;
-
-            //                 tableBody += `<tr>
-        //             <td><small>${serialNumber++}</small></td>
-        //             <td><small>${letter.crn}</small></td>
-        //             <td style="width: 30%;">${truncatedSubject}</td>
-        //             <td><small>${letter.letter_no}</small></td>
-        //             <td><small>${letter.sender_name}</small></td>
-        //             <td><small>${letter.received_date}</small></td>
-        //             <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
-        //         </tr>`;
-            //             });
-
-            //             // Update the DataTable
-            //             dataTable.clear(); // Clear the existing data
-            //             dataTable.rows.add($(tableBody)); // Add the new data
-            //             dataTable.draw(); // Redraw the table
-
-            //             // Show the table and hide the cards
-            //             $('#cardsContainer').hide();
-            //             $('#lettersTable').show();
-            //             $('#resetView').show();
-            //         },
-            //         error: function(xhr, status, error) {
-            //             $('#lettersList tbody').html(
-            //                 '<tr><td colspan="7" class="text-center">Error loading data</td></tr>'
-            //             );
-            //         }
-            //     });
-            // });
-
-            const dashboardUrl = "{{ route('dashboard') }}";
-
-            // Handle back button click to reset view
-            $('#resetView').on('click', function() {
-                // Check if the letters table is visible
-                // if ($('#lettersTable').is(':visible')) {
-                //     // If on the category page, reset to the main view
-                //     $('#lettersTable').hide();
-                //     $('#cardsContainer').show();
-                //     $('#selectedCategoryName').html('<strong>Receipts</strong>');
-                // } else {
-                // Redirect to the dashboard if on the initial view
-                window.location.href = dashboardUrl;
-                // }
-            });
+            }
         });
+    });
+
+    // Handle back button click to reset view
+    $('#resetView').on('click', function() {
+        if ($('#lettersTable').is(':visible')) {
+            $('#lettersTable').hide();
+            $('#cardsContainer').show();
+            $('#selectedCategoryName').html('<strong>Receipts</strong>');
+        } else {
+            window.location.href = "{{ route('dashboard') }}";
+        }
+    });
+});
+
     </script>
 
     <script>
@@ -293,7 +291,7 @@
                         // Construct the card HTML
                         const cardHtml = `
                     <div class="col-md-3 col-sm-6 mt-3 mb-3">
-                        <a href="#" class="category-card" data-category-id="${item.id}" data-category-name="${item.category_name}">
+                        <a href="#" class="category-card" data-category-id="${item.id}" data-category="${category}" data-category-name="${item.category_name}">
                             <div class="small-box" style="background-color: white; border-radius: 1rem; margin-left: 15px; margin-right: 15px;">
                                 <div class="inner p-3" style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
                                     

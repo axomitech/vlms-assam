@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     //Report Controller
     Route::get('/report', [App\Http\Controllers\ReportController::class, 'cat_wise_diarize_assign_forwarded'])->name('reports');
     Route::get('/getCategoryData', [App\Http\Controllers\ReportController::class, 'getCategoryData']);
+    Route::get('/getCategoryReport', [App\Http\Controllers\ReportController::class, 'report_by_category'])->name('report_by_category');
 
 
     Route::get('/pdf_genarator/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF'])->name('pdf_genarator');

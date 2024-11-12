@@ -40,4 +40,29 @@ class ReportController extends Controller
         // Return JSON response
         return response()->json($data);
     }
+
+    public function report_by_category(Request $request){
+
+        $category = $request->query('category');
+        $category_id = $request->query('category_id');
+        return response()->json([
+            'category' => $category,
+            'category_id' => $category_id,
+        ]);
+
+        // Retrieve category data from the database
+        $data = [];
+        if ($category == 'diarized') {
+            return 'ok';
+            $data = ReportModel::get_diarized_details();
+        } elseif ($category == 'assigned') {
+            $data = ReportModel::get_assigned_details();
+        } elseif ($category == 'forwarded') {
+            $data = ReportModel::get_forwarded_details();
+        }
+
+        // Return JSON response
+        return response()->json($data);
+
+    }
 }
