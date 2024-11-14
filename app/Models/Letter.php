@@ -143,7 +143,8 @@ class Letter extends Model
             ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
             ->get();
 
-        return $assignedLetters->merge($receivedLetters);
+        //return $assignedLetters->merge($receivedLetters);
+        return $assignedLetters;
     }
 
 

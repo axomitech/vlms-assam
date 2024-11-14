@@ -243,7 +243,8 @@ class LetterController extends Controller
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept')
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>3
         ],$letterIds);
         $receiverId = Common::getSingleColumnValue('user_departments',[
             'department_id'=>session('role_dept'),
