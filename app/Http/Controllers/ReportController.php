@@ -45,16 +45,11 @@ class ReportController extends Controller
 
         $category = $request->query('category');
         $category_id = $request->query('category_id');
-        return response()->json([
-            'category' => $category,
-            'category_id' => $category_id,
-        ]);
 
         // Retrieve category data from the database
         $data = [];
         if ($category == 'diarized') {
-            return 'ok';
-            $data = ReportModel::get_diarized_details();
+            $data = ReportModel::get_diarized_report($category_id);
         } elseif ($category == 'assigned') {
             $data = ReportModel::get_assigned_details();
         } elseif ($category == 'forwarded') {

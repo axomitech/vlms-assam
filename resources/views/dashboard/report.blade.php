@@ -57,7 +57,7 @@
                             </a>
                         </div>
                         <div class="col-md-4 col-sm-6 mt-3">
-                            <a href="#"  data-category="assigned">
+                            <a href="#" data-category="assigned">
                                 <div class="small-box"
                                     style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
                                     <div class="inner p-3"
@@ -133,7 +133,7 @@
     <hr>
 
     <!-- Cards Row for Dynamic Data Display -->
-    <div class="row mt-4" id="cardsContainer">
+    <div class="row mt-4" id="categoryCardsContainer">
         <div class="box-body col-md-12">
             <section class="content">
                 <div class="container-fluid">
@@ -158,7 +158,6 @@
                                         <th scope="col"><small><b>Diarize No.</b></small></th>
                                         <th scope="col"><small><b>Subject</b></small></th>
                                         <th scope="col"><small><b>Letter No.</b></small></th>
-                                        <th scope="col"><small><b>Sender Name</b></small></th>
                                         <th scope="col"><small><b>Received Date</b></small></th>
                                         <th scope="col"><small><b>Download</b></small></th>
                                     </tr>
@@ -191,22 +190,17 @@
     // Fetch and display category data when category card is clicked
     $(document).on('click', '.category-card', function(e) {
         e.preventDefault();        
+        showLoading();
         let categoryId = $(this).data('category-id');
         let categoryName = $(this).data('category-name');
         let category = $(this).data('category');
-        console.log(categoryId);
-        console.log(category);
-        let url = '{{ route('report_by_category', ['category_id' => ':category_id', 'category' => ':category']) }}'
-            .replace(':category_id', categoryId)
-            .replace(':category', category);
-            console.log(url);
-            
+        let url = `/getCategoryReport?category_id=${categoryId}&category=${encodeURIComponent(category)}`;
         // Fetch letters using AJAX
         $.ajax({
             url: url,
             type: 'GET',
             success: function(response) {
-                $('#selectedCategoryName').html('<strong>Receipts from ' + categoryName + '</strong>');
+                $('#selectedCategoryName').html('<strong>' + categoryName + '</strong>');
                 let tableBody = '';
                 let serialNumber = 1;
 
@@ -232,7 +226,6 @@
                         <td><small>${letter.crn}</small></td>
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
-                        <td><small>${letter.sender_name}</small></td>
                         <td><small>${letter.received_date}</small></td>
                         <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                     </tr>`;
@@ -245,6 +238,7 @@
 
                 // Show/hide views
                 $('#cardsContainer').hide();
+                $('#categoryCardsContainer').hide();
                 $('#lettersTable').show();
                 $('#resetView').show();
                 hideLoading();
@@ -262,7 +256,9 @@
         if ($('#lettersTable').is(':visible')) {
             $('#lettersTable').hide();
             $('#cardsContainer').show();
-            $('#selectedCategoryName').html('<strong>Receipts</strong>');
+            $('#categoryCardsContainer').show();
+            document.getElementById("selectedCategoryName").innerHTML =
+            `<strong>${capitalizeFirstLetter(category)} Report Category-Wise</strong>`;
         } else {
             window.location.href = "{{ route('dashboard') }}";
         }

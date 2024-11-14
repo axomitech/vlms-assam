@@ -216,7 +216,7 @@ class LetterActionController extends Controller
                     }
                     DB::commit();
                     $jData[1] = [
-                        'message'=>'Letter\'s action is successfully stored.',
+                        'message'=>'Letter\'s action forwarded successfully',
                         'status'=>'success'
                     ];
                     

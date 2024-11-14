@@ -82,4 +82,15 @@ class ReportModel extends Model
         ->orderBy('count', 'desc')  // You can order by count to get the most frequent category first
         ->get();
     }
+
+    public static function get_diarized_report($category_id)
+    {
+        return DB::table('letters')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->select('crn','subject','letter_no','received_date','letter_path')
+            ->where('letters.department_id', '=', session('role_dept'))
+            ->where('letters.letter_category_id', '=', $category_id)
+            ->where('letters.stage_status', 1)
+            ->get();
+    }
 }
