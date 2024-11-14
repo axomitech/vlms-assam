@@ -36,10 +36,23 @@ class HomeModel extends Model
     }
     public static function get_inbox_count()
     {
-        return DB::table('action_sents')
-            ->join('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
-            ->where('action_department_maps.department_id', '=', session('role_dept'))
-            ->count();
+        $actionSentCount = DB::table('action_sents')
+        ->join('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
+        ->where('action_department_maps.department_id', '=', session('role_dept'))
+        ->count();
+        if($actionSentCount == 0){
+            $actionSentCount = DB::table('letter_assigns')
+            ->join('letters','letters.id','=','letter_assigns.letter_id')
+            ->where([
+                'letter_assigns.receiver_id'=> session('role_user'),
+                'in_hand'=>true,
+                'letters.stage_status'=>1,
+                'letters.legacy'=>false
+            ])
+            ->count();    
+            
+        }
+        return $actionSentCount;
     }
     public static function get_diarized_details()
     {
