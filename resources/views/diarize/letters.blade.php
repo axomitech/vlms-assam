@@ -4,7 +4,7 @@
 <style>
 .custom-dropdown-width {
     min-width: 200px; /* Adjust width to fit longest item */
-    margin-right: 60px; /* Adds space from left edge */
+    margin-right: 100px; /* Adds space from left edge */
 }
 
 
@@ -223,12 +223,12 @@
                                                                     @if ($assignedLetters[$i - 1] > 0)
                                                                         @if ($legacy == 0)
                                                                             <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                                Assign <i class="fas fa-paper-plane ml-1"></i>
+                                                                                Assign Within CMO<i class="fas fa-paper-plane ml-1"></i>
                                                                             </a>
                                                                         @endif
-                                                                        <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                        {{-- <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
                                                                             Edit <i class="fas fa-edit ml-1"></i>
-                                                                        </a>
+                                                                        </a> --}}
                                                                     @endif
                                                                 @endisset
                                                 
@@ -236,7 +236,7 @@
                                                                     @isset($assignedLetters[$i - 1])
                                                                         @if ($assignedLetters[$i - 1] > 0)
                                                                             <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
-                                                                                Add Actions <i class="fas fa-list ml-1"></i>
+                                                                                Send to Department <i class="fas fa-list ml-1"></i>
                                                                             </a>
                                                                         @endif
                                                                     @endisset
@@ -246,9 +246,9 @@
                                                                     Acknowledge <i class="fas fa-envelope-open-text ml-1"></i>
                                                                 </a>
                                                 
-                                                                <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                {{-- <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
                                                                     Respond <i class="fas fa-reply ml-1"></i>
-                                                                </a>
+                                                                </a> --}}
                                                 
                                                                 <a href="{{ route('correspondences', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
                                                                     Correspondences <i class="fas fa-file-alt ml-1"></i>
@@ -344,9 +344,9 @@
                                                                     <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                                     class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                                     data-toggle="tooltip" data-placement="top"
-                                                                    title="Add Actions"
+                                                                    title="Send to Department"
                                                                     style="min-height: 30px; font-size: 12px;">
-                                                                    <i class="fas fa-edit mr-1"></i> Add Actions
+                                                                    <i class="fas fa-edit mr-1"></i> Send to Department
                                                                     </a>
                                                     @endif    
                                                     @if (session('role') == 3)
@@ -354,9 +354,9 @@
                                                             <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                                 class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                                 data-toggle="tooltip" data-placement="top"
-                                                                title="Add Actions"
+                                                                title="Send to Department"
                                                                 style="min-height: 30px; font-size: 12px;">
-                                                                <i class="fas fa-edit mr-1"></i> Add Actions
+                                                                <i class="fas fa-edit mr-1"></i> Send to Department
                                                             </a>
                                                             @if ($value['stage_status'] < 3)
                                                                 
@@ -365,9 +365,9 @@
                                                                         <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                                             class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                                             data-toggle="tooltip" data-placement="top"
-                                                                            title="Add Actions"
+                                                                            title="Send to Department"
                                                                             style="min-height: 30px; font-size: 12px;">
-                                                                            <i class="fas fa-edit mr-1"></i> Add Actions
+                                                                            <i class="fas fa-edit mr-1"></i> Send to Department
                                                                         </a>
                                                                     @endif
                                                                 @endisset
@@ -533,7 +533,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><strong>Send Letter</strong></h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -545,7 +545,7 @@
                                 <div class="card-body">
                                     <form id="assign-form">
                                         <div class="form-group">
-                                            <label for="assignee" class="col-form-label">Assign</label>
+                                            <label for="assignee" class="col-form-label">Assignee</label>
                                             <select class="form-control" name="assignee" id="assignee">
                                                 <option value="">Select Assignee</option>
                                                 @foreach ($departmentUsers as $value)

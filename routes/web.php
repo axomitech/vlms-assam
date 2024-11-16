@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::get('/home1', [App\Http\Controllers\HomeController::class, 'box'])->name('home1');
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/data', [App\Http\Controllers\DashboardController::class, 'getChartData'])->name('charts.data');
     Route::get('/dashboard-data', [App\Http\Controllers\DashboardController::class, 'dashboard_data'])->name('dashboard-data');
     Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
     Route::get('/issue_box', [App\Http\Controllers\DashboardController::class, 'issue_box'])->name('issue_box');

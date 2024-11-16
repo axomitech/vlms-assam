@@ -39,13 +39,15 @@
                                                     Category:
                                                 </div>
                                                 <div class="col-md-3 text-left">
-                                                    <select class="form-control" id="category">
-                                                        <option value="">Select</option>
+                                                    <select class="form-control" id="category" name="category">
+                                                        <option value="" {{ request('category') == '' ? 'selected' : '' }}>Select</option>
                                                         @foreach ($categories as $c)
-                                                            <option value="{{ $c->id }}">{{ $c->category_name }}
+                                                            <option value="{{ $c->id }}" {{ request('category') == $c->id ? 'selected' : '' }}>
+                                                                {{ $c->category_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    
                                                 </div>
                                                 <div class="col-md-2 offset-md-1">
                                                     Received/Issued Date:
@@ -160,6 +162,16 @@
                 });
             });
         });
+
+        $(document).ready(function() {
+            var category = $('#category').val();
+
+            if (category) {
+                $('#btn-search').click(); // Trigger the search button click programmatically
+            }
+        });
+
+
     </script>
     <script>
         $(document).ready(function() {
