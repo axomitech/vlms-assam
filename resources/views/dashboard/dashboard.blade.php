@@ -11,7 +11,7 @@
             <section class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        @if (session('role') > 0)
+                        @if (session('role_dept') == 1)
                             <div class="col-md-3 col-sm-3">
                                 <!-- small box -->
                                 <a href="{{ route('receipt_box') }}">
@@ -101,32 +101,34 @@
                                     </div>
                                 </div>
                             </div>
+                        @endif
 
-                            <div class="col-md-6 col-sm-6">
-                                <div class="row">
-                                    <!-- small box for Inbox (previously Action Taken) -->
-                                    <div class="col-lg-6">
-                                        <a href="{{ route('letters', [encrypt(0), 'tab' => 'inbox']) }}" data-tab="inbox">
-                                            <div class="small-box pattern-background"
-                                                style="background: #d3e0eb; padding:15px; border-radius:1rem;">
-                                                <div class="inner">
-                                                    <div class="row">
-                                                        <div class="col-lg-8">
-                                                            <h3 style="color:#000100;">{{ $inbox_count }}</h3>
-                                                            <h3 style="font-size: 18px;color:#000100;">My Inbox</h3>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <img src="{{ asset('banoshree/images/inbox64x64.png') }}"
-                                                                alt="Dak Inbox" style="width: 100%; height: 80%;">
-                                                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <div class="row">
+                                <!-- small box for Inbox (previously Action Taken) -->
+                                <div class="col-lg-3">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'inbox']) }}" data-tab="inbox">
+                                        <div class="small-box pattern-background"
+                                            style="background: #d3e0eb; padding:15px; border-radius:1rem;">
+                                            <div class="inner">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <h3 style="color:#000100;">{{ $inbox_count }}</h3>
+                                                        <h3 style="font-size: 18px;color:#000100;">My Inbox</h3>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <img src="{{ asset('banoshree/images/inbox64x64.png') }}"
+                                                            alt="Dak Inbox" style="width: 100%; height: 80%;">
                                                     </div>
                                                 </div>
                                             </div>
-                                        </a>
-                                    </div>
+                                        </div>
+                                    </a>
+                                </div>
 
+                                @if (session('role_dept') == 1)
                                     <!-- small box for Sent (previously Archived) -->
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
                                             <div class="small-box pattern-background"
                                                 style="background:#d3e0eb; padding:15px; border-radius:1rem;">
@@ -145,15 +147,76 @@
                                             </div>
                                         </a>
                                     </div>
+                                @endif
+                                @if (session('role_dept') > 1)
+                                <div class="col-lg-3">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                        <div class="small-box pattern-background"
+                                            style="background:#d3e0eb; padding:15px; border-radius:1rem;">
+                                            <div class="inner">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <h3 style="color:#000100;">{{ $action_count }}</h3>
+                                                        <h3 style="font-size: 18px;color:#000100;">Action Taken</h3>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <img src="{{ asset('banoshree/images/actiontaken.png') }}"
+                                                            alt="Dak Sent" style="width: 100%; height: 80%;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
+                                <div class="col-lg-3">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                        <div class="small-box pattern-background"
+                                            style="background:#d3e0eb; padding:15px; border-radius:1rem;">
+                                            <div class="inner">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <h3 style="color:#000100;">{{ $in_process_count }}</h3>
+                                                        <h3 style="font-size: 18px;color:#000100;">In Process</h3>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <img src="{{ asset('banoshree/images/process.png') }}"
+                                                            alt="Dak Sent" style="width: 100%; height: 80%;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                        <div class="small-box pattern-background"
+                                            style="background:#d3e0eb; padding:15px; border-radius:1rem;">
+                                            <div class="inner">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <h3 style="color:#000100;">{{ $completed_count }}</h3>
+                                                        <h3 style="font-size: 18px;color:#000100;">Completed</h3>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <img src="{{ asset('banoshree/images/completed.png') }}"
+                                                            alt="Dak Sent" style="width: 100%; height: 80%;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                @endif
                             </div>
-                        @endif
+                        </div>
+
                     </div>
                 </div>
             </section>
         </div>
 
     </div>
+    @if (session('role_dept') == 1)
     <div class="row">
         <!-- Left Column: eDak Overview and Overview of Receipt stacked vertically -->
         <div class="col-md-7 col-sm-12">
@@ -249,6 +312,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 @section('scripts')
     @include('layouts.scripts')

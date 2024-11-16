@@ -30,27 +30,25 @@ class HomeModel extends Model
     public static function get_archive_count()
     {
         return DB::table('letters')
-            ->where('department_id', '=', session('role_dept'))
             ->where('stage_status', '=', 5)
             ->count();
     }
     public static function get_inbox_count()
     {
         $actionSentCount = DB::table('action_sents')
-        ->join('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
-        ->where('action_department_maps.department_id', '=', session('role_dept'))
-        ->count();
-        if($actionSentCount == 0){
+            ->join('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
+            ->where('action_department_maps.department_id', '=', session('role_dept'))
+            ->count();
+        if ($actionSentCount == 0) {
             $actionSentCount = DB::table('letter_assigns')
-            ->join('letters','letters.id','=','letter_assigns.letter_id')
-            ->where([
-                'letter_assigns.receiver_id'=> session('role_user'),
-                'in_hand'=>true,
-                'letters.stage_status'=>1,
-                'letters.legacy'=>false
-            ])
-            ->count();    
-            
+                ->join('letters', 'letters.id', '=', 'letter_assigns.letter_id')
+                ->where([
+                    'letter_assigns.receiver_id' => session('role_user'),
+                    'in_hand' => true,
+                    'letters.stage_status' => 1,
+                    'letters.legacy' => false
+                ])
+                ->count();
         }
         return $actionSentCount;
     }
@@ -78,7 +76,6 @@ class HomeModel extends Model
     public static function get_issue_count()
     {
         return DB::table('letters')
-            ->where('department_id', '=', session('role_dept'))
             ->where('receipt', '=', false)
             ->count();
     }
@@ -86,7 +83,6 @@ class HomeModel extends Model
     public static function get_receipt_count()
     {
         return DB::table('letters')
-            ->where('department_id', '=', session('role_dept'))
             ->where('receipt', '=', true)
             ->count();
     }
@@ -151,17 +147,35 @@ class HomeModel extends Model
     public static function get_action_by_category($category_id)
     {
         return DB::table('letters')
-        ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
-        ->join('letter_actions', 'letters.id', '=', 'letter_actions.letter_id')
-        ->join('action_department_maps', 'letter_actions.id', '=', 'action_department_maps.letter_action_id')
-        ->join('senders', 'letters.id', '=', 'senders.letter_id')
-        ->where('action_department_maps.department_id', session('role_dept'))
-        ->where('action_department_maps.action_status_id', 3)
-        ->where('letters.letter_category_id', $category_id)
-        ->get();
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->join('letter_actions', 'letters.id', '=', 'letter_actions.letter_id')
+            ->join('action_department_maps', 'letter_actions.id', '=', 'action_department_maps.letter_action_id')
+            ->join('senders', 'letters.id', '=', 'senders.letter_id')
+            ->where('action_department_maps.department_id', session('role_dept'))
+            ->where('action_department_maps.action_status_id', 3)
+            ->where('letters.letter_category_id', $category_id)
+            ->get();
     }
 
     public static function get_actions_count()
+    {
+        return DB::table('action_department_maps')
+            ->when(session('role_dept') > 1, function ($query) {
+                $query->where('department_id', '=', session('role_dept'));
+            })
+            ->where('action_status_id', 1)
+            ->count();
+    }
+
+    public static function get_in_process_count()
+    {
+        return DB::table('action_department_maps')
+            ->where('department_id', '=', session('role_dept'))
+            ->where('action_status_id', 2)
+            ->count();
+    }
+
+    public static function get_completed_count()
     {
         return DB::table('action_department_maps')
             ->where('department_id', '=', session('role_dept'))

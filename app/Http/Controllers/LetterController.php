@@ -257,6 +257,15 @@ class LetterController extends Controller
         $inboxLetters = Letter::showInboxLetters([
             'action_sents.receiver_id' => $receiverId,
         ],$assignedLetters);
+
+        $completedLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>4
+        ],[]);
+        $actionLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>4
+        ],[]);
         $archivedLetters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>5
@@ -270,12 +279,12 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
 
 
         }else{
             
-        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
 
         }
     }

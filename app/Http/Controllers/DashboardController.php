@@ -16,18 +16,18 @@ class DashboardController extends Controller
             'user_departments.department_id' => session('role_dept')
         ], []);
         $letter_category = Letter::join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
-        ->select('letter_categories.id', 'letter_categories.category_name', DB::raw('COUNT(*) as count'))
-        ->where('letters.department_id', '=', session('role_dept'))
-        ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
-        ->get();
-        $selectedMonth = request('month') ?? 9;  // Get selected month, default to current month
+            ->select('letter_categories.id', 'letter_categories.category_name', DB::raw('COUNT(*) as count'))
+            ->where('letters.department_id', '=', session('role_dept'))
+            ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
+            ->get();
+        $selectedMonth = request('month');  // Get selected month, default to current month
 
         $receivedLetters = DB::table('letters')
-    ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
-    ->selectRaw('letter_categories.category_name, letter_category_id, ceil(extract(day from received_date) / 7) as week_of_month, COUNT(*) as count')
-    ->whereRaw('extract(month from received_date) = ?', [$selectedMonth])
-    ->groupBy('letter_category_id', 'week_of_month', 'letter_categories.category_name')
-    ->get();
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->selectRaw('letter_categories.category_name, letter_category_id, ceil(extract(day from received_date) / 7) as week_of_month, COUNT(*) as count')
+            ->whereRaw('extract(month from received_date) = ?', [$selectedMonth])
+            ->groupBy('letter_category_id', 'week_of_month', 'letter_categories.category_name')
+            ->get();
 
         // return $receivedLetters;
 
@@ -41,8 +41,10 @@ class DashboardController extends Controller
 
         $receipt_count = HomeModel::get_receipt_count();
         $action_count = HomeModel::get_actions_count();
+        $in_process_count = HomeModel::get_in_process_count();
+        $completed_count = HomeModel::get_completed_count();
 
-        return view('dashboard.dashboard', compact('letters', 'diarized_count', 'sent_count', 'archive_count', 'diarized_details', 'inbox_count', 'receipt_count', 'issue_count', 'action_count','letter_category','receivedLetters'));
+        return view('dashboard.dashboard', compact('letters', 'diarized_count', 'sent_count', 'archive_count', 'diarized_details', 'inbox_count', 'receipt_count', 'issue_count', 'action_count', 'letter_category', 'receivedLetters','in_process_count','completed_count'));
         // return response()->json($data);
     }
     public function dashboard_data()
@@ -102,16 +104,17 @@ class DashboardController extends Controller
         $categories = HomeModel::get_receipt_count_by_category();
         return view('dashboard.receipt', compact('categories'));
     }
-    
+
     public function action_box()
     {
         $categories = HomeModel::get_action_count_by_category();
         return view('dashboard.action', compact('categories'));
     }
 
-    public function issue_box(){
+    public function issue_box()
+    {
         $categories = HomeModel::get_issue_count_by_category();
-        return view('dashboard.issue',compact('categories'));
+        return view('dashboard.issue', compact('categories'));
     }
 
     public function fetchReceiptByCategory($category_id)
