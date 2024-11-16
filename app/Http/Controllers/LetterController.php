@@ -89,6 +89,7 @@ class LetterController extends Controller
                     $request->receipt,
                     $request->sub_category,
                     $request->legacy,
+                    $request->other_sub_category
                 ];
 
                 $letterId = Letter::storeLetter($letterDetails);
@@ -309,6 +310,7 @@ class LetterController extends Controller
             $letterData['legacy'] = $value['legacy'];
             $letterData['letter_priority_id'] = $value['letter_priority_id'];
             $letterData['letter_path'] = $value['letter_path'];
+            $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
             
         }
         $priorities = LetterPriority::getAllPriorities();
@@ -380,6 +382,7 @@ class LetterController extends Controller
                     $request->sub_category,
                     $request->legacy,
                     $crn,
+                    $request->other_sub_category,
                 ];
 
                 Letter::updateLetter($letterDetails,$letter);

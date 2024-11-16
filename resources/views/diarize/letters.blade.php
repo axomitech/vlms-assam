@@ -171,7 +171,7 @@
                                         @php
                                             $i = 1;
                                         @endphp
-                                        @foreach ($inboxLetters as $value)
+                                        @foreach ($inboxLetters[0] as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>{{ $value['crn'] }}
@@ -260,10 +260,104 @@
                                                 
 
                                             </tr>
+                                            @php
+                                            $i++;
+                                        @endphp
                                         @endforeach
+                                        @foreach ($inboxLetters[1] as $value)
+                                        <tr class="text text-sm text-justify">
+                                            <td>{{ $i }}</td>
+                                            <td>{{ $value['crn'] }}
+                                                <br>Diarize
+                                                Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                <br>Recieved
+                                                Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                            </td>
+                                            <td style="width: 30%;">
+                                                @if (strlen($value['subject']) > 100)
+                                                    <div class="text-block" id="textBlock1">
+                                                        <p class="shortText text-justify text-sm">
+                                                            {{ substr($value['subject'], 0, 100) }}...
+                                                            <a href="#" class="readMore">Read more</a>
+                                                        </p>
+                                                        <div class="longText" style="display: none;">
+                                                            <p class="text-sm text-justify">
+                                                                {{ $value['subject'] }}
+                                                                <a href="#" class="readLess">Read less</a>
+                                                            </p>
+                                                        </div>
+                                                    @else
+                                                        {{ $value['subject'] }}
+                                                @endif
+                                                <br>Letter No: {{ $value['letter_no'] }}
+                                                <br>Letter Date:
+                                                {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                            </td>
+
+                                            <td>{{ $value['sender_name'] }},<br>
+                                                {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
+                                            <td>{{ $value['category_name'] }}</td>
+                                            <td>
+                                                @if (session('role') == 2)
+                                                    <div class="mb-1">
+                                                        <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}" class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center" style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-edit mr-1"></i> View/Update
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                
+                                                @if (session('role') == 3)
+                                                    <div class="btn-group w-100 mt-2">
+                                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-height: 30px; font-size: 12px;">
+                                                            Actions
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-left custom-dropdown-width" style="font-size: 12px;">
+                                                            @isset($assignedLetters[$i - 1])
+                                                                @if ($assignedLetters[$i - 1] > 0)
+                                                                    @if ($legacy == 0)
+                                                                        <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                            Assign <i class="fas fa-paper-plane ml-1"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                    <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                        Edit <i class="fas fa-edit ml-1"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endisset
+                                            
+                                                            @if ($value['stage_status'] < 3)
+                                                                @isset($assignedLetters[$i - 1])
+                                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                            Add Actions <i class="fas fa-list ml-1"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                @endisset
+                                                            @endif
+                                            
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                Acknowledge <i class="fas fa-envelope-open-text ml-1"></i>
+                                                            </a>
+                                            
+                                                            <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                Respond <i class="fas fa-reply ml-1"></i>
+                                                            </a>
+                                            
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                Correspondences <i class="fas fa-file-alt ml-1"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            
+
+                                        </tr>
                                         @php
                                             $i++;
                                         @endphp
+                                        @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>

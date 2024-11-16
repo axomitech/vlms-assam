@@ -86,7 +86,8 @@
                                                                     <option value="">Select Sub Category</option>
                                                                     
                                                                 </select>
-                                                                <label class="text text-danger sub_category fw-bold"></label>
+                                                                <input type="hidden" class="form-control" name="other_sub_category" id="other_sub_category" placeholder="Other Sub Category">
+                                                                <label class="text text-danger sub_category fw-bold other_sub_category"></label>
 
                                                             </div>
                                                             <div class="col-md-6">
@@ -282,6 +283,7 @@
                                                                     data-url="{{ route('store_letter') }}"
                                                                     data-form="#letter-form"
                                                                     data-message="Do you want to diarize this letter?"
+                                                                    data-redirect="{{ route('letters', [encrypt(0)]) }}"
                                                                     id="save-letter-btn">DIARIZE</button>
                                                             </div>
                                                         </div>
@@ -390,19 +392,30 @@
         });
 
         $(document).on('change','#category',function(){
-
-            $.get("{{route('letter_sub_category')}}",{
+            if($(this).val() != "10"){
+                $.get("{{route('letter_sub_category')}}",{
                 category:$(this).val()
-            },function(j){
+                },function(j){
 
-                var option = "<option value=''>Select Sub Category</option>";
-                for(var i = 1; i < j.length; i++){
-                    option += "<option value='"+j[i].category_id+"'>"+j[i].category_name+"</option>";
-                }
-                $('#sub_category').html(option);
-            });
+                    var option = "<option value=''>Select Sub Category</option>";
+                    for(var i = 1; i < j.length; i++){
+                        option += "<option value='"+j[i].category_id+"'>"+j[i].category_name+"</option>";
+                    }
+                    $('#sub_category').html(option);
+                });
+            }
 
         });
+
+        $(document).on('change','#category',function(){
+            if($(this).val() == 10){
+                $('#other_sub_category').attr('type','text');
+                $('#sub_category').prop('hidden',true);
+            }else{
+                $('#other_sub_category').attr('type','hidden');
+                $('#sub_category').prop('hidden',false);
+            }
+        })
     </script>
 @endsection
 @endsection
