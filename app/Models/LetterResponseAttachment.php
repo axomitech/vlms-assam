@@ -13,6 +13,7 @@ class LetterResponseAttachment extends Model
         $attachment = new LetterResponseAttachment;
         $attachment->response_id = $attachmentDetails[0];
         $attachment->response_attachment = $attachmentDetails[1];
+        $attachment->is_forwarding = $attachmentDetails[2];
         $attachment->save();
         return $attachment->id;
     }

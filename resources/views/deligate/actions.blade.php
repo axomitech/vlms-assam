@@ -392,13 +392,18 @@
                     <input type="hidden" name="forward_letter" value="{{$letter_id}}">
                   <div class="row">
                    <div class="col-md-12">
-                     <label>Add Note</label>
+                     <label>Forwarding Note</label>
                      <textarea class="form-control" name="note" rows="8"></textarea>
                      <label class="text text-danger note"></label>
                    </div>
+                   <div class="col-md-12">
+                    <label>Forwarding</label>
+                    <input type="file" class="form-control" name="forwarding" id="forwarding">
+                    <label class="text text-danger forwarding"></label>
+                  </div>
                   </div>
                   <div class="form-group row">
-                    <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to direct a note to this action!" id="save-note-btn">Submit</button>
+                    <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to forward a note to the department(s)!" id="save-note-btn">Submit</button>
                  </div>
                  </form>
                 </div>

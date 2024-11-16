@@ -36,6 +36,7 @@ class Letter extends Model
         if ($letterDetails[11] == 0) {
             $letter->legacy = false;
         }
+        $letter->letter_other_sub_categories = $letterDetails[12];
         $letter->save();
         return $letter->id;
     }
@@ -69,6 +70,7 @@ class Letter extends Model
             'receipt' => $receipt,
             'legacy' => $legacy,
             'crn' => $letterDetails[12],
+            'letter_other_sub_categories' => $letterDetails[13],
         ]);
     }
 
@@ -105,7 +107,8 @@ class Letter extends Model
                 'letters.legacy',
                 'letters.letter_priority_id',
                 'letter_categories.category_name',
-                'letters.letter_path'
+                'letters.letter_path',
+                'letters.letter_other_sub_categories'
             )
             ->where($condition);  // Apply the given condition
 
@@ -144,7 +147,10 @@ class Letter extends Model
             ->get();
 
         //return $assignedLetters->merge($receivedLetters);
-        return $assignedLetters;
+        return [
+            $receivedLetters,
+            $assignedLetters
+        ];
     }
 
 
