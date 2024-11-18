@@ -101,7 +101,7 @@
                                                     <button type="submit" class="btn" id="btn-search"
                                                         style="background-color: #174060;color: white;">Search</button>
                                                     &nbsp;
-                                                    <button type="reset" class="btn" id="btn-search"
+                                                    <button type="reset" class="btn" id="btn-reset"
                                                         style="background-color: #174060;color: white;">Reset</button>
                                                 </div>
                                             </div>

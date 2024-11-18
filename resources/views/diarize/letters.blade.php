@@ -121,7 +121,7 @@
                                                         @if (!$assignedLetters[$i - 1])
                                                             <div class="mb-1">
                                                                 @if ($legacy == 0)
-                                                                    <a href="javascript:void(0);" class="assign-link"
+                                                                    <a href="" class="assign-link"
                                                                         data-toggle="modal"
                                                                         data-target=".bd-example-modal-lg"
                                                                         data-letter="{{ $value['letter_id'] }}"
@@ -349,12 +349,12 @@
                                                                 @if ($assignedLetters[$i - 1] > 0)
                                                                     @if ($legacy == 0)
                                                                         <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                            Assign <i class="fas fa-paper-plane ml-1"></i>
+                                                                            Assign Within CMO <i class="fas fa-paper-plane ml-1"></i>
                                                                         </a>
                                                                     @endif
-                                                                    <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                    {{-- <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
                                                                         Edit <i class="fas fa-edit ml-1"></i>
-                                                                    </a>
+                                                                    </a> --}}
                                                                 @endif
                                                             @endisset
                                             
@@ -362,7 +362,7 @@
                                                                 @isset($assignedLetters[$i - 1])
                                                                     @if ($assignedLetters[$i - 1] > 0)
                                                                         <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
-                                                                            Add Actions <i class="fas fa-list ml-1"></i>
+                                                                            Send to Department <i class="fas fa-list ml-1"></i>
                                                                         </a>
                                                                     @endif
                                                                 @endisset
