@@ -150,7 +150,7 @@
                                 @endif
                                 @if (session('role_dept') > 1)
                                 <div class="col-lg-3">
-                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'action']) }}" data-tab="action">
                                         <div class="small-box pattern-background"
                                             style="background:#d3e0eb; padding:15px; border-radius:1rem;">
                                             <div class="inner">
@@ -169,7 +169,7 @@
                                     </a>
                                 </div>
                                 <div class="col-lg-3">
-                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'process']) }}" data-tab="process">
                                         <div class="small-box pattern-background"
                                             style="background:#d3e0eb; padding:15px; border-radius:1rem;">
                                             <div class="inner">
@@ -188,7 +188,7 @@
                                     </a>
                                 </div>
                                 <div class="col-lg-3">
-                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}" data-tab="sent">
+                                    <a href="{{ route('letters', [encrypt(0), 'tab' => 'completed']) }}" data-tab="completed">
                                         <div class="small-box pattern-background"
                                             style="background:#d3e0eb; padding:15px; border-radius:1rem;">
                                             <div class="inner">
