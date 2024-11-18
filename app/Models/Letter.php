@@ -133,7 +133,7 @@ class Letter extends Model
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Join for letter categories
             ->where($condition)
             ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name')
-            ->orderBy('letters.id', 'ASC')
+            ->orderBy('letters.id', 'DESC')
             ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
             ->get();
 
@@ -142,7 +142,7 @@ class Letter extends Model
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Join for letter categories
             ->whereIn('letter_assigns.id', $assignedLetterIds)
             ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name')
-            ->orderBy('letters.id', 'ASC')
+            ->orderBy('letters.id', 'DESC')
             ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
             ->get();
 
