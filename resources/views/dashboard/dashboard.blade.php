@@ -3,7 +3,7 @@
     @include('layouts.header')
     <div class="row">
         <div class="col-md-12 text-center py-2">
-            <h4><strong>Dashboard</strong></h4>
+            <h4><strong>My Dashboard</strong></h4>
         </div>
     </div>
     <div class="row mt-1">

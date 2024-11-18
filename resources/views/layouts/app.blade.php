@@ -170,6 +170,7 @@
                                     </p>
                                 </a>
                             </li>
+                            @if (session('role_dept') == 1)                                
                             <li class="nav-item mb-2">
                                 <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}"
                                     class="nav-link d-flex align-items-center">
@@ -188,6 +189,7 @@
                                     </p>
                                 </a>
                             </li>
+                            @endif
                             <li class="nav-item mb-2">
                                 <a href="{{ route('action_box') }}" class="nav-link d-flex align-items-center">
                                     <i class='bx bxs-message-alt-check' style="font-size: 24px;"></i>
@@ -196,6 +198,27 @@
                                     </p>
                                 </a>
                             </li>
+                            @if (session('role_dept') > 1 )                                
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'process']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-bar-chart-square' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        In Process
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'completed']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-badge-check' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Completed
+                                    </p>
+                                </a>
+                            </li>
+                            @endif
+                            @if (session('dept_role') == 1)                                
                             <li class="nav-item mb-2">
                                 <a href="{{ route('letters', [encrypt(0), 'tab' => 'archive']) }}"
                                     class="nav-link d-flex align-items-center">
@@ -213,8 +236,6 @@
                                     </p>
                                 </a>
                             </li>
-
-
                             <li class="nav-item mb-2">
                                 <a href="{{ route('letters', [encrypt(1)]) }}"
                                     class="nav-link d-flex align-items-center">
@@ -224,6 +245,7 @@
                                     </p>
                                 </a>
                             </li>
+                            @endif
                         @endif
                         @if (session('role') == 1)
                             <li class="nav-item mb-2">
