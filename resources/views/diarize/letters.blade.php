@@ -1294,6 +1294,12 @@
                     document.getElementById('nav-sent-tab').click(); // Switch to Sent tab
                 } else if (tab === 'archive') {
                     document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+                } else if (tab === 'process') {
+                    document.getElementById('nav-process-tab').click(); // Switch to Archive tab
+                } else if (tab === 'completed') {
+                    document.getElementById('nav-completed-tab').click(); // Switch to Archive tab
+                } else if (tab === 'action') {
+                    document.getElementById('nav-action-tab').click(); // Switch to Archive tab
                 }
             }
         });
@@ -1311,6 +1317,12 @@
                     document.getElementById('nav-sent-tab').click(); // Switch to Sent tab
                 } else if (tab === 'archive') {
                     document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+                } else if (tab === 'process') {
+                    document.getElementById('nav-process-tab').click(); // Switch to Archive tab
+                } else if (tab === 'completed') {
+                    document.getElementById('nav-completed-tab').click(); // Switch to Archive tab
+                } else if (tab === 'action') {
+                    document.getElementById('nav-action-tab').click(); // Switch to Archive tab
                 }
             }
         });
