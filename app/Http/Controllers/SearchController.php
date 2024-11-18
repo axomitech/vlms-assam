@@ -18,7 +18,8 @@ class SearchController extends Controller
     public function index()
     {
         $categories = SearchModel::get_all_letter_categories();
-        return view('search', compact('categories'));
+        $subcategory = SearchModel::get_all_letter_subcategories();
+        return view('search', compact('categories','subcategory'));
     }
     public function search(Request $request)
     {

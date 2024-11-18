@@ -176,6 +176,7 @@ class SearchModel extends Model
             ->leftJoin('senders', 'letters.id', '=', 'senders.letter_id')
             ->leftJoin('recipients', 'letters.id', '=', 'recipients.letter_id')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->join('letter_sub_categories', 'letters.letter_sub_category_id', '=', 'letter_sub_categories.id')
             ->select('letters.*','senders.organization as sender_organization', 'recipients.organization as recipient_organization', 'letter_categories.category_name');
 
         if (isset($inputData['letter_category'])) {
@@ -198,6 +199,10 @@ class SearchModel extends Model
             $query->where('letter_category_id', '=', $inputData['category']);
         }
 
+        if (!empty($inputData['subcategory'])) {
+            $query->where('letter_sub_category_id', '=', $inputData['subcategory']);
+        }
+
         if (!empty($inputData['received_from']) && !empty($inputData['received_to'])) {
             $query->whereBetween('received_date', [$inputData['received_from'], $inputData['received_to']]);
         }
@@ -214,6 +219,12 @@ class SearchModel extends Model
     public static function get_all_letter_categories()
     {
         return DB::table('letter_categories')
+            ->get();
+    }
+
+    public static function get_all_letter_subcategories()
+    {
+        return DB::table('letter_sub_categories')
             ->get();
     }
 }

@@ -33,21 +33,24 @@
                                                         placeholder="">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row mt-2">
                                                 <div class="col-md-2">
                                                     Category:
                                                 </div>
                                                 <div class="col-md-3 text-left">
                                                     <select class="form-control" id="category" name="category">
-                                                        <option value="" {{ request('category') == '' ? 'selected' : '' }}>Select</option>
+                                                        <option value=""
+                                                            {{ request('category') == '' ? 'selected' : '' }}>Select
+                                                        </option>
                                                         @foreach ($categories as $c)
-                                                            <option value="{{ $c->id }}" {{ request('category') == $c->id ? 'selected' : '' }}>
+                                                            <option value="{{ $c->id }}"
+                                                                {{ request('category') == $c->id ? 'selected' : '' }}>
                                                                 {{ $c->category_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    
+
                                                 </div>
                                                 <div class="col-md-2 offset-md-1">
                                                     Received/Issued Date:
@@ -63,8 +66,26 @@
                                                     <small id="emailHelp" class="form-text text-muted">To</small>
                                                 </div>
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-md-2">
+                                                    Sub-Category:
+                                                </div>
+                                                <div class="col-md-3 text-left">
+                                                    <select class="form-control" id="subcategory" name="subcategory">
+                                                        <option value=""
+                                                            {{ request('subcategory') == '' ? 'selected' : '' }}>Select
+                                                        </option>
+                                                        @foreach ($subcategory as $c)
+                                                            <option value="{{ $c->id }}"
+                                                                {{ request('subcategory') == $c->id ? 'selected' : '' }}>
+                                                                {{ $c->sub_category_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-2 offset-md-1">
                                                     Letter Category:
                                                 </div>
                                                 <div class="col-md-3 text-left">
@@ -109,7 +130,7 @@
         </div>
     </div>
 @section('scripts')
-@include('layouts.scripts')
+    @include('layouts.scripts')
     <script>
         $(document).ready(function() {
 
@@ -170,8 +191,6 @@
                 $('#btn-search').click(); // Trigger the search button click programmatically
             }
         });
-
-
     </script>
     <script>
         $(document).ready(function() {
@@ -202,7 +221,7 @@
                     }
                 ]
             }).buttons().container().appendTo(
-            '#letter-table_wrapper .col-md-6:eq(0)'); // Adjust the container as per your layout
+                '#letter-table_wrapper .col-md-6:eq(0)'); // Adjust the container as per your layout
         });
     </script>
 @endsection
