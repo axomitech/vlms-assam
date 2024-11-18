@@ -197,6 +197,32 @@
                                     </p>
                                 </a>
                             </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'archive']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-archive-in' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Archived
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('reports') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-report' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Reports
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(1)]) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bx-history' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Legacy Letters
+                                    </p>
+                                </a>
+                            </li>
                             @endif
                             @if (session('role_dept') > 1 )                                
                             <li class="nav-item mb-2">
@@ -223,34 +249,6 @@
                                     <i class='bx bxs-badge-check' style="font-size: 24px;"></i>
                                     <p style="margin: 0; padding-left: 8px;">
                                         Completed
-                                    </p>
-                                </a>
-                            </li>
-                            @endif
-                            @if (session('dept_role') == 1)                                
-                            <li class="nav-item mb-2">
-                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'archive']) }}"
-                                    class="nav-link d-flex align-items-center">
-                                    <i class='bx bxs-archive-in' style="font-size: 24px;"></i>
-                                    <p style="margin: 0; padding-left: 8px;">
-                                        Archived
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="{{ route('reports') }}" class="nav-link d-flex align-items-center">
-                                    <i class='bx bxs-report' style="font-size: 24px;"></i>
-                                    <p style="margin: 0; padding-left: 8px;">
-                                        Reports
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="{{ route('letters', [encrypt(1)]) }}"
-                                    class="nav-link d-flex align-items-center">
-                                    <i class='bx bx-history' style="font-size: 24px;"></i>
-                                    <p style="margin: 0; padding-left: 8px;">
-                                        Legacy Letters
                                     </p>
                                 </a>
                             </li>
