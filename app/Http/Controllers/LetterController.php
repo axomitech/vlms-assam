@@ -256,22 +256,33 @@ class LetterController extends Controller
             'hod_id'=>session('role_user')
         ],'deligate_id');
         $inboxLetters = Letter::showInboxLetters([
-            'action_sents.receiver_id' => $receiverId,
+            'action_sents.receiver_id' => session('role_user'),
         ],$assignedLetters);
 
         $completedLetters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>4
         ],[]);
+        $actionTakenLetters = Letter::actionTakenLetters(['action_status_id','>',1]);
         $actionLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>4
-        ],[]);
+            
+        ],$actionTakenLetters);
         $archivedLetters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>5
         ],[]);
-
+        $inProcess = Letter::actionTakenLetters(['action_status_id','=',2]);
+        $inProcessLetters = Letter::showLetterAndSender([
+            
+        ],$inProcess);
+        $completed = Letter::actionTakenLetters(['action_status_id','=',3]);
+        $deptCompletedLetters = Letter::showLetterAndSender([
+            
+        ],$completed);
+        $archivedLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>5
+        ],[]);
         if(session('role') == 1 ){
             $departmentUsers = UserDepartment::getFirstReceiverDepartment(session('role_dept'));
         }else{
@@ -280,7 +291,7 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters'));
 
 
         }else{

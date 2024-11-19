@@ -35,9 +35,12 @@ class HomeModel extends Model
     }
     public static function get_inbox_count()
     {
+        
         $actionSentCount = DB::table('action_sents')
-            ->join('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
-            ->where('action_department_maps.department_id', '=', session('role_dept'))
+        ->join('letters', 'action_sents.letter_id', '=', 'letters.id')
+        ->join('senders', 'senders.letter_id', '=', 'letters.id')
+        ->where('action_sents.receiver_id', '=', session('role_user'))
+            ->distinct('action_sents.letter_id')
             ->count();
         if ($actionSentCount == 0) {
             $actionSentCount = DB::table('letter_assigns')
@@ -159,27 +162,43 @@ class HomeModel extends Model
 
     public static function get_actions_count()
     {
+        // return DB::table('action_department_maps')
+        //     ->when(session('role_dept') > 1, function ($query) {
+        //         $query->where('department_id', '=', session('role_dept'));
+        //     })
+        //     ->where('action_status_id','>',1)
+        //     ->count();
+
         return DB::table('action_department_maps')
-            ->when(session('role_dept') > 1, function ($query) {
-                $query->where('department_id', '=', session('role_dept'));
-            })
-            ->where('action_status_id', 1)
+            ->join('letter_actions','action_department_maps.letter_action_id','=','letter_actions.id')
+            ->where('department_id', '=', session('role_dept'))
+            ->where('action_status_id','>',1)
+            ->distinct('letter_actions.letter_id')
             ->count();
     }
 
     public static function get_in_process_count()
     {
         return DB::table('action_department_maps')
+            ->join('letter_actions','action_department_maps.letter_action_id','=','letter_actions.id')
             ->where('department_id', '=', session('role_dept'))
-            ->where('action_status_id', 2)
+            ->where('action_status_id','=',2)
+            ->distinct('letter_actions.letter_id')
             ->count();
     }
 
     public static function get_completed_count()
     {
+        // return DB::table('action_department_maps')
+        //     ->where('department_id', '=', session('role_dept'))
+        //     ->where('action_status_id', 3)
+        //     ->count();
+
         return DB::table('action_department_maps')
+            ->join('letter_actions','action_department_maps.letter_action_id','=','letter_actions.id')
             ->where('department_id', '=', session('role_dept'))
-            ->where('action_status_id', 3)
+            ->where('action_status_id','=',3)
+            ->distinct('letter_actions.letter_id')
             ->count();
     }
 }
