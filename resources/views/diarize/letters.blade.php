@@ -220,74 +220,18 @@
                                                     {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
-                                                    @if (session('role') == 2)
-                                                        <div class="mb-1">
-                                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                                class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                style="min-height: 30px; font-size: 12px;">
-                                                                <i class="fas fa-edit mr-1"></i> View/Update
-                                                            </a>
-                                                        </div>
-                                                    @endif
-
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
                                                     @if (session('role') == 3)
-                                                        <div class="btn-group w-100 mt-2">
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-primary dropdown-toggle w-100"
-                                                                data-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="false"
-                                                                style="min-height: 30px; font-size: 12px;">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-left custom-dropdown-width"
-                                                                style="font-size: 12px;">
-                                                                @isset($assignedLetters[$i - 1])
-                                                                    @if ($assignedLetters[$i - 1] > 0)
-                                                                        @if ($legacy == 0)
-                                                                            <a href="javascript:void(0);"
-                                                                                class="dropdown-item d-flex justify-content-between"
-                                                                                data-toggle="modal"
-                                                                                data-target=".bd-example-modal-lg"
-                                                                                data-letter="{{ $value['letter_id'] }}"
-                                                                                data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                                Assign Within CMO<i
-                                                                                    class="fas fa-paper-plane ml-1"></i>
-                                                                            </a>
-                                                                        @endif
-                                                                        {{-- <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
-                                                                            Edit <i class="fas fa-edit ml-1"></i>
-                                                                        </a> --}}
-                                                                    @endif
-                                                                @endisset
-
-                                                                @if ($value['stage_status'] < 3)
-                                                                    @isset($assignedLetters[$i - 1])
-                                                                        @if ($assignedLetters[$i - 1] > 0)
-                                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                                                class="dropdown-item d-flex justify-content-between">
-                                                                                Send to Department <i
-                                                                                    class="fas fa-list ml-1"></i>
-                                                                            </a>
-                                                                        @endif
-                                                                    @endisset
-                                                                @endif
-
-                                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                                    class="dropdown-item d-flex justify-content-between">
-                                                                    Acknowledge <i
-                                                                        class="fas fa-envelope-open-text ml-1"></i>
-                                                                </a>
-
-                                                                {{-- <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
-                                                                    Respond <i class="fas fa-reply ml-1"></i>
-                                                                </a> --}}
-
-                                                                <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                                    class="dropdown-item d-flex justify-content-between">
-                                                                    Correspondences <i class="fas fa-file-alt ml-1"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                                    <div class="mb-1">
+                                                        <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
+                                                            class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Correspondences"
+                                                            style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-reply mr-1"></i> Respond
+                                                        </a>
+                                                    </div>
+                                                    @endif
                                                     @endif
                                                 </td>
 
@@ -778,6 +722,21 @@
                                                     @endif
 
                                                 </td> --}}
+                                                <td>
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if (session('role') == 3)
+                                                    <div class="mb-1">
+                                                        <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
+                                                            class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Correspondences"
+                                                            style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-reply mr-1"></i> Respond
+                                                        </a>
+                                                    </div>
+                                                    @endif
+                                                    @endif
+                                                </td>
                                             </tr>
                                             @php
                                                 $i++;
@@ -805,7 +764,7 @@
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
-                                            {{-- <th>Options</th> --}}
+                                             <th>Options</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -849,7 +808,7 @@
 
                                                 <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
                                                 </td>
-                                                <td>{{ $value['category_name'] }},{{ $value['organization'] }}</td>
+                                                <td>{{ $value['category_name'] }},<br>{{ $value['organization'] }}</td>
                                                 {{-- <td>
                                                     @if (session('role') == 2)
                                                         <div class="mb-1">
@@ -895,7 +854,42 @@
                                                         </div>
                                                     @endif
                                                 </td> --}}
+                                                <td>
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if (session('role') == 3)
+                                                        {{-- <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
 
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledgement Letter Generation"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div> --}}
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-reply mr-1"></i> Respond
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                  
+                                                        @endif
+                                                </td>
                                             </tr>
                                             @php
                                                 $i++;
