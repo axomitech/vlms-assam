@@ -20,7 +20,6 @@ class SearchController extends Controller
     {
         $inputData = $request->all();
         $results = SearchModel::get_letter_search($inputData);
-        // return $results;
 
         $table = '<table class="table table-hover table-striped table-sm table-responsive" id="letter-table">
         <thead>

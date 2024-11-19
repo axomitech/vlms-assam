@@ -19,9 +19,14 @@ class SearchModel extends Model
             ->join('letter_sub_categories', 'letters.letter_sub_category_id', '=', 'letter_sub_categories.id')
             ->select(
                 'letters.*',
-                'senders.*',
-                'recipients.*',
                 'senders.organization as sender_organization',
+                'senders.sender_name as sender_name',
+                'senders.sender_email as sender_email',
+                'senders.sender_phone as sender_phone',
+                'senders.sender_designation as sender_designation',
+                'senders.sms_to as sms_to',
+                'senders.email_to as email_to',
+                'senders.address as address',
                 'recipients.organization as recipient_organization',
                 'letter_categories.*',
                 'letter_sub_categories.*'
