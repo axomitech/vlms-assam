@@ -109,16 +109,22 @@ class Letter extends Model
                 'letter_categories.category_name',
                 'letters.letter_path',
                 'letters.letter_other_sub_categories'
-            )
-            ->where($condition);  // Apply the given condition
+            );
+            if(count($condition) > 0){
+                $lettersDetails = $lettersDetails->where($condition);
+            }  // Apply the given condition
 
         // If letters array is not empty, filter the results further with whereIn
         if (count($letters) > 0) {
             $lettersDetails = $lettersDetails->whereIn('letters.id', $letters);
         }
-
-        // Order by letters.id in descending order
+        if (count($letters) == 0 && count($condition) == 0) {
+            $lettersDetails = [];
+        }else{
         $lettersDetails = $lettersDetails->orderBy('letters.id', 'DESC')->get();
+
+        }
+        // Order by letters.id in descending order
 
         return $lettersDetails;
     }
@@ -146,7 +152,6 @@ class Letter extends Model
             ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
             ->get();
 
-        //return $assignedLetters->merge($receivedLetters);
         return [
             $receivedLetters,
             $assignedLetters
@@ -196,5 +201,22 @@ class Letter extends Model
             ->get();
 
         return $lettersDetails;
+    }
+
+    public static function actionTakenLetters($condition){
+        $letters = Letter::join('letter_actions','letters.id','=','letter_actions.letter_id')
+        ->join('action_department_maps','letter_actions.id','=','action_department_maps.letter_action_id')->where([
+            'action_department_maps.department_id'=>session('role_dept'),
+        ])->where([
+            $condition
+        ])
+        ->select('letters.id')->get();
+        $actionTakens = [];
+        $i = 0;
+        foreach($letters AS $value){
+            $actionTakens[$i] = $value['id'];
+            $i++;
+        }
+       return $actionTakens;
     }
 }

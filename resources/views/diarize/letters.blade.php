@@ -812,7 +812,7 @@
                                         @php
                                             $i = 1;
                                         @endphp
-                                        @foreach ($archivedLetters as $value)
+                                        @foreach ($inProcessLetters as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
@@ -930,7 +930,7 @@
                                         @php
                                             $i = 1;
                                         @endphp
-                                        @foreach ($completedLetters as $value)
+                                        @foreach ($deptCompletedLetters as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
