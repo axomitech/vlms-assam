@@ -27,6 +27,11 @@ class SearchModel extends Model
                 'senders.sms_to as sms_to',
                 'senders.email_to as email_to',
                 'senders.address as address',
+                'recipients.recipient_name as recipient_name',
+                'recipients.recipient_email as recipient_email',
+                'recipients.recipient_phone as recipient_phone',
+                'recipients.recipient_designation as recipient_designation',
+                'recipients.address as address',
                 'recipients.organization as recipient_organization',
                 'letter_categories.*',
                 'letter_sub_categories.*'
@@ -60,11 +65,6 @@ class SearchModel extends Model
 
         if (!empty($inputData['received_from']) && !empty($inputData['received_to'])) {
             $query->whereBetween('received_date', [$inputData['received_from'], $inputData['received_to']]);
-        }
-
-        // Filter by department (except for system admin)
-        if (session()->has('role_dept') && session('role_dept') != 1) {
-            $query->where('letters.department_id', '=', session('role_dept'));
         }
 
         $query->orderBy('letters.id', 'desc');
