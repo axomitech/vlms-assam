@@ -17,7 +17,16 @@
                                     <div class="card-body">
                                         <form>
                                             @csrf <!-- CSRF token for Laravel -->
-                                            <div class="row">
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    Text Search:
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <input type="text" class="form-control" id="text_search" name="text_search" placeholder="Search by letter number, subject, letter no, diarize no, sender, recipient, category, sub-category etc.">
+                                                </div>
+                                            </div>
+                                            
+                                            {{-- <div class="row mt-2">
                                                 <div class="col-md-2">
                                                     Diarized Number:
                                                 </div>
@@ -32,9 +41,9 @@
                                                     <input type="text" class="form-control" id="letter_no"
                                                         placeholder="">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="row mt-2">
+                                            <div class="row mt-4">
                                                 <div class="col-md-2">
                                                     Category:
                                                 </div>
@@ -140,22 +149,28 @@
 
                 // Serialize form data
                 // tinymce.activeEditor.setContent("<p>Hello world!</p>");
-                var diarized_no = $('#diarized_no').val();
-                var letter_no = $('#letter_no').val();
+                // var diarized_no = $('#diarized_no').val();
+                // var letter_no = $('#letter_no').val();
                 var received_from = $('#received_from').val();
                 var received_to = $('#received_to').val();
                 var category = $('#category').val();
+                var subcategory = $('#subcategory').val();
                 var letter_category = $('#letter_category').val();
+                var text_search = $('#text_search').val(); // Include text search
+
                 // var formData = $('#letter-form').serialize();
-                // alert(diarized_no);
+                // alert(text_search);
                 // exit();
                 var formData = {
-                    diarized_no: diarized_no,
-                    letter_no: letter_no,
+                    // diarized_no: diarized_no,
+                    // letter_no: letter_no,
                     received_from: received_from,
                     received_to: received_to,
                     category: category,
+                    subcategory: subcategory,
                     letter_category: letter_category,
+                    text_search: text_search, // Include text search
+
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                 };
                 // Ajax request

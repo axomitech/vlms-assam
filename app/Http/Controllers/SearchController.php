@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\LetterAction;
-use App\Models\Department;
-use App\Models\LetterPriority;
-use App\Models\ActionDepartmentMap;
-use App\Models\LetterActionResponse;
-use App\Models\ActionSent;
 use App\Models\Letter;
+use Illuminate\Http\Request;
 use App\Models\SearchModel;
-use DB;
 
 class SearchController extends Controller
 {
@@ -19,22 +12,15 @@ class SearchController extends Controller
     {
         $categories = SearchModel::get_all_letter_categories();
         $subcategory = SearchModel::get_all_letter_subcategories();
-        return view('search', compact('categories','subcategory'));
+        // return Letter::all();
+        return view('search', compact('categories', 'subcategory'));
     }
+
     public function search(Request $request)
     {
-        $where = '';
         $inputData = $request->all();
-        // print_r($inputData);
-        // exit;
-        // $diarized_no = $request->input('diarized_no');
-        // $letter_no = $request->input('letter_no');
-        // $received_from = $request->input('received_from')??'2024-01-01';
-        // $received_to = $request->input('received_to')?? date("Y-m-d");
-        // $category = $request->input('category');
-
-
         $results = SearchModel::get_letter_search($inputData);
+        // return $results;
 
         $table = '<table class="table table-hover table-striped table-sm table-responsive" id="letter-table">
         <thead>
@@ -56,10 +42,7 @@ class SearchController extends Controller
             foreach ($results as $result) {
                 $has_data = 1;
 
-                // Determine the status for the first column based on receipt (Issue/Receipt)
                 $status = !$result->receipt ? 'Issued' : 'Received';
-
-                // Determine "From" or "To" based on receipt
                 $from_to = !$result->receipt ? 'To' : 'From';
                 $name_designation = !$result->receipt
                     ? ($result->recipient_organization ? $result->recipient_organization : 'N/A')
@@ -82,7 +65,6 @@ class SearchController extends Controller
             $table = '<h6 style="color:red;">No results found. Please enter a correct combination.</h6>';
         }
 
-        $data = ['diarized_no' => $table];
-        return response()->json($data);
+        return response()->json(['diarized_no' => $table]);
     }
 }

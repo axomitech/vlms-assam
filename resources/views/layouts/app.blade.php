@@ -74,6 +74,8 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto d-flex align-items-center" style="flex-grow: 1;">
                 <!-- Navbar Search -->
+                <a href="{{ route('search') }}" style="text-decoration: none;">
+
                 <li class="nav-item" style="flex-grow: 1; position: relative;">
                     <input type="text" class="form-control" placeholder="Search for a DAK.."
                         style="width: 100%; background-color: #ECF0F3; padding: 8px 12px; border-radius: 0.5rem; padding-right: 40px; border: 1px solid white;">
@@ -82,6 +84,7 @@
                         <i class="fas fa-search"></i>
                     </a>
                 </li>
+            </a>
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
