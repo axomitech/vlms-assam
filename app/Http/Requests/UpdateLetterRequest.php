@@ -32,7 +32,7 @@ class UpdateLetterRequest extends FormRequest
             'category' => 'required|numeric|min:1|max:' . LetterCategory::max('id'),
             'sub_category' => 'nullable|required_if:category,7,8|numeric|min:1|max:' . LetterSubCategory::max('id'),
             'other_sub_category' => 'nullable|required_if:category,10|string',
-            'letter' => 'nullable|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
+            'letter' => 'nullable|mimes:pdf|min:50|max:100000',
             'letter_no' => 'required',
             'letter_date' => 'required|date|date_format:Y-m-d|before_or_equal:' . $today,
             'received_date' => 'required|date|date_format:Y-m-d|before_or_equal:' . $today,
