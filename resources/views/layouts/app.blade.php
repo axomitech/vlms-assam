@@ -544,6 +544,7 @@
     <script src="{{ asset('js/sweetalert2@11.js') }}"></script>
     <!-- Select2 -->
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
     @yield('scripts')
 </body>
 

@@ -82,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/department/view', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department.index');
     Route::post('/department/add', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department.add');   
     Route::post('/department/edit', [App\Http\Controllers\AdminController::class, 'edit_department'])->name('department.edit');   
-    
+    Route::get('/file_view', [App\Http\Controllers\FilePreviewController::class, 'index'])->name('file_view');
 });
 
 
