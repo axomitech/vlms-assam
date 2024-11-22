@@ -292,7 +292,7 @@
                                                             @isset($assignedLetters[$i - 1])
                                                                 @if ($assignedLetters[$i - 1] > 0)
                                                                     @if ($legacy == 0)
-                                                                        <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                        <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between file-btn" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
                                                                             Assign Within CMO <i class="fas fa-paper-plane ml-1"></i>
                                                                         </a>
                                                                     @endif
