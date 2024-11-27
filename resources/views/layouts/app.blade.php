@@ -32,15 +32,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap" rel="stylesheet">
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Include Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <style>
         .sidebar a {
             color: #fff !important;
         }
 
         body {
-    font-family: 'Poppins', sans-serif;
-}
-
+            font-family: 'Poppins', sans-serif;
+        }
     </style>
 </head>
 
@@ -69,6 +74,8 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto d-flex align-items-center" style="flex-grow: 1;">
                 <!-- Navbar Search -->
+                <a href="{{ route('search') }}" style="text-decoration: none;">
+
                 <li class="nav-item" style="flex-grow: 1; position: relative;">
                     <input type="text" class="form-control" placeholder="Search for a DAK.."
                         style="width: 100%; background-color: #ECF0F3; padding: 8px 12px; border-radius: 0.5rem; padding-right: 40px; border: 1px solid white;">
@@ -77,6 +84,7 @@
                         <i class="fas fa-search"></i>
                     </a>
                 </li>
+            </a>
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
@@ -149,32 +157,115 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         @if (session('role') > 1)
-                            <li class="nav-item">
-                                <a href="{{ route('dashboard') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('dashboard') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-dashboard' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
                                         Dashboard
                                     </p>
                                 </a>
                             </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-inbox' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Inbox
+                                    </p>
+                                </a>
+                            </li>
+                            @if (session('role_dept') == 1)                                
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-send' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Sent Items
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('issue_box') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-edit' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Issued Items
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('action_box') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-message-alt-check' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Action Taken
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'archive']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-archive-in' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Archived
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('reports') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-report' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Reports
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(1)]) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bx-history' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Legacy Letters
+                                    </p>
+                                </a>
+                            </li>
+                            @endif
+                            @if (session('role_dept') > 1 )                                
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'action']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-message-alt-check' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Action Taken
+                                    </p>
+                                </a>
+                            </li>                            
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'process']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-bar-chart-square' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        In Process
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(0), 'tab' => 'completed']) }}"
+                                    class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-badge-check' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Completed
+                                    </p>
+                                </a>
+                            </li>
+                            @endif
                         @endif
-                        <li class="nav-item">
-                            <a href="{{ route('home1') }}" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
-                                    Letters
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('letters', [encrypt(1)]) }}" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
-                                    Legacy Letters
-                                </p>
-                            </a>
-                        </li>
                         @if (session('role') == 1)
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bxs-inbox' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Diarized
+                                    </p>
+                                </a>
+                            </li>
                             <li class="nav-item menu-is-opening menu-open">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-user-cog"></i>
@@ -367,7 +458,7 @@
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex" style="border-top: 1px solid #4f5962;">
                     <div class="info">
-                        <a href="#" class="d-block">
+                        <a href="#" class="d-block mt-3">
                             {{ Auth::user()->name }} <br>
                             {{ Auth::user()->email }}
                         </a>
@@ -453,6 +544,7 @@
     <script src="{{ asset('js/sweetalert2@11.js') }}"></script>
     <!-- Select2 -->
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
     @yield('scripts')
 </body>
 

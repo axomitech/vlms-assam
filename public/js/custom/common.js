@@ -1,11 +1,15 @@
 $(document).on('click','.save-btn',function(){
     var url = $(this).data('url');
+    var redirectUrl = "";
+    if($(this).data('redirect')){
+        redirectUrl = $(this).data('redirect');
+    }
     var message = $(this).data('message');
     var formData = new FormData($($(this).data('form'))[0]); 
-    confirmSubmission(url,formData,message,1);
+    confirmSubmission(url,formData,message,1,redirectUrl);
 });
 
-function confirmSubmission(url,formData,confirmMessage,refreshStatus){
+function confirmSubmission(url,formData,confirmMessage,refreshStatus,redirectUrl){
     var successResponse = null;
     Swal.fire({
         title: 'Are you sure?',
@@ -38,7 +42,7 @@ function confirmSubmission(url,formData,confirmMessage,refreshStatus){
                     if(candidateId > 0){
                         $('.candidate').val(candidateId);
                     }
-                    successConfirm(response[1].status,response[1].message,refreshStatus);
+                    successConfirm(response[1].status,response[1].message,refreshStatus,redirectUrl);
                 },
                 error: function (response) {
                     // handle error response
@@ -74,7 +78,7 @@ $(document).on('focus','.form-control',function(){
     $('.'+$(this).attr('name')).text("");
 })
 
-function successConfirm(status,message,responseStatus){
+function successConfirm(status,message,responseStatus,redirectUrl){
     Swal.fire({
     title: status.substr(0,1).toUpperCase()+status.substr(1),
     text: message,
@@ -94,7 +98,14 @@ function successConfirm(status,message,responseStatus){
                     if(urlComponent[urlComponent.length-1] == 'rcapacity'){
                         window.location.replace(window.location.origin+'/capacity');
                     }else{
-                        location.reload();
+                        if(redirectUrl != ""){
+
+                        window.location.replace(redirectUrl);
+
+                        }else{
+                            location.reload();
+                        }
+                        
                     }
                     
                 }

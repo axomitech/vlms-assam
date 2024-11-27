@@ -89,6 +89,7 @@ class LetterController extends Controller
                     $request->receipt,
                     $request->sub_category,
                     $request->legacy,
+                    $request->other_sub_category
                 ];
 
                 $letterId = Letter::storeLetter($letterDetails);
@@ -196,7 +197,6 @@ class LetterController extends Controller
             'stage_status'=>1,
             'legacy'=>$legacyStatus
         ],[]);
-        // return $letters;
         $assignedLetters = [];
         $assignedSentLetters = [];
         $delegatgeLetters = [];
@@ -244,7 +244,8 @@ class LetterController extends Controller
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept')
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>3
         ],$letterIds);
         $receiverId = Common::getSingleColumnValue('user_departments',[
             'department_id'=>session('role_dept'),
@@ -255,20 +256,49 @@ class LetterController extends Controller
             'hod_id'=>session('role_user')
         ],'deligate_id');
         $inboxLetters = Letter::showInboxLetters([
-            'action_sents.receiver_id' => $receiverId,
+            'action_sents.receiver_id' => session('role_user'),
         ],$assignedLetters);
+
+        $completedLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>4
+        ],[]);
+        $actionTakenLetters = Letter::actionTakenLetters(['action_status_id','>',1]);
+        $actionLetters = Letter::showLetterAndSender([
+            
+        ],$actionTakenLetters);
         $archivedLetters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>5
         ],[]);
-
+        $inProcess = Letter::actionTakenLetters(['action_status_id','=',2]);
+        $inProcessLetters = Letter::showLetterAndSender([
+            
+        ],$inProcess);
+        $completed = Letter::actionTakenLetters(['action_status_id','=',3]);
+        $deptCompletedLetters = Letter::showLetterAndSender([
+            
+        ],$completed);
+        $archivedLetters = Letter::showLetterAndSender([
+            'user_departments.department_id'=>session('role_dept'),
+            'stage_status'=>5
+        ],[]);
         if(session('role') == 1 ){
             $departmentUsers = UserDepartment::getFirstReceiverDepartment(session('role_dept'));
         }else{
             $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
 
         }
-        return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+
+        if($legacy <= 0){
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters'));
+
+
+        }else{
+            
+        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+
+        }
     }
 
    public function editDiarized($letterId){
@@ -300,6 +330,7 @@ class LetterController extends Controller
             $letterData['legacy'] = $value['legacy'];
             $letterData['letter_priority_id'] = $value['letter_priority_id'];
             $letterData['letter_path'] = $value['letter_path'];
+            $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
             
         }
         $priorities = LetterPriority::getAllPriorities();
@@ -371,6 +402,7 @@ class LetterController extends Controller
                     $request->sub_category,
                     $request->legacy,
                     $crn,
+                    $request->other_sub_category,
                 ];
 
                 Letter::updateLetter($letterDetails,$letter);

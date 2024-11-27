@@ -44,6 +44,28 @@ class LetterActionResponseController extends Controller
             $actDept = $request->action_dept;
             $letter = $request->forward_letter;
             Letter::finalizeLetter($letter);
+            $forwardingPath = "";
+            if ($request->hasFile('forwarding')) {
+                
+                if ($request->file('forwarding')->isValid()) {
+
+                    $forwardingPath = $request->forwarding->store('public/forwarding');
+
+                }else{
+
+                    $jData[1] = [
+                        'message'=>'The forwarding upload was unsuccessful! Please try again.',
+                        'status'=>'error'
+                    ];
+                }
+
+            }else{
+
+                $jData[1] = [
+                    'message'=>'The uploaded forwarding is absent! Please try again.',
+                    'status'=>'error'
+                ];
+            }
             for($i = 0; $i < count($actDept); $i++){
 
                 ActionSent::storeActionForward([
@@ -75,6 +97,12 @@ class LetterActionResponseController extends Controller
                     $noteId = LetterActionResponse::storeNote($noteDetails);
                     
                         Letter::changeLetterStage($letter,3);
+
+                        $attachmentId = LetterResponseAttachment::storeAttachment([
+                            $noteId,
+                            $forwardingPath,
+                            true
+                        ]);
                     
                         DB::commit();
                     }
@@ -171,7 +199,8 @@ class LetterActionResponseController extends Controller
                     
                     $attachmentId = LetterResponseAttachment::storeAttachment([
                         $noteId,
-                        $responsePath
+                        $responsePath,
+                        false
                     ]);
                     ActionDepartmentMap::changeActionStatus([
                         $actionDeptId,
@@ -189,6 +218,9 @@ class LetterActionResponseController extends Controller
                     
                         Letter::changeLetterStage($request->letter,4);
                         //Letter::changeLetterStage($request->letter,5);
+
+                    }else if($completedCount < $actionDepartment){
+                        Letter::changeLetterStage($request->letter,6);
 
                     }
 

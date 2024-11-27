@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .custom-dropdown-width {
+            min-width: 200px;
+            /* Adjust width to fit longest item */
+            margin-right: 100px;
+            /* Adds space from left edge */
+        }
+    </style>
     <form id="letter-complete-form">
         <input type="hidden" id="stage_letter" name="stage_letter">
         <input type="hidden" id="stage" name="stage" value="5">
@@ -10,16 +18,32 @@
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     @if (session('role') == 1)
-                        <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
-                            type="button" role="tab" aria-controls="nav-home" aria-selected="true">Diarized</button>
+                        <button class="nav-link btn-lg active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
+                            type="button" role="tab" aria-controls="nav-home"
+                            aria-selected="true"><strong>Diarized</strong></button>
                     @else
-                        <button class="nav-link active" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
-                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Inbox</button>
-                        <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
-                            type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sent</button>
-                        <button class="nav-link" id="nav-archive-tab" data-toggle="tab" data-target="#nav-archive"
-                            type="button" role="tab" aria-controls="nav-profile"
-                            aria-selected="false">Archived</button>
+                        <button class="nav-link btn-lg active" id="nav-inbox-tab" data-toggle="tab"
+                            data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                            aria-selected="false"><strong>Inbox</strong></button>
+                        @if (session('role_dept') == 1)
+                            <button class="nav-link btn-lg" id="nav-sent-tab" data-toggle="tab" data-target="#nav-contact"
+                                type="button" role="tab" aria-controls="nav-contact"
+                                aria-selected="false"><strong>Sent</strong></button>
+                            <button class="nav-link btn-lg" id="nav-archive-tab" data-toggle="tab"
+                                data-target="#nav-archive" type="button" role="tab" aria-controls="nav-profile"
+                                aria-selected="false"><strong>Archived</strong></button>
+                        @elseif (session('role_dept') > 1)
+                            <button class="nav-link btn-lg" id="nav-action-tab" data-toggle="tab" data-target="#nav-action"
+                                type="button" role="tab" aria-controls="nav-action"
+                                aria-selected="false"><strong>Action Taken</strong></button>
+
+                            <button class="nav-link btn-lg" id="nav-process-tab" data-toggle="tab" data-target="#nav-process"
+                                type="button" role="tab" aria-controls="nav-process"
+                                aria-selected="false"><strong>In Process</strong></button>
+                            <button class="nav-link btn-lg" id="nav-completed-tab" data-toggle="tab" data-target="#nav-completed"
+                                type="button" role="tab" aria-controls="nav-completed"
+                                aria-selected="false"><strong>Completed</strong></button>
+                        @endif
                     @endif
                 </div>
             </nav>
@@ -28,7 +52,7 @@
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                             <div class="box-body">
-                                <table class="table table-sm table-hover table-striped letter-table" id="inbox-table">
+                                <table class="table table-sm table-hover table-striped letter-table" id="diarized-table">
                                     <thead>
                                         <tr>
                                             <th colspan="6" class="text text-center">Diarized Letters</th>
@@ -93,27 +117,37 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($assignedLetters[$i - 1] <= 0)
-                                                       
-                                                       <div class="mb-1">
-                                                        @if($legacy == 0)
-                                                        <a href="javascript:void(0);" class="assign-link"
-                                                            data-toggle="modal" data-target=".bd-example-modal-lg"
-                                                            data-letter="{{ $value['letter_id'] }}"
-                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                            <span
-                                                                class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                title="Assign Letter"
-                                                                style="min-height: 30px; font-size: 12px;">
-                                                                Assign
-                                                                <i class="fas fa-paper-plane ml-1"></i>
-                                                            </span>
-                                                        </a>
-                                                        @endif
-                                                        <a href="{{route('edit_diarize',[encrypt($value['letter_id'])])}}"><i class="fas fa-edit"></i></a>
+                                                    @if (session('role') == 1)
+                                                        @if (!$assignedLetters[$i - 1])
+                                                            <div class="mb-1">
+                                                                @if ($legacy == 0)
+                                                                    <a href="" class="assign-link"
+                                                                        data-toggle="modal"
+                                                                        data-target=".bd-example-modal-lg"
+                                                                        data-letter="{{ $value['letter_id'] }}"
+                                                                        data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                        <span
+                                                                            class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                            title="Assign Letter"
+                                                                            style="min-height: 30px; font-size: 12px;">
+                                                                            Assign
+                                                                            <i class="fas fa-paper-plane ml-1"></i>
+                                                                        </span>
+                                                                    </a>
+                                                                @endif
+                                                                <a
+                                                                    href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
+                                                                    <span
+                                                                        class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
+                                                                        title="Edit Letter"
+                                                                        style="min-height: 30px; font-size: 12px;">
+                                                                        Edit
+                                                                        <i class="fas fa-edit ml-1"></i>
+                                                                    </span>
+                                                                </a>
 
-                                                    </div>
-                                                       
+                                                            </div>
+                                                        @endif
                                                     @endif
 
 
@@ -131,13 +165,16 @@
                     </div>
                 @else
                     <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
-                        aria-labelledby="nav-profile-tab">
+                        aria-labelledby="nav-inbox-tab">
                         <div class="box shadow-lg p-3 mb-5 bg-white rounded">
                             <div class="box-body">
-                                <table class="table table-sm table-hover table-striped" id="letter-table">
+                                <table class="table table-sm table-hover table-striped" id="inbox-table">
                                     <thead>
+                                        <tr>
+                                            <th colspan="6" class="text text-center">Inbox Letters</th>
+                                        </tr>
                                         <tr class="text text-sm text-justify">
-                                            <th>Sl no.</th>
+                                            <th>Sl No.</th>
                                             <th>Diary</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
@@ -149,7 +186,7 @@
                                         @php
                                             $i = 1;
                                         @endphp
-                                        @foreach ($inboxLetters as $value)
+                                        @foreach ($inboxLetters[0] as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>{{ $value['crn'] }}
@@ -183,6 +220,326 @@
                                                     {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if (session('role') == 3)
+                                                    <div class="mb-1">
+                                                        <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
+                                                            class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Correspondences"
+                                                            style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-reply mr-1"></i> Respond
+                                                        </a>
+                                                    </div>
+                                                    @endif
+                                                    @endif
+                                                </td>
+
+
+                                            </tr>
+                                            @php
+                                            $i++;
+                                        @endphp
+                                        @endforeach
+                                        @foreach ($inboxLetters[1] as $value)
+                                        <tr class="text text-sm text-justify">
+                                            <td>{{ $i }}</td>
+                                            <td>{{ $value['crn'] }}
+                                                <br>Diarize
+                                                Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                <br>Recieved
+                                                Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                            </td>
+                                            <td style="width: 30%;">
+                                                @if (strlen($value['subject']) > 100)
+                                                    <div class="text-block" id="textBlock1">
+                                                        <p class="shortText text-justify text-sm">
+                                                            {{ substr($value['subject'], 0, 100) }}...
+                                                            <a href="#" class="readMore">Read more</a>
+                                                        </p>
+                                                        <div class="longText" style="display: none;">
+                                                            <p class="text-sm text-justify">
+                                                                {{ $value['subject'] }}
+                                                                <a href="#" class="readLess">Read less</a>
+                                                            </p>
+                                                        </div>
+                                                    @else
+                                                        {{ $value['subject'] }}
+                                                @endif
+                                                <br>Letter No: {{ $value['letter_no'] }}
+                                                <br>Letter Date:
+                                                {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                            </td>
+
+                                            <td>{{ $value['sender_name'] }},<br>
+                                                {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
+                                            <td>{{ $value['category_name'] }}</td>
+                                            <td>
+                                                @if (session('role') == 2)
+                                                    <div class="mb-1">
+                                                        <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}" class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center" style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-edit mr-1"></i> View/Update
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                
+                                                @if (session('role') == 3)
+                                                    <div class="btn-group w-100 mt-2">
+                                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-height: 30px; font-size: 12px;">
+                                                            Actions
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-left custom-dropdown-width" style="font-size: 12px;">
+                                                            @isset($assignedLetters[$i - 1])
+                                                                @if ($assignedLetters[$i - 1] > 0)
+                                                                    @if ($legacy == 0)
+                                                                        <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between file-btn" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                            Assign Within CMO <i class="fas fa-paper-plane ml-1"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                    {{-- <a href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                        Edit <i class="fas fa-edit ml-1"></i>
+                                                                    </a> --}}
+                                                                @endif
+                                                            @endisset
+                                            
+                                                            @if ($value['stage_status'] < 3)
+                                                                @isset($assignedLetters[$i - 1])
+                                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                            Send to Department <i class="fas fa-list ml-1"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                @endisset
+                                                            @endif
+                                            
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                Acknowledge <i class="fas fa-envelope-open-text ml-1"></i>
+                                                            </a>
+                                            
+                                                            <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                Respond <i class="fas fa-reply ml-1"></i>
+                                                            </a>
+                                            
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">
+                                                                Correspondences <i class="fas fa-file-alt ml-1"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            
+
+                                        </tr>
+                                        @php
+                                            $i++;
+                                        @endphp
+                                        @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @if (session('role_dept') == 1)
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-sent-tab">
+                        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                            <div class="box-body">
+                                <table class="table table-sm table-hover table-striped letter-table" id="sent-table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text text-center">Sent Letters</th>
+                                        </tr>
+                                        <tr class="text text-sm text-justify">
+                                            <th>Sl no.</th>
+                                            <th>Diary</th>
+                                            <th>Subject</th>
+                                            <th>Sender</th>
+                                            <th>Category</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @foreach ($sentLetters as $value)
+                                            <tr class="text text-sm text-justify">
+                                                <td>{{ $i }}</td>
+                                                <td>
+                                                    {{ $value['crn'] }}
+                                                    <br>
+                                                    Diarize
+                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>
+                                                    Recieved
+                                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                </td>
+                                                <td style="width: 30%;">
+                                                    @if (strlen($value['subject']) > 100)
+                                                        <div class="text-block" id="textBlock1">
+                                                            <p class="shortText text-justify text-sm">
+                                                                {{ substr($value['subject'], 0, 100) }}...
+                                                                <a href="#" class="readMore">Read more</a>
+                                                            </p>
+                                                            <div class="longText" style="display: none;">
+                                                                <p class="text-sm text-justify">
+                                                                    {{ $value['subject'] }}
+                                                                    <a href="#" class="readLess">Read less</a>
+                                                                </p>
+                                                            </div>
+                                                        @else
+                                                            {{ $value['subject'] }}
+                                                    @endif
+                                                    <br>Letter No: {{ $value['letter_no'] }}
+                                                    <br>Letter Date:
+                                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                                </td>
+
+                                                <td>{{ $value['sender_name'] }},<br>
+                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                </td>
+                                                <td>{{ $value['category_name'] }}</td>
+                                                <td>
+
+                                                    @if (session('role') == 2)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                    @if (session('role') == 1)
+                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                            class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Send to Department"
+                                                            style="min-height: 30px; font-size: 12px;">
+                                                            <i class="fas fa-edit mr-1"></i> Send to Department
+                                                        </a>
+                                                    @endif
+                                                    @if (session('role') == 3)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Send to Department"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> Send to Department
+                                                            </a>
+                                                            @if ($value['stage_status'] < 3)
+                                                                @isset($assignedLetters[$i - 1])
+                                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                            class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title="Send to Department"
+                                                                            style="min-height: 30px; font-size: 12px;">
+                                                                            <i class="fas fa-edit mr-1"></i> Send to Department
+                                                                        </a>
+                                                                    @endif
+                                                                @endisset
+                                                            @endif
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledge"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-file mr-1"></i> Correspondences
+                                                            </a>
+                                                        </div>
+                                                    @endif
+
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $i++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
+                        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                            <div class="box-body">
+                                <div class="letter-table_wrapper">
+
+                                </div>
+                                <table class="table table-sm table-hover table-striped letter-table" id="archive-table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text text-center">Archived Letters</th>
+                                        </tr>
+                                        <tr class="text text-sm text-justify">
+                                            <th>Sl no.</th>
+                                            <th>Diary</th>
+                                            <th>Subject</th>
+                                            <th>Sender</th>
+                                            <th>Category</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @foreach ($archivedLetters as $value)
+                                            <tr class="text text-sm text-justify">
+                                                <td>{{ $i }}</td>
+                                                <td>
+                                                    {{ $value['crn'] }}
+                                                    <br>
+                                                    Diarize
+                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>
+                                                    Recieved
+                                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                </td>
+                                                <td style="width: 30%;">
+                                                    @if (strlen($value['subject']) > 100)
+                                                        <div class="text-block" id="textBlock1">
+                                                            <p class="shortText text-justify text-sm">
+                                                                {{ substr($value['subject'], 0, 100) }}...
+                                                                <a href="#" class="readMore">Read more</a>
+                                                            </p>
+                                                            <div class="longText" style="display: none;">
+                                                                <p class="text-sm text-justify">
+                                                                    {{ $value['subject'] }}
+                                                                    <a href="#" class="readLess">Read less</a>
+                                                                </p>
+                                                            </div>
+                                                        @else
+                                                            {{ $value['subject'] }}
+                                                    @endif
+                                                    <br>
+                                                    Letter No: {{ $value['letter_no'] }}
+                                                    <br>
+                                                    Letter Date:
+                                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                                </td>
+
+                                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                </td>
+                                                <td>{{ $value['category_name'] }},{{ $value['organization'] }}</td>
+                                                <td>
                                                     @if (session('role') == 2)
                                                         <div class="mb-1">
                                                             <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
@@ -195,306 +552,483 @@
                                                         </div>
                                                     @endif
 
-
                                                     @if (session('role') == 3)
-                                                        &nbsp;
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledgement Letter Generation"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-file mr-1"></i> Correspondences
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </td>
+
+                                            </tr>
+                                            @php
+                                                $i++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @elseif (session('role_dept') > 1)
+                    <div class="tab-pane fade" id="nav-action" role="tabpanel" aria-labelledby="nav-action-tab">
+                        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                            <div class="box-body">
+                                <table class="table table-sm table-hover table-striped letter-table" id="action-table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text text-center">Action Taken Letters</th>
+                                        </tr>
+                                        <tr class="text text-sm text-justify">
+                                            <th>Sl no.</th>
+                                            <th>Diary</th>
+                                            <th>Subject</th>
+                                            <th>Sender</th>
+                                            <th>Category</th>
+                                            {{-- <th>Options</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @foreach ($actionLetters as $value)
+                                            <tr class="text text-sm text-justify">
+                                                <td>{{ $i }}</td>
                                                 <td>
-                                                    @isset($assignedSentLetters[$i - 1])
-                                                    @if ($assignedSentLetters[$i - 1] > 0)
-                                                    <div class="mb-1">
+                                                    {{ $value['crn'] }}
+                                                    <br>
+                                                    Diarize
+                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>
+                                                    Recieved
+                                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                </td>
+                                                <td style="width: 30%;">
+                                                    @if (strlen($value['subject']) > 100)
+                                                        <div class="text-block" id="textBlock1">
+                                                            <p class="shortText text-justify text-sm">
+                                                                {{ substr($value['subject'], 0, 100) }}...
+                                                                <a href="#" class="readMore">Read more</a>
+                                                            </p>
+                                                            <div class="longText" style="display: none;">
+                                                                <p class="text-sm text-justify">
+                                                                    {{ $value['subject'] }}
+                                                                    <a href="#" class="readLess">Read less</a>
+                                                                </p>
+                                                            </div>
+                                                        @else
+                                                            {{ $value['subject'] }}
+                                                    @endif
+                                                    <br>Letter No: {{ $value['letter_no'] }}
+                                                    <br>Letter Date:
+                                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                                </td>
+
+                                                <td>{{ $value['sender_name'] }},<br>
+                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                </td>
+                                                <td>{{ $value['category_name'] }}</td>
+                                                {{-- <td>
+
+                                                    @if (session('role') == 2)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                    @if (session('role') == 1)
                                                         <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
                                                             class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                             data-toggle="tooltip" data-placement="top"
-                                                            title="Add Action Points"
+                                                            title="Send to Department"
                                                             style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-edit mr-1"></i> Add Actions
+                                                            <i class="fas fa-edit mr-1"></i> Send to Department
                                                         </a>
-                                                    </div>
-                                                @else
-                                                @endif    
-                                                    @endisset
-                                                  
-                                                    <div class="mb-1">
-                                                        <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                            class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"
-                                                            style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
-                                                        </a>
-                                                    </div>
+                                                    @endif
+                                                    @if (session('role') == 3)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Send to Department"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> Send to Department
+                                                            </a>
+                                                            @if ($value['stage_status'] < 3)
+                                                                @isset($assignedLetters[$i - 1])
+                                                                    @if ($assignedLetters[$i - 1] > 0)
+                                                                        <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                            class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title="Send to Department"
+                                                                            style="min-height: 30px; font-size: 12px;">
+                                                                            <i class="fas fa-edit mr-1"></i> Send to Department
+                                                                        </a>
+                                                                    @endif
+                                                                @endisset
+                                                            @endif
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledge"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-file mr-1"></i> Correspondences
+                                                            </a>
+                                                        </div>
+                                                    @endif
+
+                                                </td> --}}
+                                                <td>
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if (session('role') == 3)
                                                     <div class="mb-1">
                                                         <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
-                                                            class="action-link btn btn-sm btn-info w-100 d-flex align-items-center justify-content-center"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="Acknowledgement Letter Generation"
-                                                            style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-envelope-open-text mr-1"></i> Respond
-                                                        </a>
-                                                        
-                                                    </div>
-                                                    <div class="mb-1">
-                                                        <a href="{{ route('correspondences', [$value['letter_id']]) }}"
                                                             class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
                                                             data-toggle="tooltip" data-placement="top"
                                                             title="Correspondences"
                                                             style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-file-alt mr-1"></i> Correspondences
+                                                            <i class="fas fa-reply mr-1"></i> Respond
                                                         </a>
                                                     </div>
+                                                    @endif
+                                                    @endif
                                                 </td>
-                                        @endif
-                                        </td>
+                                            </tr>
+                                            @php
+                                                $i++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-process" role="tabpanel" aria-labelledby="nav-process-tab">
+                        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                            <div class="box-body">
+                                <div class="letter-table_wrapper">
 
+                                </div>
+                                <table class="table table-sm table-hover table-striped letter-table" id="process-table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text text-center">In Process Letters</th>
                                         </tr>
+                                        <tr class="text text-sm text-justify">
+                                            <th>Sl no.</th>
+                                            <th>Diary</th>
+                                            <th>Subject</th>
+                                            <th>Sender</th>
+                                            <th>Category</th>
+                                             <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         @php
-                                            $i++;
+                                            $i = 1;
                                         @endphp
-                @endforeach
-                </tbody>
-                </table>
+                                        @foreach ($inProcessLetters as $value)
+                                            <tr class="text text-sm text-justify">
+                                                <td>{{ $i }}</td>
+                                                <td>
+                                                    {{ $value['crn'] }}
+                                                    <br>
+                                                    Diarize
+                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>
+                                                    Recieved
+                                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                </td>
+                                                <td style="width: 30%;">
+                                                    @if (strlen($value['subject']) > 100)
+                                                        <div class="text-block" id="textBlock1">
+                                                            <p class="shortText text-justify text-sm">
+                                                                {{ substr($value['subject'], 0, 100) }}...
+                                                                <a href="#" class="readMore">Read more</a>
+                                                            </p>
+                                                            <div class="longText" style="display: none;">
+                                                                <p class="text-sm text-justify">
+                                                                    {{ $value['subject'] }}
+                                                                    <a href="#" class="readLess">Read less</a>
+                                                                </p>
+                                                            </div>
+                                                        @else
+                                                            {{ $value['subject'] }}
+                                                    @endif
+                                                    <br>
+                                                    Letter No: {{ $value['letter_no'] }}
+                                                    <br>
+                                                    Letter Date:
+                                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                                </td>
 
+                                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                </td>
+                                                <td>{{ $value['category_name'] }},<br>{{ $value['organization'] }}</td>
+                                                {{-- <td>
+                                                    @if (session('role') == 2)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+                                                    @endif
+
+                                                    @if (session('role') == 3)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledgement Letter Generation"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-file mr-1"></i> Correspondences
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </td> --}}
+                                                <td>
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if (session('role') == 3)
+                                                        {{-- <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledgement Letter Generation"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div> --}}
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-reply mr-1"></i> Respond
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                  
+                                                        @endif
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $i++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
+                            <div class="box-body">
+                                <div class="letter-table_wrapper">
+
+                                </div>
+                                <table class="table table-sm table-hover table-striped letter-table" id="completed-table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text text-center">Completed Letters</th>
+                                        </tr>
+                                        <tr class="text text-sm text-justify">
+                                            <th>Sl no.</th>
+                                            <th>Diary</th>
+                                            <th>Subject</th>
+                                            <th>Sender</th>
+                                            <th>Category</th>
+                                            {{-- <th>Options</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @foreach ($deptCompletedLetters as $value)
+                                            <tr class="text text-sm text-justify">
+                                                <td>{{ $i }}</td>
+                                                <td>
+                                                    {{ $value['crn'] }}
+                                                    <br>
+                                                    Diarize
+                                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
+                                                    <br>
+                                                    Recieved
+                                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                </td>
+                                                <td style="width: 30%;">
+                                                    @if (strlen($value['subject']) > 100)
+                                                        <div class="text-block" id="textBlock1">
+                                                            <p class="shortText text-justify text-sm">
+                                                                {{ substr($value['subject'], 0, 100) }}...
+                                                                <a href="#" class="readMore">Read more</a>
+                                                            </p>
+                                                            <div class="longText" style="display: none;">
+                                                                <p class="text-sm text-justify">
+                                                                    {{ $value['subject'] }}
+                                                                    <a href="#" class="readLess">Read less</a>
+                                                                </p>
+                                                            </div>
+                                                        @else
+                                                            {{ $value['subject'] }}
+                                                    @endif
+                                                    <br>
+                                                    Letter No: {{ $value['letter_no'] }}
+                                                    <br>
+                                                    Letter Date:
+                                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
+                                                </td>
+
+                                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                </td>
+                                                <td>{{ $value['category_name'] }},{{ $value['organization'] }}</td>
+                                                {{-- <td>
+                                                    @if (session('role') == 2)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+                                                    @endif
+
+                                                    @if (session('role') == 3)
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
+                                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="View/Update"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-edit mr-1"></i> View/Update
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Acknowledgement Letter Generation"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
+                                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                title="Correspondences"
+                                                                style="min-height: 30px; font-size: 12px;">
+                                                                <i class="fas fa-file mr-1"></i> Correspondences
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </td> --}}
+
+                                            </tr>
+                                            @php
+                                                $i++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @endif                    
+                @endif
             </div>
         </div>
-    </div>
-    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
-            <div class="box-body">
-                <table class="table table-sm table-hover table-striped letter-table" id="sent-table">
-                    <thead>
-                        <tr>
-                            <th colspan="6" class="text text-center">Sent Letters</th>
-                        </tr>
-                        <tr class="text text-sm text-justify">
-                            <th>Sl no.</th>
-                            <th>Diary</th>
-                            <th>Subject</th>
-                            <th>Sender</th>
-                            <th>Category</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $i = 1;
-                        @endphp
-                        @foreach ($sentLetters as $value)
-                            <tr class="text text-sm text-justify">
-                                <td>{{ $i }}</td>
-                                <td>
-                                    {{ $value['crn'] }}
-                                    <br>
-                                    Diarize
-                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
-                                    <br>
-                                    Recieved
-                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                </td>
-                                <td style="width: 30%;">
-                                    @if (strlen($value['subject']) > 100)
-                                        <div class="text-block" id="textBlock1">
-                                            <p class="shortText text-justify text-sm">
-                                                {{ substr($value['subject'], 0, 100) }}...
-                                                <a href="#" class="readMore">Read more</a>
-                                            </p>
-                                            <div class="longText" style="display: none;">
-                                                <p class="text-sm text-justify">
-                                                    {{ $value['subject'] }}
-                                                    <a href="#" class="readLess">Read less</a>
-                                                </p>
-                                            </div>
-                                        @else
-                                            {{ $value['subject'] }}
-                                    @endif
-                                    <br>Letter No: {{ $value['letter_no'] }}
-                                    <br>Letter Date:
-                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
-                                </td>
-
-                                <td>{{ $value['sender_name'] }},<br>
-                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}
-                                </td>
-                                <td>{{ $value['category_name'] }}</td>
-                                <td>
-                                    @if (session('role') == 2)
-                                        <div class="mb-1">
-                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="View/Update"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-edit mr-1"></i> View/Update
-                                            </a>
-                                        </div>
-                                    @endif
-
-                                    @if (session('role') == 3)
-                                        <div class="mb-1">
-                                            @if ($assignedSentLetters[$i - 1] > 0)
-                                                <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                    class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                    data-toggle="tooltip" data-placement="top" title="Add Actions"
-                                                    style="min-height: 30px; font-size: 12px;">
-                                                    <i class="fas fa-edit mr-1"></i> Add Actions
-                                                </a>
-                                            @endif
-                                        </div>
-
-                                        <div class="mb-1">
-                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="Acknowledge"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
-                                            </a>
-                                        </div>
-
-                                        <div class="mb-1">
-                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="Correspondences"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-file mr-1"></i> Correspondences
-                                            </a>
-                                        </div>
-                                    @endif
-
-                                </td>
-                            </tr>
-                            @php
-                                $i++;
-                            @endphp
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="nav-archive" role="tabpanel" aria-labelledby="nav-archive-tab">
-        <div class="box shadow-lg p-3 mb-5 bg-white rounded">
-            <div class="box-body">
-                <div class="letter-table_wrapper">
-
-                </div>
-                <table class="table table-sm table-hover table-striped letter-table" id="archive-table">
-                    <thead>
-                        <tr>
-                            <th colspan="6" class="text text-center">Archived Letters</th>
-                        </tr>
-                        <tr class="text text-sm text-justify">
-                            <th>Sl no.</th>
-                            <th>Diary</th>
-                            <th>Subject</th>
-                            <th>Sender</th>
-                            <th>Category</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $i = 1;
-                        @endphp
-                        @foreach ($archivedLetters as $value)
-                            <tr class="text text-sm text-justify">
-                                <td>{{ $i }}</td>
-                                <td>
-                                    {{ $value['crn'] }}
-                                    <br>
-                                    Diarize
-                                    Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
-                                    <br>
-                                    Recieved
-                                    Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                </td>
-                                <td style="width: 30%;">
-                                    @if (strlen($value['subject']) > 100)
-                                        <div class="text-block" id="textBlock1">
-                                            <p class="shortText text-justify text-sm">
-                                                {{ substr($value['subject'], 0, 100) }}...
-                                                <a href="#" class="readMore">Read more</a>
-                                            </p>
-                                            <div class="longText" style="display: none;">
-                                                <p class="text-sm text-justify">
-                                                    {{ $value['subject'] }}
-                                                    <a href="#" class="readLess">Read less</a>
-                                                </p>
-                                            </div>
-                                        @else
-                                            {{ $value['subject'] }}
-                                    @endif
-                                    <br>
-                                    Letter No: {{ $value['letter_no'] }}
-                                    <br>
-                                    Letter Date:
-                                    {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
-                                </td>
-
-                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
-                                </td>
-                                <td>{{ $value['category_name'] }},{{ $value['organization'] }}</td>
-                                <td>
-                                    @if (session('role') == 2)
-                                        <div class="mb-1">
-                                            <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}"
-                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="View/Update"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-edit mr-1"></i> View/Update
-                                            </a>
-                                        </div>
-                                    @endif
-                                
-                                    @if (session('role') == 3)
-                                        <div class="mb-1">
-                                            <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}"
-                                                class="action-link btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="View/Update"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-edit mr-1"></i> View/Update
-                                            </a>
-                                        </div>
-                                
-                                        <div class="mb-1">
-                                            <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
-                                                class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="Acknowledgement Letter Generation"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-envelope-open-text mr-1"></i> Acknowledge
-                                            </a>
-                                        </div>
-                                
-                                        <div class="mb-1">
-                                            <a href="{{ route('correspondences', [$value['letter_id']]) }}"
-                                                class="action-link btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
-                                                data-toggle="tooltip" data-placement="top" title="Correspondences"
-                                                style="min-height: 30px; font-size: 12px;">
-                                                <i class="fas fa-file mr-1"></i> Correspondences
-                                            </a>
-                                        </div>
-                                    @endif
-                                </td>
-                                
-                            </tr>
-                            @php
-                                $i++;
-                            @endphp
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    @endif
-
-    </div>
-
-    </div>
     </div>
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Send Letter</h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -506,7 +1040,7 @@
                                 <div class="card-body">
                                     <form id="assign-form">
                                         <div class="form-group">
-                                            <label for="assignee" class="col-form-label">Assign</label>
+                                            <label for="assignee" class="col-form-label">Assignee</label>
                                             <select class="form-control" name="assignee" id="assignee">
                                                 <option value="">Select Assignee</option>
                                                 @foreach ($departmentUsers as $value)
@@ -553,7 +1087,6 @@
         </div>
     </div>
 
-    </div>
 @section('scripts')
     <script>
         $(document).on('click', '.file-btn, .assign-link', function() {
@@ -638,6 +1171,82 @@
             $(".buttons-html5").removeClass('btn-secondary');
             $(".buttons-print").addClass("btn-sm");
             $(".buttons-print").removeClass('btn-secondary');
+
+            $("#action-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                }, {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#action-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
+
+            $("#process-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                }, {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#process-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
+
+            $("#completed-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                }, {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#completed-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
+
+            $("#diarized-table").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel green" style="color:green"></i>',
+                    titleAttr: 'Excel'
+                }, {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf" style="color:red"></i>',
+                    titleAttr: 'PDF'
+                }]
+            }).buttons().container().appendTo('#diarized-table_wrapper .col-md-6:eq(0)');
+            $(".buttons-html5").addClass("btn-sm");
+            $(".buttons-html5").removeClass('btn-secondary');
+            $(".buttons-print").addClass("btn-sm");
+            $(".buttons-print").removeClass('btn-secondary');
         });
     </script>
     <script>
@@ -674,29 +1283,40 @@
             // Check if 'tab' exists and switch to the appropriate tab
             if (tab) {
                 if (tab === 'inbox') {
-                    document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+                    document.getElementById('nav-inbox-tab').click(); // Switch to Inbox tab
                 } else if (tab === 'sent') {
-                    document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+                    document.getElementById('nav-sent-tab').click(); // Switch to Sent tab
                 } else if (tab === 'archive') {
                     document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+                } else if (tab === 'process') {
+                    document.getElementById('nav-process-tab').click(); // Switch to Archive tab
+                } else if (tab === 'completed') {
+                    document.getElementById('nav-completed-tab').click(); // Switch to Archive tab
+                } else if (tab === 'action') {
+                    document.getElementById('nav-action-tab').click(); // Switch to Archive tab
                 }
             }
         });
-    </script>
     </script>
     <!-- Add the JavaScript to handle tab switching based on the URL parameter -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const segments = window.location.href.split("/");
-            const tab = segments[segments.length-1];
+            const tab = segments[segments.length - 1];
             // Check if 'tab' exists and switch to the appropriate tab
             if (tab) {
                 if (tab === 'inbox') {
-                    document.getElementById('nav-profile-tab').click(); // Switch to Inbox tab
+                    document.getElementById('nav-inbox-tab').click(); // Switch to Inbox tab
                 } else if (tab === 'sent') {
-                    document.getElementById('nav-contact-tab').click(); // Switch to Sent tab
+                    document.getElementById('nav-sent-tab').click(); // Switch to Sent tab
                 } else if (tab === 'archive') {
                     document.getElementById('nav-archive-tab').click(); // Switch to Archive tab
+                } else if (tab === 'process') {
+                    document.getElementById('nav-process-tab').click(); // Switch to Archive tab
+                } else if (tab === 'completed') {
+                    document.getElementById('nav-completed-tab').click(); // Switch to Archive tab
+                } else if (tab === 'action') {
+                    document.getElementById('nav-action-tab').click(); // Switch to Archive tab
                 }
             }
         });

@@ -23,7 +23,8 @@ class StoreLetterActionResponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'note'=>'required',
+            'note'=>'nullable',
+            'forwarding'=>'required|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
             'letter_action'=>'required|array|min:1',
             'letter_action.*'=>'required|numeric|min:1',
 
@@ -46,7 +47,12 @@ class StoreLetterActionResponseRequest extends FormRequest
             'letter_action.*.required'=>'Letter action must be valid5.',
             'letter_action.*.numeric'=>'Letter action must be valid6.',
             'letter_action.*.min'=>'Letter action must be valid7.',
-
+            'forwarding'=>'required|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
+            'forwarding.required' => 'Please select a forwarding file.',
+            'forwarding.mimes' => 'Please select a forwarding file in jpg,pdf,png or jpeg format.',
+            'forwarding.min' => 'Please select a forwarding file with minimum size 50Kb.',
+            'forwarding.max' => 'Please select a forwarding file with maximum size 1Mb',
+            
             'action_map.required'=>'Please provide valid data.',
             'action_map.array'=>'Please provide valid data.',
             'action_map.min'=>'Please provide valid data.',

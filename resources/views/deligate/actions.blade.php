@@ -41,17 +41,22 @@
   </div>
   @endif
 
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" style="display:none;">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
 
-<div class="row  bg-danger1">
+<div class="row col-md-12 bg-danger1">
   <div class="col-md-7">
     <div class="card card-primary card-outline card-outline-tabs h-100">
       <div class="card-header">
         <ul class="nav nav-pills nav-fill nav-justified" id="custom-tabs-four-tab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Action List</a>
+            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true"><strong>Action List</strong></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Correspondence</a>
+            <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false"><strong>Correspondence</strong></a>
           </li>
         </ul>
       </div>
@@ -59,8 +64,8 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
           <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
             <div>
-              <div class="col-md-2">
-                <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg-action" {{$disable}}><i class="fas fa-plus"></i></button>
+              <div class="col-md-3">
+                <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target=".bd-example-modal-lg-action" {{$disable}}><span>Add Action</span>&nbsp;<i class="fas fa-plus"></i></button>
               </div>
               <table class="table table-sm table-striped text text-sm text-justify" id="letter-table">
                 <thead>
@@ -110,7 +115,7 @@
                           </table>
                         </td>
                         <td>
-                          <a href="" class="note-link" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}"><i class="fas fa-eye"></i><a>
+                          <a href="" class="note-link btn btn-sm btn-info" data-action="{{$value['action_id']}}" data-toggle="modal" data-target="#noteModal" data-action_text="{{$value['action_description']}}">View <i class="fas fa-eye"></i><a>
                         </td>
                     </tr>
                       @php
@@ -128,7 +133,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="col-md-12 text-left">
-                  <button type="button" class="btn btn-sm" style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal">Add<i class="fas fa-plus-circle" style="color: #24a0ed"></i></button>
+                  {{-- <button type="button" class="btn btn-sm" style="background-color: #173f5f;color: white;" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal">Add<i class="fas fa-plus-circle" style="color: #24a0ed"></i></button> --}}
+                  <button type="button" class="btn btn-warning btn-sm mb-1" id="btn-modal" data-toggle="modal" data-target="addCorrespondenceModal"><span>Add Correspondence</span>&nbsp;<i class="fas fa-plus"></i></button>
+
               </div>
                   <form id="letter-form">
                       <div class="card">
@@ -282,12 +289,12 @@
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title" id="addCorrespondenceModalTitle">Upload Correspondence</h5>
+              <h5 class="modal-title" id="addCorrespondenceModalTitle"><strong>Upload Correspondence</strong></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body" id="description_view">
+          <div class="modal-body p-4" id="description_view">
               <div id="parent">
                   <div id="add">
                       <form id="uploadForm" class="form-horizontal">
@@ -364,7 +371,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
        <div class="modal-header">
-          <h5 class="modal-title text-primary">Forward</h5>
+          <h5 class="modal-title text-primary"><strong>Forward</strong></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -385,13 +392,18 @@
                     <input type="hidden" name="forward_letter" value="{{$letter_id}}">
                   <div class="row">
                    <div class="col-md-12">
-                     <label>Add Note</label>
+                     <label>Forwarding Note</label>
                      <textarea class="form-control" name="note" rows="8"></textarea>
                      <label class="text text-danger note"></label>
                    </div>
+                   <div class="col-md-12">
+                    <label>Forwarding</label>
+                    <input type="file" class="form-control" name="forwarding" id="forwarding">
+                    <label class="text text-danger forwarding"></label>
+                  </div>
                   </div>
                   <div class="form-group row">
-                    <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to direct a note to this action!" id="save-note-btn">SAVE</button>
+                    <button type="button" class="btn btn-primary save-btn ml-2" data-url="{{ route('store_note') }}" data-form="#note-form" data-message="That you want to forward a note to the department(s)!" id="save-note-btn">Submit</button>
                  </div>
                  </form>
                 </div>
@@ -416,7 +428,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
        <div class="modal-header">
-          <h5 class="modal-title text-primary">Add Action</h5>
+          <h5 class="modal-title"><strong>Add Action</strong></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -525,20 +537,20 @@
     </div>
   </div>
 @section('scripts')
-    <!-- DataTables  & Plugins -->
-<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-<script src="{{asset('js/custom/common.js')}}"></script>
+ <!-- DataTables  & Plugins -->
+ <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+ <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+ <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+ <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+ <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+ <script src="{{asset('js/custom/common.js')}}"></script>
 <script>
 // $(function () {
 //     $("#letter-table").DataTable({
@@ -559,25 +571,22 @@
   $(document).on('click','.note-link',function(e){
       e.preventDefault();
      $('.modal-title').text($(this).data('action_text'));
-     $('.modal-title').text($(this).data('action_text'));
       var action = $(this).data('action');
       $.get("{{route('action_notes')}}",{
         'action':action
       },function(j){
         var tr = "";
         var attachment = "";
-       if(j.length > 1){
+       
        if(j.length > 1){
           for(var i = 1; i < j.length; i++){
           if(j[i].attach != ""){
-            attachment = "<a href='#' class='attach' data-attach='"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
+            attachment = "<a href='#' class='attach' data-attach='{{str_replace('public','storage/app/',url(''))}}"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
           }
           tr += "<tr><td><b>"+j[i].name+"</b> : "+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"&nbsp;"+attachment+"</b></td></tr>";
           attachment = "";
           }
             $('#note-body').html(tr);
-          }else{
-            $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }else{
             $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
           }
@@ -645,6 +654,7 @@ $('.js-example-basic-multiple').select2();
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                     };
                 // alert(correspondence_id);
+                showLoading();
                 $.ajax({
                 url: '{{ route('remove_correspondences') }}',
                 type: 'POST',
@@ -655,6 +665,7 @@ $('.js-example-basic-multiple').select2();
                 },
                 success: function(response){
                     alert("Correspondence removed successfully!");
+                    hideLoading();
                     location.reload(true);
                 }
                 });

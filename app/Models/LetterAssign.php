@@ -22,7 +22,7 @@ class LetterAssign extends Model
     public static function forwardFrom($forwardFrom){
 
         return LetterAssign::where([
-            'id'=>$forwardFrom
+            'letter_id'=>$forwardFrom
         ])->update([
             'in_hand'=>false
         ]);

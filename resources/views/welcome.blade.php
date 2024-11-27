@@ -20,7 +20,7 @@
     <div id="edak-login" class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-xl-9 login-bg d-none d-xl-block">
-                <img src="{{ asset('banoshree/images/hcm.svg') }}" alt="eDAK Background Image"
+                <img src="{{ asset('banoshree/images/hcm.jpeg') }}" alt="eDAK Background Image"
                     class="img-fluid login-img">
                 <footer class="position-relative">
                     <div class="row row-cols-1 row-cols-sm-2 g-3">
@@ -41,9 +41,9 @@
                 class="col-sm-12 col-xl-3 ps-0 pe-0 pb-0 edak-login-form d-flex flex-column align-items-center justify-content-between">
                 <div>
                     <picture class="d-xxl-none d-xxl-block d-xl-none">
-                        <source srcset="{{ asset('banoshree/images/hcm.svg') }}" type="image/svg"
+                        <source srcset="{{ asset('banoshree/images/hcm.jpeg') }}" type="image/svg"
                             class="img-fluid d-block d-sm-block d-md-block d-lg-block d-xl-none login-img-mobile">
-                        <img src="{{ asset('banoshree/images/hcm.svg') }}" alt="eDak ackground Image with Photo of HCM"
+                        <img src="{{ asset('banoshree/images/hcm.jpeg') }}" alt="eDak ackground Image with Photo of HCM"
                             class="img-fluid d-block d-sm-block d-md-block d-lg-block d-xl-none login-img-mobile">
                     </picture>
                     <div>

@@ -5,6 +5,11 @@
         <div class="col-md-12 ">
             <div class="card">
                 <div class="card-body">
+                    <!-- Loading Overlay -->
+                    <div id="loading-overlay" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading...</p>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 ">
                             <form id="letter-form">
@@ -12,7 +17,16 @@
                                     <div class="card-body">
                                         <form>
                                             @csrf <!-- CSRF token for Laravel -->
-                                            <div class="row">
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    Text Search:
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <input type="text" class="form-control" id="text_search" name="text_search" placeholder="Search by letter number, subject, letter no, diarize no, sender, recipient, category, sub-category etc.">
+                                                </div>
+                                            </div>
+                                            
+                                            {{-- <div class="row mt-2">
                                                 <div class="col-md-2">
                                                     Diarized Number:
                                                 </div>
@@ -27,20 +41,25 @@
                                                     <input type="text" class="form-control" id="letter_no"
                                                         placeholder="">
                                                 </div>
-                                            </div>
-                                            
-                                            <div class="row mt-2">
+                                            </div> --}}
+
+                                            <div class="row mt-4">
                                                 <div class="col-md-2">
                                                     Category:
                                                 </div>
                                                 <div class="col-md-3 text-left">
-                                                    <select class="form-control" id="category">
-                                                        <option value="">Select</option>
+                                                    <select class="form-control" id="category" name="category">
+                                                        <option value=""
+                                                            {{ request('category') == '' ? 'selected' : '' }}>Select
+                                                        </option>
                                                         @foreach ($categories as $c)
-                                                            <option value="{{ $c->id }}">{{ $c->category_name }}
+                                                            <option value="{{ $c->id }}"
+                                                                {{ request('category') == $c->id ? 'selected' : '' }}>
+                                                                {{ $c->category_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
+
                                                 </div>
                                                 <div class="col-md-2 offset-md-1">
                                                     Received/Issued Date:
@@ -56,8 +75,26 @@
                                                     <small id="emailHelp" class="form-text text-muted">To</small>
                                                 </div>
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-md-2">
+                                                    Sub-Category:
+                                                </div>
+                                                <div class="col-md-3 text-left">
+                                                    <select class="form-control" id="subcategory" name="subcategory">
+                                                        <option value=""
+                                                            {{ request('subcategory') == '' ? 'selected' : '' }}>Select
+                                                        </option>
+                                                        @foreach ($subcategory as $c)
+                                                            <option value="{{ $c->id }}"
+                                                                {{ request('subcategory') == $c->id ? 'selected' : '' }}>
+                                                                {{ $c->sub_category_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-2 offset-md-1">
                                                     Letter Category:
                                                 </div>
                                                 <div class="col-md-3 text-left">
@@ -73,7 +110,7 @@
                                                     <button type="submit" class="btn" id="btn-search"
                                                         style="background-color: #174060;color: white;">Search</button>
                                                     &nbsp;
-                                                    <button type="reset" class="btn" id="btn-search"
+                                                    <button type="reset" class="btn" id="btn-reset"
                                                         style="background-color: #174060;color: white;">Reset</button>
                                                 </div>
                                             </div>
@@ -102,20 +139,7 @@
         </div>
     </div>
 @section('scripts')
-    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('js/custom/common.js') }}"></script>
-
+    @include('layouts.scripts')
     <script>
         $(document).ready(function() {
 
@@ -125,25 +149,32 @@
 
                 // Serialize form data
                 // tinymce.activeEditor.setContent("<p>Hello world!</p>");
-                var diarized_no = $('#diarized_no').val();
-                var letter_no = $('#letter_no').val();
+                // var diarized_no = $('#diarized_no').val();
+                // var letter_no = $('#letter_no').val();
                 var received_from = $('#received_from').val();
                 var received_to = $('#received_to').val();
                 var category = $('#category').val();
+                var subcategory = $('#subcategory').val();
                 var letter_category = $('#letter_category').val();
+                var text_search = $('#text_search').val(); // Include text search
+
                 // var formData = $('#letter-form').serialize();
-                // alert(diarized_no);
+                // alert(text_search);
                 // exit();
                 var formData = {
-                    diarized_no: diarized_no,
-                    letter_no: letter_no,
+                    // diarized_no: diarized_no,
+                    // letter_no: letter_no,
                     received_from: received_from,
                     received_to: received_to,
                     category: category,
+                    subcategory: subcategory,
                     letter_category: letter_category,
+                    text_search: text_search, // Include text search
+
                     _token: '{{ csrf_token() }}' // Include CSRF token if using Laravel
                 };
                 // Ajax request
+                showLoading();
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('submit.search') }}', // Replace with your server-side script URL
@@ -157,13 +188,23 @@
                         $('#letter-table').DataTable({
                             "destroy": true, //use for reinitialize datatable
                         });
+                        hideLoading();
                     },
                     error: function(xhr, status, error) {
                         // Handle error
                         console.error('Error:', error);
+                        hideLoading();
                     }
                 });
             });
+        });
+
+        $(document).ready(function() {
+            var category = $('#category').val();
+
+            if (category) {
+                $('#btn-search').click(); // Trigger the search button click programmatically
+            }
         });
     </script>
     <script>
@@ -195,7 +236,7 @@
                     }
                 ]
             }).buttons().container().appendTo(
-            '#letter-table_wrapper .col-md-6:eq(0)'); // Adjust the container as per your layout
+                '#letter-table_wrapper .col-md-6:eq(0)'); // Adjust the container as per your layout
         });
     </script>
 @endsection

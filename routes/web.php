@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -7,7 +9,12 @@ Route::get('/', function () {
 });
 Route::post('/register_user', [App\Http\Controllers\RegisterVlmsUser::class, 'registerUser'])->name('register_user');
 
-Auth::routes();
+//Auth::routes();
+Auth::routes([
+    'register' => false, // Registration Routes...
+    'reset' => false, // Password Reset Routes...
+    'verify' => false, // Email Verification Routes...
+  ]);
 Route::middleware(['auth'])->group(function () {
     
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -47,9 +54,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard-data', [App\Http\Controllers\DashboardController::class, 'dashboard_data'])->name('dashboard-data');
     Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
     Route::get('/issue_box', [App\Http\Controllers\DashboardController::class, 'issue_box'])->name('issue_box');
+    Route::get('/action_box', [App\Http\Controllers\DashboardController::class, 'action_box'])->name('action_box');
+    Route::get('/action/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchActionByCategory'])->name('action_by_category');
     Route::get('/receipt/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchReceiptByCategory'])->name('receipt_by_category');
     Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
     Route::get('/issue/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchIssueByCategory'])->name('issue_by_category');
+
+    //Report Controller
+    Route::get('/report', [App\Http\Controllers\ReportController::class, 'cat_wise_diarize_assign_forwarded'])->name('reports');
+    Route::get('/getCategoryData', [App\Http\Controllers\ReportController::class, 'getCategoryData']);
+    Route::get('/getCategoryReport', [App\Http\Controllers\ReportController::class, 'report_by_category'])->name('report_by_category');
 
 
     Route::get('/pdf_genarator/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF'])->name('pdf_genarator');
@@ -70,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/department/view', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department.index');
     Route::post('/department/add', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department.add');   
     Route::post('/department/edit', [App\Http\Controllers\AdminController::class, 'edit_department'])->name('department.edit');   
-    
+    Route::get('/file_view', [App\Http\Controllers\FilePreviewController::class, 'index'])->name('file_view');
 });
 
 
