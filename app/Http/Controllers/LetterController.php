@@ -186,8 +186,7 @@ class LetterController extends Controller
 
 
     public function showLetters($legacy)
-    {
-        $legacy = decrypt($legacy);
+    {   $legacy = decrypt($legacy);
         $legacyStatus = false;
         if($legacy == 1){
             $legacyStatus = true;
@@ -202,7 +201,9 @@ class LetterController extends Controller
         $delegatgeLetters = [];
         $i = 0;
         $condition = [];
-        
+        $hod = Common::getSingleColumnValue('assign_deligates',[
+            'deligate_id'=>session('role_user')
+        ],'hod_id');
         foreach($letters AS $value){
             if(session('role') == 1){
                 $condition = [
@@ -218,9 +219,10 @@ class LetterController extends Controller
             }else if(session('role') == 2){
                 $condition = [
                     'letter_id'=>$value['letter_id'],
-                    'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
-                        'deligate_id'=>session('role')
-                    ],'hod_id'),
+                    // 'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
+                    //     'deligate_id'=>session('role_user')
+                    // ],'hod_id'),
+                    'receiver_id'=>session('role_user'),
                     'in_hand'=> true,
                 ];
             }
@@ -291,7 +293,7 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters'));
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod'));
 
 
         }else{

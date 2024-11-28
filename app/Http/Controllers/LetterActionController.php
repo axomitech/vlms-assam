@@ -98,6 +98,45 @@ class LetterActionController extends Controller
     }
     public function letterActions($id)
     {
+        // $letter_id = decrypt($id);
+        // $letterNo = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_no');
+        // $letterSubject = Common::getSingleColumnValue('letters',['id'=>$letter_id],'subject');
+        // $senderName = Common::getSingleColumnValue('senders',['letter_id'=>$letter_id],'sender_name');
+        // $organization = Common::getSingleColumnValue('senders',['letter_id'=>$letter_id],'organization');
+        // $letterPath = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_path');
+        // $letterCrn = Common::getSingleColumnValue('letters',['id'=>$letter_id],'crn');
+        // $finalizeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'draft_finalize');
+        // $forwardStatus = ActionSent::isLetterForwarded($letter_id);
+        // $departments = Department::getAllDepartments();
+        // $completeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'stage_status');
+        // $completeCount = 0;
+        // $actionDepartments = [];
+        // $letterActions = LetterAction::getLetterActions($letter_id);
+        // $responsesStatuses = [];
+        // $actions = [];
+        // $i = 0;
+        // foreach($letterActions AS $value){
+        //     $j = 0;
+        //     $actions = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
+        //     foreach($actions AS $value1){
+        //         $actionDepartments[$i][$j] = $value1['department_name'];
+        //         $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
+        //         if($responsesStatuses[$i][$j] == "Completed"){
+        //             $completeCount += 1;
+        //         }
+        //         $j++;
+        //     }
+        //     $i++;
+        // }
+        // $markComplete = 0;
+        // if($completeCount >= count($letterActions)){
+        //     if($completeStatus < 4){
+
+        //     $markComplete = 1;
+
+        //     }
+        // }
+        // return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','forwardStatus'));
         $letter_id = decrypt($id);
         $letterNo = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_no');
         $letterSubject = Common::getSingleColumnValue('letters',['id'=>$letter_id],'subject');
@@ -106,37 +145,54 @@ class LetterActionController extends Controller
         $letterPath = Common::getSingleColumnValue('letters',['id'=>$letter_id],'letter_path');
         $letterCrn = Common::getSingleColumnValue('letters',['id'=>$letter_id],'crn');
         $finalizeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'draft_finalize');
-        $forwardStatus = ActionSent::isLetterForwarded($letter_id);
-        $departments = Department::getAllDepartments();
         $completeStatus = Common::getSingleColumnValue('letters',['id'=>$letter_id],'stage_status');
-        $completeCount = 0;
+        $forwardStatus = ActionSent::isLetterForwarded($letter_id);
+        $correspondence = AcknowledgeModel::get_correspondence_details($letter_id);
+
+        $notes = [];
+        $i = 0;
         $actionDepartments = [];
         $letterActions = LetterAction::getLetterActions($letter_id);
-        $responsesStatuses = [];
-        $actions = [];
         $i = 0;
+        $responsesStatuses=[];
+        $completeCount = 0;
+        $actions = [];
+        $actionIds = [];
+        $k = 0;
+        $departments = " ";
         foreach($letterActions AS $value){
             $j = 0;
-            $actions = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
-            foreach($actions AS $value1){
+            $actions[$k] = LetterAction::getDepartmentActions($letter_id,$value['action_id']);
+            $actionIds[$k] = $value['action_id'];
+            foreach($actions[$k] AS $value1){
+                $note = LetterActionResponse::getActionLastNote($value['action_id']);
+                if($note != null){
+                    $notes[$i] = $note->action_remarks;
+                }else{
+                    $notes[$i] = '';
+
+                }
                 $actionDepartments[$i][$j] = $value1['department_name'];
+                $departments .= $value1['department_name']."_";
                 $responsesStatuses[$i][$j] = ActionSent::getResponseStatuses($value1['act_dept_id'],$value1['dept_id']);
                 if($responsesStatuses[$i][$j] == "Completed"){
                     $completeCount += 1;
                 }
                 $j++;
             }
+            $k++;
             $i++;
         }
         $markComplete = 0;
-        if($completeCount >= count($letterActions)){
+        if($completeCount == count(array_filter(explode("_",$departments)))){
             if($completeStatus < 4){
 
             $markComplete = 1;
 
             }
         }
-        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','senderName','organization','departments','letterPath','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','forwardStatus'));
+        $departments = Department::getAllDepartments();
+        return view('deligate.action_list',compact('actions','letterNo','letterSubject','letter_id','notes','senderName','organization','letterPath','forwardStatus','letterCrn','finalizeStatus','actionDepartments','letterActions','responsesStatuses','markComplete','departments','completeStatus','correspondence'));
     }
 
     public function finalizeActions(Request $request){
