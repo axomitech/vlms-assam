@@ -24,7 +24,7 @@ class HomeModel extends Model
     {
         return DB::table('letters')
             ->where('department_id', '=', session('role_dept'))
-            ->where('stage_status', '=', 3)
+            ->whereIn('stage_status',  [3,4,5,6])
             ->count();
     }
     public static function get_archive_count()

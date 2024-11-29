@@ -437,7 +437,7 @@
                                                                 data-toggle="tooltip" data-placement="top"
                                                                 title="Send to Department"
                                                                 style="min-height: 30px; font-size: 12px;">
-                                                                <i class="fas fa-edit mr-1"></i> Send to Department
+                                                                <i class="fas fa-edit mr-1"></i> Check Response
                                                             </a>
                                                             @if ($value['stage_status'] < 3)
                                                                 @isset($assignedLetters[$i - 1])
