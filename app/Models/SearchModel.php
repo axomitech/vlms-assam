@@ -18,6 +18,7 @@ class SearchModel extends Model
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
             ->join('letter_sub_categories', 'letters.letter_sub_category_id', '=', 'letter_sub_categories.id')
             ->select(
+                'letters.id as letter_id',
                 'letters.*',
                 'senders.organization as sender_organization',
                 'senders.sender_name as sender_name',

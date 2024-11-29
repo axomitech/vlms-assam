@@ -20,6 +20,7 @@ class SearchController extends Controller
     {
         $inputData = $request->all();
         $results = SearchModel::get_letter_search($inputData);
+        // return $results;
 
         $table = '<table class="table table-hover table-striped table-sm table-responsive" id="letter-table">
         <thead>
@@ -53,7 +54,7 @@ class SearchController extends Controller
                 $table .= '<td><small><i>Subject</i>: ' . $result->subject . '<br><i>Letter No.</i>: ' . $result->letter_no . '<br><i>Letter Date</i>: ' . date_format(date_create($result->letter_date), "d/m/Y") . '</small></td>';
                 $table .= '<td><small><i>' . $from_to . '</i>: ' . $name_designation . '</small></td>';
                 $table .= '<td><small>' . $result->category_name . '</small></td>';
-                $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->id]) . '"><i class="fas fa-download" style="color: #174060"></i></a></td>';
+                $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->letter_id]) . '"><i class="fas fa-download" style="color: #174060"></i></a></td>';
                 $table .= '</tr>';
             }
         }
