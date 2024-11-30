@@ -59,7 +59,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Name</th>
                                             <th>Category</th>
@@ -74,7 +74,7 @@
                                         @foreach ($letters as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
-                                                <td> &nbsp;{{ $value['crn'] }}
+                                                <td>{{ $value['crn'] }}
                                                     <br>Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
@@ -175,7 +175,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl No.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -351,7 +351,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -490,7 +490,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -606,7 +606,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -760,7 +760,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -913,7 +913,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
