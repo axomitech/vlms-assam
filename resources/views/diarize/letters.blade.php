@@ -220,7 +220,7 @@
                                                     {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
-                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6 || $value['stage_status'] == 3)
                                                     @if (session('role') == 3)
                                                     <div class="mb-1">
                                                         <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
@@ -278,8 +278,17 @@
                                                 @if (session('role') == 2)
                                                     <div class="mb-1">
                                                         <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}" class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center" style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-edit mr-1"></i> View/Update
+                                                            <i class="fas fa-edit mr-1"></i> Add Actions
                                                         </a>
+                                                    </div>
+                                                    <div class="mb-1">
+                                                        <form id="for-hod-form" text>
+                                                            <input type="hidden" name="assign_letter" value="{{$value['letter_id']}}">
+                                                            <input type="hidden" name="assignee" value="{{$hod}}">
+                                                        </form>
+                                                        <button type="button" class="btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center save-btn" data-url="{{route('assign_letter')}}" data-form="#for-hod-form" data-message="That you want to send the letter for forwarding?" style="min-height: 30px; font-size: 12px;" id="hod-forward">
+                                                            <i class="fas fa-forward mr-1"></i> Send for Forwarding
+                                                        </button>
                                                     </div>
                                                 @endif
                                                 
@@ -428,7 +437,7 @@
                                                                 data-toggle="tooltip" data-placement="top"
                                                                 title="Send to Department"
                                                                 style="min-height: 30px; font-size: 12px;">
-                                                                <i class="fas fa-edit mr-1"></i> Send to Department
+                                                                <i class="fas fa-edit mr-1"></i> Check Response
                                                             </a>
                                                             @if ($value['stage_status'] < 3)
                                                                 @isset($assignedLetters[$i - 1])
@@ -1319,6 +1328,10 @@
                     document.getElementById('nav-action-tab').click(); // Switch to Archive tab
                 }
             }
+        });
+
+        $(document).on('click','#hod-forward',function(){
+
         });
     </script>
 @endsection

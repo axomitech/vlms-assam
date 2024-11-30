@@ -23,7 +23,7 @@ class ActionResponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'action_response'=>'required|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
+            'action_response'=>'nullable|required_if:action_status,3|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
             'action_status'=>'required|numeric|min:1|max:'.ActionStatus::max('id'),
             'note'=>'required',
         ];

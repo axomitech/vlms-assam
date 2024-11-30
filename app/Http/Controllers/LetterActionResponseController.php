@@ -161,8 +161,9 @@ class LetterActionResponseController extends Controller
 
     public function storeResponse(ActionResponseRequest $request){
         if($request->ajax()){
+            $responsePath = "";
             if ($request->hasFile('action_response')) {
-                $responsePath = "";
+                
                 if ($request->file('action_response')->isValid()) {
 
                     $responsePath = $request->action_response->store('public/action_response');

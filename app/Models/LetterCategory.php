@@ -9,6 +9,6 @@ class LetterCategory extends Model
 {
     use HasFactory;
     public static function getAllLetterCategories(){
-        return LetterCategory::select('id','category_name')->get();
+        return LetterCategory::select('id','category_name')->orderBy('display_priority')->get();
     }
 }
