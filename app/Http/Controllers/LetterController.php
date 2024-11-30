@@ -204,6 +204,7 @@ class LetterController extends Controller
         $hod = Common::getSingleColumnValue('assign_deligates',[
             'deligate_id'=>session('role_user')
         ],'hod_id');
+
         foreach($letters AS $value){
             if(session('role') == 1){
                 $condition = [

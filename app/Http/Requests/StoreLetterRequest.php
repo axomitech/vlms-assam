@@ -31,7 +31,7 @@ class StoreLetterRequest extends FormRequest
             'priority' => 'required|numeric|min:1|max:' . LetterPriority::max('id'),
             'category' => 'required|numeric|min:1|max:' . LetterCategory::max('id'),
             'sub_category' => 'nullable|required_if:category,7,8|numeric|min:1|max:' . LetterSubCategory::max('id'),
-            'other_sub_category' => 'nullable|required_if:category,10|string',
+            'other_sub_category' => 'nullable|required_if:category,10,11|string',
             'letter' => 'required|mimes:pdf|min:50|max:100000',
             'letter_no' => 'required',
             'letter_date' => 'required|date|date_format:Y-m-d|before_or_equal:' . $today,

@@ -81,7 +81,8 @@
                                                                     <option value="">Select Category</option>
                                                                     @foreach ($letterCategories as $value)
                                                                         <option value="{{ $value['id'] }}">
-                                                                            {{ $value['category_name'] }}</option>
+                                                                            {{ $value['category_name'] }}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                                 <label class="text text-danger category fw-bold"></label>
@@ -417,9 +418,10 @@
         });
 
         $(document).on('change','#category',function(){
-            if($(this).val() == 10){
+            if($(this).val() == 10 || $(this).val() == 11){
                 $('#other_sub_category').attr('type','text');
                 $('#sub_category').prop('hidden',true);
+                $('#other_sub_category').attr('placeholder',$.trim($("#category option:selected").text()));
             }else{
                 $('#other_sub_category').attr('type','hidden');
                 $('#sub_category').prop('hidden',false);
