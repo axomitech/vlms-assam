@@ -316,6 +316,10 @@ class LetterController extends Controller
             $letterData['receipt'] = $value['receipt'];
             $letterData['subject'] = $value['subject'];
             $letterData['recipient_name'] = $value['recipient_name'];
+            $letterData['recipient_designation'] = $value['recipient_designation'];
+            $letterData['recipient_phone'] = $value['recipient_phone'];
+            $letterData['recipient_email'] = $value['recipient_email'];
+            $letterData['recipient_address'] = $value['recipient_address'];
             $letterData['sender_name'] = $value['sender_name'];
             $letterData['sender_phone'] = $value['sender_phone'];
             $letterData['sender_email'] = $value['sender_email'];
@@ -334,6 +338,7 @@ class LetterController extends Controller
             $letterData['letter_priority_id'] = $value['letter_priority_id'];
             $letterData['letter_path'] = $value['letter_path'];
             $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
+            $letterData['issue_date'] = $value['issue_date'];
             
         }
         $priorities = LetterPriority::getAllPriorities();

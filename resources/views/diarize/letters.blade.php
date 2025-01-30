@@ -118,10 +118,9 @@
                                                 </td>
                                                 <td>
                                                     @if (session('role') == 1)
-                                                        @if (!$assignedLetters[$i - 1])
-                                                            <div class="mb-1">
-                                                                @if ($legacy == 0)
-                                                                    <a href="" class="assign-link"
+                                                    @if ($value['stage_status'] == 1)
+                                                    @if ($value['receipt'] == true)
+                                                                        <a href="" class="assign-link"
                                                                         data-toggle="modal"
                                                                         data-target=".bd-example-modal-lg"
                                                                         data-letter="{{ $value['letter_id'] }}"
@@ -130,10 +129,32 @@
                                                                             class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                                             title="Assign Letter"
                                                                             style="min-height: 30px; font-size: 12px;">
-                                                                            Assign
+                                                                            Pull Up
                                                                             <i class="fas fa-paper-plane ml-1"></i>
                                                                         </span>
-                                                                    </a>
+                                                                    </a> 
+                                                                    @endif  
+                                                                        @endif
+                                                        @if (!$assignedLetters[$i - 1])
+                                                            <div class="mb-1">
+                                                                @if ($legacy == 0)
+                                                                    @if ($value['receipt'] == true)
+                                                                    
+                                                                        <a href="" class="assign-link"
+                                                                            data-toggle="modal"
+                                                                            data-target=".bd-example-modal-lg"
+                                                                            data-letter="{{ $value['letter_id'] }}"
+                                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                            <span
+                                                                                class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                                title="Assign Letter"
+                                                                                style="min-height: 30px; font-size: 12px;">
+                                                                                Assign
+                                                                                <i class="fas fa-paper-plane ml-1"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                        
+                                                                    @endif
                                                                 @endif
                                                                 <a
                                                                     href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">

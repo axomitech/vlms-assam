@@ -126,15 +126,23 @@
 
 
                                                             <div class="col-md-6">
+                                                                @php
+                                                                    $issue_date = "";
+                                                                    $read_only = "";
+                                                                @endphp
                                                                 @if ($receipt == 1)
                                                                     <label class="form-label fw-bold">Received Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @else
+                                                                @php
+                                                                    $issue_date = \Carbon\Carbon::now()->format('Y-m-d');
+                                                                    $read_only = "readonly";
+                                                                @endphp
                                                                     <label class="form-label fw-bold">Issue Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @endif
                                                                 <input type="date" name="received_date"
-                                                                    id="received_date" class="form-control form-control-sm">
+                                                                    id="received_date" class="form-control form-control-sm" value="{{$issue_date}}" {{$read_only}}>
                                                                 <label
                                                                     class="text text-danger received_date fw-bold"></label>
                                                             </div>
