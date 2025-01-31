@@ -59,7 +59,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Name</th>
                                             <th>Category</th>
@@ -74,7 +74,7 @@
                                         @foreach ($letters as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
-                                                <td> &nbsp;{{ $value['crn'] }}
+                                                <td>{{ $value['crn'] }}
                                                     <br>Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
@@ -118,10 +118,9 @@
                                                 </td>
                                                 <td>
                                                     @if (session('role') == 1)
-                                                        @if (!$assignedLetters[$i - 1])
-                                                            <div class="mb-1">
-                                                                @if ($legacy == 0)
-                                                                    <a href="" class="assign-link"
+                                                    @if ($value['stage_status'] == 1)
+                                                    @if ($value['receipt'] == true)
+                                                                        <a href="" class="assign-link"
                                                                         data-toggle="modal"
                                                                         data-target=".bd-example-modal-lg"
                                                                         data-letter="{{ $value['letter_id'] }}"
@@ -130,10 +129,32 @@
                                                                             class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                                             title="Assign Letter"
                                                                             style="min-height: 30px; font-size: 12px;">
-                                                                            Assign
+                                                                            Pull Up
                                                                             <i class="fas fa-paper-plane ml-1"></i>
                                                                         </span>
-                                                                    </a>
+                                                                    </a> 
+                                                                    @endif  
+                                                                        @endif
+                                                        @if (!$assignedLetters[$i - 1])
+                                                            <div class="mb-1">
+                                                                @if ($legacy == 0)
+                                                                    @if ($value['receipt'] == true)
+                                                                    
+                                                                        <a href="" class="assign-link"
+                                                                            data-toggle="modal"
+                                                                            data-target=".bd-example-modal-lg"
+                                                                            data-letter="{{ $value['letter_id'] }}"
+                                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                            <span
+                                                                                class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                                title="Assign Letter"
+                                                                                style="min-height: 30px; font-size: 12px;">
+                                                                                Assign
+                                                                                <i class="fas fa-paper-plane ml-1"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                        
+                                                                    @endif
                                                                 @endif
                                                                 <a
                                                                     href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
@@ -175,7 +196,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl No.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -220,7 +241,7 @@
                                                     {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
-                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6)
+                                                    @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6 || $value['stage_status'] == 3)
                                                     @if (session('role') == 3)
                                                     <div class="mb-1">
                                                         <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
@@ -278,8 +299,17 @@
                                                 @if (session('role') == 2)
                                                     <div class="mb-1">
                                                         <a href="{{ route('action_lists', [encrypt($value['letter_id'])]) }}" class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center" style="min-height: 30px; font-size: 12px;">
-                                                            <i class="fas fa-edit mr-1"></i> View/Update
+                                                            <i class="fas fa-edit mr-1"></i> Add Actions
                                                         </a>
+                                                    </div>
+                                                    <div class="mb-1">
+                                                        <form id="for-hod-form" text>
+                                                            <input type="hidden" name="assign_letter" value="{{$value['letter_id']}}">
+                                                            <input type="hidden" name="assignee" value="{{$hod}}">
+                                                        </form>
+                                                        <button type="button" class="btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center save-btn" data-url="{{route('assign_letter')}}" data-form="#for-hod-form" data-message="That you want to send the letter for forwarding?" style="min-height: 30px; font-size: 12px;" id="hod-forward">
+                                                            <i class="fas fa-forward mr-1"></i> Send for Forwarding
+                                                        </button>
                                                     </div>
                                                 @endif
                                                 
@@ -351,7 +381,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -428,7 +458,7 @@
                                                                 data-toggle="tooltip" data-placement="top"
                                                                 title="Send to Department"
                                                                 style="min-height: 30px; font-size: 12px;">
-                                                                <i class="fas fa-edit mr-1"></i> Send to Department
+                                                                <i class="fas fa-edit mr-1"></i> Check Response
                                                             </a>
                                                             @if ($value['stage_status'] < 3)
                                                                 @isset($assignedLetters[$i - 1])
@@ -490,7 +520,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -606,7 +636,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -760,7 +790,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -913,7 +943,7 @@
                                         </tr>
                                         <tr class="text text-sm text-justify">
                                             <th>Sl no.</th>
-                                            <th>Diary</th>
+                                            <th>Diarized Details</th>
                                             <th>Subject</th>
                                             <th>Sender</th>
                                             <th>Category</th>
@@ -1319,6 +1349,10 @@
                     document.getElementById('nav-action-tab').click(); // Switch to Archive tab
                 }
             }
+        });
+
+        $(document).on('click','#hod-forward',function(){
+
         });
     </script>
 @endsection

@@ -21,7 +21,7 @@ class Letter extends Model
         $letter->letter_priority_id = $letterDetails[1];
         $letter->letter_no = $letterDetails[5];
         $letter->letter_date = $letterDetails[2];
-        $letter->received_date = $letterDetails[3];
+        
         $letter->diary_date = $letterDetails[4];
         $letter->subject = $letterDetails[6];
         $letter->letter_path = $letterDetails[7];
@@ -32,6 +32,9 @@ class Letter extends Model
         $letter->legacy = true;
         if ($letterDetails[9] == 0) {
             $letter->receipt = false;
+            $letter->issue_date = $letterDetails[3];
+        }else{
+            $letter->received_date = $letterDetails[3];
         }
         if ($letterDetails[11] == 0) {
             $letter->legacy = false;
@@ -85,13 +88,17 @@ class Letter extends Model
                 'letters.letter_no',
                 'letters.receipt',
                 'letters.subject',
-                'recipients.recipient_name',
                 'senders.sender_name',
                 'senders.sender_designation',
                 'senders.organization',
                 'letters.letter_path',
                 'letters.id AS letter_id',
+                'recipients.recipient_name',
+                'recipients.recipient_designation',
                 'recipients.organization as recipient_organization',
+                'recipients.recipient_phone',
+                'recipients.recipient_email',
+                'recipients.address AS recipient_address',
                 'senders.organization as sender_organization',
                 'senders.sender_phone',
                 'senders.sender_email',
@@ -108,7 +115,8 @@ class Letter extends Model
                 'letters.letter_priority_id',
                 'letter_categories.category_name',
                 'letters.letter_path',
-                'letters.letter_other_sub_categories'
+                'letters.letter_other_sub_categories',
+                'letters.issue_date'
             );
             if(count($condition) > 0){
                 $lettersDetails = $lettersDetails->where($condition);
@@ -151,7 +159,6 @@ class Letter extends Model
             ->orderBy('letters.id', 'DESC')
             ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name') // Added category_name
             ->get();
-
         return [
             $receivedLetters,
             $assignedLetters

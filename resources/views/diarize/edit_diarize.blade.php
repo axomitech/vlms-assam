@@ -122,6 +122,9 @@
 
 
                                                             <div class="col-md-6">
+                                                                @php
+                                                                        $readOnly = "";
+                                                                @endphp
                                                                 @if ($letterData['receipt'] == 1)
                                                                     @php
                                                                         $receiveIssueDate = $letterData['received_date'];
@@ -132,11 +135,12 @@
                                                                     <label class="form-label fw-bold">Issue Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                             @php
+                                                                            $readOnly = "readonly";
                                                                         $receiveIssueDate = $letterData['issue_date'];
                                                                     @endphp
                                                                 @endif
                                                                 <input type="date" name="received_date"
-                                                                    id="received_date" class="form-control form-control-sm" value="{{$receiveIssueDate}}">
+                                                                    id="received_date" class="form-control form-control-sm" value="{{$receiveIssueDate}}" {{$readOnly}}>
                                                                 <label
                                                                     class="text text-danger received_date fw-bold"></label>
                                                             </div>
@@ -219,7 +223,7 @@
                                                                     <input type="text" name="recipient_name"
                                                                         id="recipient_name"
                                                                         class="form-control form-control-sm"
-                                                                        placeholder=" Name of a person">
+                                                                        placeholder=" Name of a person" value="{{$letterData['recipient_name']}}">
                                                                     <label
                                                                         class="text text-danger recipient_name fw-bold"></label>
                                                                 </div>
@@ -229,7 +233,7 @@
                                                                     <input type="text" name="recipient_designation"
                                                                         id="recipient_designation"
                                                                         class="form-control form-control-sm"
-                                                                        placeholder="eg. Home Secretary" value="{{$letterData['sender_designation']}}">
+                                                                        placeholder="eg. Home Secretary" value="{{$letterData['recipient_designation']}}">
                                                                     <label
                                                                         class="text text-danger recipient_designation fw-bold"></label>
                                                                 </div>
@@ -240,7 +244,7 @@
                                                                     <input type="text" name="recipient_mobile"
                                                                         id="recipient_mobile"
                                                                         class="form-control form-control-sm"
-                                                                        placeholder="eg. 7020541234" value="{{$letterData['sender_phone']}}">
+                                                                        placeholder="eg. 7020541234" value="{{$letterData['recipient_phone']}}">
                                                                     <label
                                                                         class="text text-danger recipient_mobile fw-bold"></label>
                                                                 </div>
@@ -250,7 +254,7 @@
                                                                     <input type="text" name="recipient_email"
                                                                         id="recipient_email"
                                                                         class="form-control form-control-sm"
-                                                                        placeholder="eg. assam@gov.in" value="{{$letterData['sender_email']}}">
+                                                                        placeholder="eg. assam@gov.in" value="{{$letterData['recipient_email']}}">
                                                                     <label
                                                                         class="text text-danger recipient_email fw-bold"></label>
                                                                 </div>
@@ -261,7 +265,7 @@
                                                                 <label class="form-label fw-bold">Office Details<span
                                                                         class="text text-danger fw-bold">*</span></label>
                                                                 <textarea class="form-control form-control-sm" name="organization" id="organization"
-                                                                    placeholder="eg. Assam Secretariat">{{$letterData['organization']}}</textarea>
+                                                                    placeholder="eg. Assam Secretariat">{{$letterData['recipient_organization']}}</textarea>
                                                                 <label
                                                                     class="text text-danger organization fw-bold"></label>
                                                             </div>
@@ -269,7 +273,7 @@
                                                             <div class="col-md-12">
                                                                 <label class="form-label fw-bold">Address</label>
                                                                 <textarea class="form-control form-control-sm" name="address" id=address"
-                                                                    placeholder="eg. Dispur, Guwahati, Kamrup(M), Assam-781019">{{$letterData['address']}}</textarea>
+                                                                    placeholder="eg. Dispur, Guwahati, Kamrup(M), Assam-781019">{{$letterData['recipient_address']}}</textarea>
                                                                 <label class="text text-danger address fw-bold"></label>
                                                             </div>
                                                             @if ($letterData['receipt'] == 1)

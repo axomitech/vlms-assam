@@ -81,7 +81,8 @@
                                                                     <option value="">Select Category</option>
                                                                     @foreach ($letterCategories as $value)
                                                                         <option value="{{ $value['id'] }}">
-                                                                            {{ $value['category_name'] }}</option>
+                                                                            {{ $value['category_name'] }}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                                 <label class="text text-danger category fw-bold"></label>
@@ -125,15 +126,23 @@
 
 
                                                             <div class="col-md-6">
+                                                                @php
+                                                                    $issue_date = "";
+                                                                    $read_only = "";
+                                                                @endphp
                                                                 @if ($receipt == 1)
                                                                     <label class="form-label fw-bold">Received Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @else
+                                                                @php
+                                                                    $issue_date = \Carbon\Carbon::now()->format('Y-m-d');
+                                                                    $read_only = "readonly";
+                                                                @endphp
                                                                     <label class="form-label fw-bold">Issue Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @endif
                                                                 <input type="date" name="received_date"
-                                                                    id="received_date" class="form-control form-control-sm">
+                                                                    id="received_date" class="form-control form-control-sm" value="{{$issue_date}}" {{$read_only}}>
                                                                 <label
                                                                     class="text text-danger received_date fw-bold"></label>
                                                             </div>
@@ -417,9 +426,10 @@
         });
 
         $(document).on('change','#category',function(){
-            if($(this).val() == 10){
+            if($(this).val() == 10 || $(this).val() == 11){
                 $('#other_sub_category').attr('type','text');
                 $('#sub_category').prop('hidden',true);
+                $('#other_sub_category').attr('placeholder',$.trim($("#category option:selected").text()));
             }else{
                 $('#other_sub_category').attr('type','hidden');
                 $('#sub_category').prop('hidden',false);

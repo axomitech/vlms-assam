@@ -36,8 +36,8 @@ class LetterAssignController extends Controller
     
                 try {
                     
-                    if(session('role') == 1){
-
+                    if(session('role') == 1 || session('role') == 2){
+                        LetterAssign::forwardFrom($request->assign_letter);
                         $id = LetterAssign::assignLetter([
 
                             $request->assign_letter,

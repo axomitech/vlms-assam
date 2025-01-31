@@ -23,7 +23,7 @@ class ActionResponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'action_response'=>'required|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
+            'action_response'=>'nullable|required_if:action_status,3|mimes:jpg,pdf,png,jpeg|min:50|max:10000',
             'action_status'=>'required|numeric|min:1|max:'.ActionStatus::max('id'),
             'note'=>'required',
         ];
@@ -33,7 +33,7 @@ class ActionResponseRequest extends FormRequest
     {
         return [
             
-            'action_response.required'=>'Please select a response file.',
+            'action_response.required_if'=>'Please select a response file.',
             'action_response.mimes'=>'Please select a response file in jpg,pdf,png or jpeg format.',
             'action_response.min'=>'Please select a response file with minimum size 50Kb.',
             'action_response.max'=>'Please select a response file with maximum size 1Mb',

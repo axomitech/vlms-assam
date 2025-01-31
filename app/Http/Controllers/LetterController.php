@@ -186,8 +186,7 @@ class LetterController extends Controller
 
 
     public function showLetters($legacy)
-    {
-        $legacy = decrypt($legacy);
+    {   $legacy = decrypt($legacy);
         $legacyStatus = false;
         if($legacy == 1){
             $legacyStatus = true;
@@ -202,7 +201,10 @@ class LetterController extends Controller
         $delegatgeLetters = [];
         $i = 0;
         $condition = [];
-        
+        $hod = Common::getSingleColumnValue('assign_deligates',[
+            'deligate_id'=>session('role_user')
+        ],'hod_id');
+
         foreach($letters AS $value){
             if(session('role') == 1){
                 $condition = [
@@ -218,9 +220,10 @@ class LetterController extends Controller
             }else if(session('role') == 2){
                 $condition = [
                     'letter_id'=>$value['letter_id'],
-                    'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
-                        'deligate_id'=>session('role')
-                    ],'hod_id'),
+                    // 'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
+                    //     'deligate_id'=>session('role_user')
+                    // ],'hod_id'),
+                    'receiver_id'=>session('role_user'),
                     'in_hand'=> true,
                 ];
             }
@@ -244,8 +247,8 @@ class LetterController extends Controller
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>3
+           ['user_departments.department_id','=',session('role_dept')],
+            ['stage_status','>=',3]
         ],$letterIds);
         $receiverId = Common::getSingleColumnValue('user_departments',[
             'department_id'=>session('role_dept'),
@@ -291,7 +294,7 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters'));
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod'));
 
 
         }else{
@@ -313,6 +316,10 @@ class LetterController extends Controller
             $letterData['receipt'] = $value['receipt'];
             $letterData['subject'] = $value['subject'];
             $letterData['recipient_name'] = $value['recipient_name'];
+            $letterData['recipient_designation'] = $value['recipient_designation'];
+            $letterData['recipient_phone'] = $value['recipient_phone'];
+            $letterData['recipient_email'] = $value['recipient_email'];
+            $letterData['recipient_address'] = $value['recipient_address'];
             $letterData['sender_name'] = $value['sender_name'];
             $letterData['sender_phone'] = $value['sender_phone'];
             $letterData['sender_email'] = $value['sender_email'];
@@ -331,6 +338,7 @@ class LetterController extends Controller
             $letterData['letter_priority_id'] = $value['letter_priority_id'];
             $letterData['letter_path'] = $value['letter_path'];
             $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
+            $letterData['issue_date'] = $value['issue_date'];
             
         }
         $priorities = LetterPriority::getAllPriorities();

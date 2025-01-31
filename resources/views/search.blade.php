@@ -142,8 +142,6 @@
     @include('layouts.scripts')
     <script>
         $(document).ready(function() {
-
-
             $('#btn-search').click(function(event) {
                 event.preventDefault(); // Prevent default form submission
 

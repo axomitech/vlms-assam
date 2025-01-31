@@ -15,9 +15,10 @@ class DashboardController extends Controller
         $letters = Letter::showLetterAndSender([
             'user_departments.department_id' => session('role_dept')
         ], []);
+        
         $letter_category = Letter::join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
             ->select('letter_categories.id', 'letter_categories.category_name', DB::raw('COUNT(*) as count'))
-            ->where('letters.department_id', '=', session('role_dept'))
+            // ->where('letters.department_id', '=', session('role_dept'))
             ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
             ->get();
         $selectedMonth = request('month');  // Get selected month, default to current month

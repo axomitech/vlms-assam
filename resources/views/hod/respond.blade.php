@@ -19,7 +19,11 @@
             @foreach ($responses as $value)
             <tr class="text-sm">
               <td>{{$i}}.</td>
-              <td style="width: 45%;"> {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td><a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{storageUrl($value['response_attachment'])}}"><i class="fas fa-file-pdf"></i></a></td>
+              <td style="width: 45%;"> {{$value['action_remarks']}}<br><b>Response Date:{{\Carbon\Carbon::parse($value['response_date'])->format('d/m/Y')}}</b></td><td>{{$value['status_name']}}</td><td>
+                @if($value['response_attachment'] != "")
+                <a class="file-btn"  data-toggle="modal" data-target="#modal-lg" data-letter_path="{{storageUrl($value['response_attachment'])}}"><i class="fas fa-file-pdf"></i></a>
+                @endif
+              </td>
             </tr>
             @php
               $i++;
