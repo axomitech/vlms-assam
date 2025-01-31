@@ -20,7 +20,7 @@
     <div id="edak-login" class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-xl-9 login-bg d-none d-xl-block">
-                <img src="{{ asset('banoshree/images/hcm.jpeg') }}" alt="eDAK Background Image"
+                <img src="{{ asset('banoshree/images/edak3.png') }}" alt="eDAK Background Image"
                     class="img-fluid login-img">
                 <footer class="position-relative">
                     <div class="row row-cols-1 row-cols-sm-2 g-3">
