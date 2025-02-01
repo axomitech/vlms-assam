@@ -116,7 +116,8 @@ class Letter extends Model
                 'letter_categories.category_name',
                 'letters.letter_path',
                 'letters.letter_other_sub_categories',
-                'letters.issue_date'
+                'letters.issue_date',
+                'letters.user_id'
             );
             if(count($condition) > 0){
                 $lettersDetails = $lettersDetails->where($condition);
