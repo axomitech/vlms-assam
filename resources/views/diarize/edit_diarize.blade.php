@@ -214,7 +214,7 @@
                                                             </div>
                                                         </div>
                                                         <div id="recipient-fields"
-                                                            style="display: @if ($letterData['receipt'] == 0) block @else none @endif">
+                                                            style="display: @if ($letterData['receipt'] != 1) block @else none @endif">
                                                             <!-- Recipient Details Form Fields -->
                                                             <div class="row">
                                                                 <div class="col-md-6">
@@ -261,6 +261,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
+                                                            @if ($letterData['receipt'] != 1)
                                                             <div class="col-md-12">
                                                                 <label class="form-label fw-bold">Office Details<span
                                                                         class="text text-danger fw-bold">*</span></label>
@@ -276,6 +277,24 @@
                                                                     placeholder="eg. Dispur, Guwahati, Kamrup(M), Assam-781019">{{$letterData['recipient_address']}}</textarea>
                                                                 <label class="text text-danger address fw-bold"></label>
                                                             </div>
+                                                            @endif
+                                                            @if ($letterData['receipt'] == 1)
+                                                            <div class="col-md-12">
+                                                                <label class="form-label fw-bold">Office Details111<span
+                                                                        class="text text-danger fw-bold">*</span></label>
+                                                                <textarea class="form-control form-control-sm" name="organization" id="organization"
+                                                                    placeholder="eg. Assam Secretariat">{{$letterData['sender_organization']}}</textarea>
+                                                                <label
+                                                                    class="text text-danger organization fw-bold"></label>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <label class="form-label fw-bold">Address</label>
+                                                                <textarea class="form-control form-control-sm" name="address" id=address"
+                                                                    placeholder="eg. Dispur, Guwahati, Kamrup(M), Assam-781019">{{$letterData['address']}}</textarea>
+                                                                <label class="text text-danger address fw-bold"></label>
+                                                            </div>
+                                                            @endif
                                                             @if ($letterData['receipt'] == 1)
                                                                 <div class="col-md-12">
 

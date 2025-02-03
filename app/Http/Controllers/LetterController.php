@@ -346,6 +346,9 @@ class LetterController extends Controller
             $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
             $letterData['issue_date'] = $value['issue_date'];
         }
+        // print_r($letterData);
+        // echo $letterData['address'];
+        // die();
         $priorities = LetterPriority::getAllPriorities();
         $letterCategories = LetterCategory::getAllLetterCategories();
         return view('diarize.edit_diarize', compact('priorities', 'letterCategories', 'letterData'));
