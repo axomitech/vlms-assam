@@ -204,7 +204,7 @@ class LetterController extends Controller
         $hod = Common::getSingleColumnValue('assign_deligates',[
             'deligate_id'=>session('role_user')
         ],'hod_id');
-
+        $diarizedBy = [];
         foreach($letters AS $value){
             if(session('role') == 1){
                 $condition = [
@@ -231,6 +231,12 @@ class LetterController extends Controller
             $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
             $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
             $i++;
+            $diarizedBy[0] =  Common::getSingleColumnValue('user_departments',[
+                'id'=>$value['user_id']
+            ],'user_id');
+            $diarizedBy[1] =  Common::getSingleColumnValue('users',[
+                'id'=>$diarizedBy[0]
+            ],'name');
         }
         $actionSents = ActionSent::getForwardedActions();
         $letterIds = [];
@@ -294,12 +300,12 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod'));
+            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy'));
 
 
         }else{
             
-        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy'));
+        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','diarizedBy'));
 
         }
     }
@@ -339,8 +345,10 @@ class LetterController extends Controller
             $letterData['letter_path'] = $value['letter_path'];
             $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
             $letterData['issue_date'] = $value['issue_date'];
-            
         }
+        // print_r($letterData);
+        // echo $letterData['address'];
+        // die();
         $priorities = LetterPriority::getAllPriorities();
         $letterCategories = LetterCategory::getAllLetterCategories();
         return view('diarize.edit_diarize', compact('priorities', 'letterCategories', 'letterData'));

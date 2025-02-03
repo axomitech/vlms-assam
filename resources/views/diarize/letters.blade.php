@@ -74,11 +74,14 @@
                                         @foreach ($letters as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
-                                                <td>{{ $value['crn'] }}
+                                                <td><a href="" href="" id="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizedBy[1]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -118,25 +121,38 @@
                                                 </td>
                                                 <td>
                                                     @if (session('role') == 1)
-                                                    @if ($value['stage_status'] == 1)
+                                                    @if ($value['stage_status'] == 1) 
                                                     @if ($value['receipt'] == true)
-                                                                        <a href="" class="assign-link"
+                                                                        <div class="mb-1">
+
+                                                                            <a href="" class="assign-link "
                                                                         data-toggle="modal"
                                                                         data-target=".bd-example-modal-lg"
                                                                         data-letter="{{ $value['letter_id'] }}"
                                                                         data-letter_path="{{ storageUrl($value['letter_path']) }}">
                                                                         <span
-                                                                            class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
+                                                                            class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
                                                                             title="Assign Letter"
                                                                             style="min-height: 30px; font-size: 12px;">
+                                                                            @if (Auth::user()->id == $diarizedBy[0])
                                                                             Pull Up
-                                                                            <i class="fas fa-paper-plane ml-1"></i>
+                                                                            <i class="fas fa-arrow-up ml-1"></i>
+                                                                            @else
+                                                                            Pull Back
+                                                                            <i class="fas fa-arrow-left ml-1"></i>
+                                                                            @endif
+                                                                            
                                                                         </span>
-                                                                    </a> 
+                                                                    </a>
+                                                                        
+                                                                        </div>
+                                                                   
                                                                     @endif  
                                                                         @endif
+                                                                        
                                                         @if (!$assignedLetters[$i - 1])
                                                             <div class="mb-1">
+                                                                @if (Auth::user()->id == $diarizedBy[0])
                                                                 @if ($legacy == 0)
                                                                     @if ($value['receipt'] == true)
                                                                     
@@ -156,6 +172,8 @@
                                                                         
                                                                     @endif
                                                                 @endif
+                                                                
+
                                                                 <a
                                                                     href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
                                                                     <span
@@ -166,6 +184,8 @@
                                                                         <i class="fas fa-edit ml-1"></i>
                                                                     </span>
                                                                 </a>
+                                                                    
+                                                                @endif
 
                                                             </div>
                                                         @endif
@@ -805,7 +825,7 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
-                                                    {{ $value['crn'] }}
+                                                    <a>{{ $value['crn'] }}</a>
                                                     <br>
                                                     Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -1065,7 +1085,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-5" id="assign-div">
                             <div class="card card-primary card-outline card-outline-tabs">
                                 <div class="card-body">
                                     <form id="assign-form">
@@ -1121,6 +1141,7 @@
     <script>
         $(document).on('click', '.file-btn, .assign-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
+            $('#assign-div').show();
         });
     </script>
 
@@ -1353,6 +1374,10 @@
 
         $(document).on('click','#hod-forward',function(){
 
+        });
+        $(document).on('click','#letter-link',function(){
+            $('#assign-div').hide();
+            $('#letter-view').attr('src', $(this).data('letter_path'));
         });
     </script>
 @endsection
