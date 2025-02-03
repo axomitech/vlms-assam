@@ -186,7 +186,8 @@ class LetterController extends Controller
 
 
     public function showLetters($legacy)
-    {   $legacy = decrypt($legacy);
+    {  
+        $legacy = decrypt($legacy);
         $legacyStatus = false;
         if($legacy == 1){
             $legacyStatus = true;
@@ -232,7 +233,7 @@ class LetterController extends Controller
             $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
             $i++;
             $diarizedBy[0] =  Common::getSingleColumnValue('user_departments',[
-                'id'=>$value['user_id']
+                'id'=>session('role_user')
             ],'user_id');
             $diarizedBy[1] =  Common::getSingleColumnValue('users',[
                 'id'=>$diarizedBy[0]
@@ -267,7 +268,7 @@ class LetterController extends Controller
         $inboxLetters = Letter::showInboxLetters([
             'action_sents.receiver_id' => session('role_user'),
         ],$assignedLetters);
-
+        
         $completedLetters = Letter::showLetterAndSender([
             'user_departments.department_id'=>session('role_dept'),
             'stage_status'=>4
@@ -300,7 +301,7 @@ class LetterController extends Controller
         }
 
         if($legacy <= 0){
-            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy'));
+           return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy'));
 
 
         }else{
