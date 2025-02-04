@@ -337,9 +337,11 @@
                                                     <div class="btn-group w-100 mt-2">
                                                         <button type="button" class="btn btn-sm btn-primary dropdown-toggle w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-height: 30px; font-size: 12px;">
                                                             Actions
+                                                            
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-left custom-dropdown-width" style="font-size: 12px;">
-                                                            @isset($assignedLetters[$i - 1])
+                                                           <script>alert({{$assignedLetters[$i - 1]}})</script>
+                                                            @if(isset($assignedLetters[$i - 1]))
                                                                 @if ($assignedLetters[$i - 1] > 0)
                                                                     @if ($legacy == 0)
                                                                         <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between file-btn" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
@@ -350,7 +352,13 @@
                                                                         Edit <i class="fas fa-edit ml-1"></i>
                                                                     </a> --}}
                                                                 @endif
-                                                            @endisset
+                                                            @else
+                                                            @if ($legacy == 0)
+                                                            <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between file-btn" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                Assign Within CMO <i class="fas fa-paper-plane ml-1"></i>
+                                                            </a>
+                                                            @endif
+                                                            @endif
                                             
                                                             @if ($value['stage_status'] < 3)
                                                                 @isset($assignedLetters[$i - 1])
