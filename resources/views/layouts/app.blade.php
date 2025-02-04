@@ -165,6 +165,7 @@
                                     </p>
                                 </a>
                             </li>
+                
                             <li class="nav-item mb-2">
                                 <a href="{{ route('home1') }}" class="nav-link d-flex align-items-center">
                                     <i class='bx bxs-inbox' style="font-size: 24px;"></i>
@@ -263,6 +264,14 @@
                                     <i class='bx bxs-inbox' style="font-size: 24px;"></i>
                                     <p style="margin: 0; padding-left: 8px;">
                                         Diarized
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a href="{{ route('letters', [encrypt(1)]) }}" class="nav-link d-flex align-items-center">
+                                    <i class='bx bx-history' style="font-size: 24px;"></i>
+                                    <p style="margin: 0; padding-left: 8px;">
+                                        Legacy Letters
                                     </p>
                                 </a>
                             </li>

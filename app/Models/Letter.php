@@ -134,7 +134,7 @@ class Letter extends Model
 
         }
         // Order by letters.id in descending order
-
+        
         return $lettersDetails;
     }
 
