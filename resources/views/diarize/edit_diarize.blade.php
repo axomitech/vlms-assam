@@ -139,6 +139,7 @@
                                                                         $receiveIssueDate = $letterData['issue_date'];
                                                                     @endphp
                                                                 @endif
+                                                                <!-- Issue date is modified here -->
                                                                 @if($letterData['legacy'] != 1)
                                                                 <input type="date" name="received_date"
                                                                     id="received_date" class="form-control form-control-sm" value="{{$receiveIssueDate}}" {{$readOnly}}>

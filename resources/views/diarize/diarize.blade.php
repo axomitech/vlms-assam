@@ -141,6 +141,7 @@
                                                                     <label class="form-label fw-bold">Issue Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @endif
+                                                                <!-- Issue date is modified here -->
                                                                 @if($legacy != 1)
                                                                 <input type="date" name="received_date"
                                                                 id="received_date" class="form-control form-control-sm" value="{{$issue_date}}" {{$read_only}}>

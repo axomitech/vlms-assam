@@ -125,6 +125,7 @@ class HomeModel extends Model
 
     public static function get_issue_by_category($category_id)
     {
+        //Receptients table data is retrieved here.
         return DB::table('letters')
             ->join('recipients', 'letters.id', '=', 'recipients.letter_id')
             ->where('letters.department_id', '=', session('role_dept'))
