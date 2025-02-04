@@ -141,8 +141,13 @@
                                                                     <label class="form-label fw-bold">Issue Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @endif
+                                                                @if($legacy != 1)
                                                                 <input type="date" name="received_date"
-                                                                    id="received_date" class="form-control form-control-sm" value="{{$issue_date}}" {{$read_only}}>
+                                                                id="received_date" class="form-control form-control-sm" value="{{$issue_date}}" {{$read_only}}>
+                                                                @else
+                                                                <input type="date" name="received_date"
+                                                                id="received_date" class="form-control form-control-sm">
+                                                                @endif
                                                                 <label
                                                                     class="text text-danger received_date fw-bold"></label>
                                                             </div>
