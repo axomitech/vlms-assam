@@ -13,6 +13,8 @@ use App\Models\LetterActionResponse;
 use App\Models\ActionSent;
 use App\Models\Letter;
 use App\Models\SearchModel;
+
+use Carbon\Carbon;
 use DB;
 
 use Mpdf\Mpdf;
@@ -72,7 +74,7 @@ class PDFController extends Controller
             $mpdf->AddPage();
             $mpdf->UseTemplate($tplId);
         }
-        $mpdf->Output('test.pdf', 'D');
+        $mpdf->Output($result->letter_no.''.Carbon::now().'.pdf', 'D');
     }
 
     public function createActionDetails($letter_id)

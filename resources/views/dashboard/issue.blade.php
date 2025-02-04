@@ -242,8 +242,8 @@
                                         <th scope="col"><small><b>Diarize No.</b></small></th>
                                         <th scope="col"><small><b>Subject</b></small></th>
                                         <th scope="col"><small><b>Letter No.</b></small></th>
-                                        <th scope="col"><small><b>Sender Name</b></small></th>
-                                        <th scope="col"><small><b>Received Date</b></small></th>
+                                        <th scope="col"><small><b>Recipient Name</b></small></th>
+                                        <th scope="col"><small><b>Issue Date</b></small></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -322,8 +322,8 @@
                                 <td><small>${letter.crn}</small></td>
                                 <td style="width: 30%;">${truncatedSubject}</td>
                                 <td><small>${letter.letter_no}</small></td>
-                                <td><small>${letter.sender_name}</small></td>
-                                <td><small>${letter.received_date}</small></td>
+                                <td><small>${letter.recipient_name}</small></td>
+                                <td><small>${letter.issue_date}</small></td>
                             </tr>`;
                         });
     
