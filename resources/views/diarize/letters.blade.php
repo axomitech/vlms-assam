@@ -81,7 +81,7 @@
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizedBy[1]}}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -134,7 +134,7 @@
                                                                             class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
                                                                             title="Assign Letter"
                                                                             style="min-height: 30px; font-size: 12px;">
-                                                                            @if (Auth::user()->id == $diarizedBy[0])
+                                                                            @if (Auth::user()->id == $diarizedBy[$value['crn']])
                                                                             Pull Up
                                                                             <i class="fas fa-arrow-up ml-1"></i>
                                                                             @else
@@ -152,7 +152,7 @@
                                                                         
                                                         @if (!$assignedLetters[$i - 1])
                                                             <div class="mb-1">
-                                                                @if (Auth::user()->id == $diarizedBy[0])
+                                                                @if (Auth::user()->id == $diarizedBy[$value['crn']])
                                                                 @if ($legacy == 0)
                                                                     @if ($value['receipt'] == true)
                                                                     
@@ -235,6 +235,7 @@
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -290,6 +291,7 @@
                                                 Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                 <br>Recieved
                                                 Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                             </td>
                                             <td style="width: 30%;">
                                                 @if (strlen($value['subject']) > 100)
@@ -327,9 +329,23 @@
                                                             <input type="hidden" name="assign_letter" value="{{$value['letter_id']}}">
                                                             <input type="hidden" name="assignee" value="{{$hod}}">
                                                         </form>
-                                                        <button type="button" class="btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center save-btn" data-url="{{route('assign_letter')}}" data-form="#for-hod-form" data-message="That you want to send the letter for forwarding?" style="min-height: 30px; font-size: 12px;" id="hod-forward">
+                                                        {{-- <button type="button" class="btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center save-btn" data-url="{{route('assign_letter')}}" data-form="#for-hod-form" data-message="That you want to send the letter for forwarding?" style="min-height: 30px; font-size: 12px;" id="hod-forward">
                                                             <i class="fas fa-forward mr-1"></i> Send for Forwarding
-                                                        </button>
+                                                        </button> --}}
+                                                        
+                                                        <a href="" class="assign-link"
+                                                                            data-toggle="modal"
+                                                                            data-target=".bd-example-modal-lg"
+                                                                            data-letter="{{ $value['letter_id'] }}"
+                                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                            <span
+                                                                                class="btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                                title="Assign Letter"
+                                                                                style="min-height: 30px; font-size: 12px;">
+                                                                                Send for Forwarding
+                                                                                <i class="fas fa-forward ml-1"></i>
+                                                                            </span>
+                                                                        </a>
                                                     </div>
                                                 @endif
                                                 
@@ -340,8 +356,7 @@
                                                             
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-left custom-dropdown-width" style="font-size: 12px;">
-                                                           <script>alert({{$assignedLetters[$i - 1]}})</script>
-                                                            @if(isset($assignedLetters[$i - 1]))
+                                                           @if(isset($assignedLetters[$i - 1]))
                                                                 @if ($assignedLetters[$i - 1] > 0)
                                                                     @if ($legacy == 0)
                                                                         <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-between file-btn" data-toggle="modal" data-target=".bd-example-modal-lg" data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">
@@ -431,6 +446,7 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -570,6 +586,7 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -686,6 +703,7 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -840,6 +858,7 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -993,6 +1012,7 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
+                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)

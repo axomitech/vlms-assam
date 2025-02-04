@@ -241,8 +241,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-6">
-                                                                    <label class="form-label fw-bold">Mobile<span
-                                                                            class="text text-danger fw-bold">*</span></label>
+                                                                    <label class="form-label fw-bold">Mobile</label>
                                                                     <input type="text" name="recipient_mobile"
                                                                         id="recipient_mobile"
                                                                         class="form-control form-control-sm"
@@ -251,8 +250,7 @@
                                                                         class="text text-danger recipient_mobile fw-bold"></label>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <label class="form-label fw-bold">Email<span
-                                                                            class="text text-danger fw-bold">*</span></label>
+                                                                    <label class="form-label fw-bold">Email</label>
                                                                     <input type="text" name="recipient_email"
                                                                         id="recipient_email"
                                                                         class="form-control form-control-sm"
