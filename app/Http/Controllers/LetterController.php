@@ -316,6 +316,7 @@ class LetterController extends Controller
             ['user_departments.department_id','=',session('role_dept')]
         ]
             ,$assignedByDeligate);
+            
        if($legacy <= 0){
            return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy','diarizerName','deligateAssignedLetters'));
 
