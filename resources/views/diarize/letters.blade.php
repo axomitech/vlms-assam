@@ -374,15 +374,14 @@
                                                             </a>
                                                             @endif
                                                             @endif
-                                            
                                                             @if ($value['stage_status'] < 3)
-                                                                @isset($assignedLetters[$i - 1])
+                                                                @if(isset($assignedLetters[$i - 1]))
                                                                     @if ($assignedLetters[$i - 1] > 0)
                                                                         <a href="{{ route('actions', [encrypt($value['letter_id'])]) }}" class="dropdown-item d-flex justify-content-between">
                                                                             Send to Department <i class="fas fa-list ml-1"></i>
                                                                         </a>
                                                                     @endif
-                                                                @endisset
+                                                                @endif
                                                             @endif
                                             
                                                             <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}" class="dropdown-item d-flex justify-content-between">

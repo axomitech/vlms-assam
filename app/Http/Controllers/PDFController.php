@@ -204,6 +204,6 @@ class PDFController extends Controller
         //     echo 'hi';
         // }
         // $mpdf->Output($outputPath, \Mpdf\Output\Destination::FILE);
-        $mpdf->Output('test.pdf', 'D');
+        $mpdf->Output(Carbon::now().'.pdf', 'D');
     }
 }
