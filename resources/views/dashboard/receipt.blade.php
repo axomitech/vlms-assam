@@ -313,7 +313,7 @@
 
                             tableBody += `<tr>
                         <td><small>${serialNumber++}</small></td>
-                        <td><small>${letter.crn}</small></td>
+                        <td><small>${letter.crn}</small><br>Diarized By:<b>${letter.name}</b></td>
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.sender_name}</small></td>

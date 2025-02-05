@@ -244,6 +244,7 @@
                                         <th scope="col"><small><b>Letter No.</b></small></th>
                                         <th scope="col"><small><b>Recipient Name</b></small></th>
                                         <th scope="col"><small><b>Issue Date</b></small></th>
+                                        <th scope="col"><small><b>Download</b></small></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -319,11 +320,12 @@
     
                             tableBody += `<tr>
                                 <td><small>${serialNumber++}</small></td>
-                                <td><small>${letter.crn}</small></td>
+                                <td><small>${letter.crn}</small><br>Diarized By: <b>${letter.name}</b></td>
                                 <td style="width: 30%;">${truncatedSubject}</td>
                                 <td><small>${letter.letter_no}</small></td>
                                 <td><small>${letter.recipient_name}</small></td>
                                 <td><small>${letter.issue_date}</small></td>
+                                <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                             </tr>`;
                         });
     
