@@ -207,6 +207,7 @@ class LetterController extends Controller
         ],'hod_id');
         $diarizedBy = [];
         $diarizerName = [];
+        $assignedByDeligate = [];
         foreach($letters AS $value){
             if(session('role') == 1){
                 $condition = [
@@ -220,6 +221,10 @@ class LetterController extends Controller
                     'in_hand'=> true,
                 ];
             }else if(session('role') == 2){
+                $assignCount = LetterAssign::checkLetterAssign($value['letter_id']);
+                if($assignCount > 0){
+                    $assignedByDeligate[$i] = $value['letter_id'];
+                }
                 $condition = [
                     'letter_id'=>$value['letter_id'],
                     // 'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
@@ -230,6 +235,7 @@ class LetterController extends Controller
                 ];
             }
             //$assignedLetters[$i] = LetterAssign::checkLetterAssign($value['letter_id']);
+            $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
             $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
             $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
             
@@ -305,13 +311,18 @@ class LetterController extends Controller
             $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
 
         }
-        if($legacy <= 0){
-           return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy','diarizerName'));
+        
+        $deligateAssignedLetters = Letter::showLetterAndSender([
+            ['user_departments.department_id','=',session('role_dept')]
+        ]
+            ,$assignedByDeligate);
+       if($legacy <= 0){
+           return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy','diarizerName','deligateAssignedLetters'));
 
 
         }else{
             
-        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','diarizedBy','diarizerName'));
+        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','diarizedBy','diarizerName','deligateAssignedLetters'));
 
         }
     }

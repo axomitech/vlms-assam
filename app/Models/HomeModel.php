@@ -116,7 +116,8 @@ class HomeModel extends Model
     {
         return DB::table('letters')
             ->join('senders', 'letters.id', '=', 'senders.letter_id')
-
+            ->join('user_departments','letters.user_id','=','user_departments.id')
+            ->join('users','users.id','=','user_departments.user_id')
             ->where('letters.department_id', '=', session('role_dept'))
             ->where('letter_category_id', $category_id)
             ->where('letters.receipt', '=', true)
@@ -128,6 +129,8 @@ class HomeModel extends Model
         //Receptients table data is retrieved here.
         return DB::table('letters')
             ->join('recipients', 'letters.id', '=', 'recipients.letter_id')
+            ->join('user_departments','letters.user_id','=','user_departments.id')
+            ->join('users','users.id','=','user_departments.user_id')
             ->where('letters.department_id', '=', session('role_dept'))
             ->where('letter_category_id', $category_id)
             ->where('letters.receipt', '=', false)
