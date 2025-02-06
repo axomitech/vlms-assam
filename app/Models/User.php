@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -43,5 +44,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public static function changePassword($password){
+        $user  = User::find($password[0]);
+        $updateStatus = 0;
+        if(Hash::check($password[1], $user->password)){
+            $user->password = Hash::make($password[2]);
+            $updateStatus =  $user->save();
+        }
+        return $updateStatus;
     }
 }
