@@ -100,9 +100,11 @@
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <span class="dropdown-item dropdown-header">{{ session('department') }}</span>
                         <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#myModal"><i class="fas fa-user-shield mr-2"></i>Change Password</a>
+                        <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fas fa-sign-out mr-2"></i> Logout
+                            <i class="fas fa-door-open mr-2"></i> Logout
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
@@ -538,6 +540,61 @@
         </aside>
         <!-- /.control-sidebar -->
     </div>
+    <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          
+          <h4 class="modal-title">Password Change Form</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-7">
+                    <form id="change-password-form">
+                        <div class="form-group row">
+                            <div class="col-md-8">
+                                <label>Old Password</label>
+                            <input type="password" name="old_password" class="form-control" placeholder="Your old password">
+                            <label class="text text-danger old_password"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-8">
+                                <label>New Password</label>
+                                <input type="password" name="new_password" class="form-control" placeholder="Your new password">
+                                <label class="text text-danger new_password"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary btn-sm save-btn" data-url="{{ route('change_password') }}"
+                                data-form="#change-password-form"
+                                data-message="Do you want to change your password?">UPDATE</button>
+                            </div>
+                        </div>
+                  </form>
+                </div>
+                <div class="col-md-5">
+                    <h5 class="text text-center text-warning">Password Rules</h5>
+                    <hr>
+                    <ol>
+                        <li class="text-danger">Password must be minimum 8 characters long.</li>
+                        <li class="text-danger">Password must contain atleast 1 upper case letter</li>
+                        <li class="text-danger">Password must contain atleast 1 lower case letter</li>
+                        <li class="text-danger">Password must contain atleast 1 number</li>
+                        <li class="text-danger">Password must contain atleast 1 special characters such as @,#,$ etc.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
     <!-- ./wrapper -->
 
     <!-- jQuery -->

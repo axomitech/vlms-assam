@@ -74,7 +74,7 @@
                                         @foreach ($letters as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
-                                                <td><a href="" href="" id="letter-link" data-toggle="modal"
+                                                <td><a href="" href="" class="letter-link" data-toggle="modal"
                                                     data-target=".bd-example-modal-lg"
                                                     data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>Diarize
@@ -230,7 +230,9 @@
                                         @foreach ($inboxLetters[0] as $value)
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
-                                                <td>{{ $value['crn'] }}
+                                                <td><a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
@@ -286,7 +288,9 @@
                                         @foreach ($inboxLetters[1] as $value)
                                         <tr class="text text-sm text-justify">
                                             <td>{{ $i }}</td>
-                                            <td>{{ $value['crn'] }}
+                                            <td><a href="" href="" class="letter-link" data-toggle="modal"
+                                                data-target=".bd-example-modal-lg"
+                                                data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                 <br>Diarize
                                                 Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                 <br>Recieved
@@ -439,7 +443,9 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
-                                                    {{ $value['crn'] }}
+                                                    <a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>
                                                     Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -551,7 +557,9 @@
                                         <tr class="text text-sm text-justify">
                                             <td>{{ $i }}</td>
                                             <td>
-                                                {{ $value['crn'] }}
+                                                <a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                 <br>
                                                 Diarize
                                                 Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -692,7 +700,9 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
-                                                    {{ $value['crn'] }}
+                                                    <a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>
                                                     Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -809,7 +819,9 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
-                                                    {{ $value['crn'] }}
+                                                    <a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>
                                                     Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -964,7 +976,9 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
-                                                    <a>{{ $value['crn'] }}</a>
+                                                    <a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>
                                                     Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -1118,7 +1132,9 @@
                                             <tr class="text text-sm text-justify">
                                                 <td>{{ $i }}</td>
                                                 <td>
-                                                    {{ $value['crn'] }}
+                                                    <a href="" href="" class="letter-link" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lg"
+                                                    data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>
                                                     Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
@@ -1516,7 +1532,7 @@
         $(document).on('click','#hod-forward',function(){
 
         });
-        $(document).on('click','#letter-link',function(){
+        $(document).on('click','.letter-link',function(){
             $('#assign-div').hide();
             $('#letter-view').attr('src', $(this).data('letter_path'));
         });
