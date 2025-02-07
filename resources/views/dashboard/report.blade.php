@@ -158,7 +158,7 @@
                                         <th scope="col"><small><b>Diarize No.</b></small></th>
                                         <th scope="col"><small><b>Subject</b></small></th>
                                         <th scope="col"><small><b>Letter No.</b></small></th>
-                                        <th scope="col"><small><b>Received Date</b></small></th>
+                                        <th scope="col"><small><b>Received/Issue Date</b></small></th>
                                         <th scope="col"><small><b>Download</b></small></th>
                                     </tr>
                                 </thead>
@@ -221,6 +221,7 @@
         let categoryId = $(this).data('category-id');
         let categoryName = $(this).data('category-name');
         let category = $(this).data('category');
+        
         let url = `{{url('getCategoryReport')}}?category_id=${categoryId}&category=${encodeURIComponent(category)}`;
         // Fetch letters using AJAX
         $.ajax({
@@ -233,6 +234,13 @@
 
                 // Build table rows for DataTable
                 response.forEach(function(letter) {
+                    let letterIssueReceiveDate = ''
+                    if(letter.received_date != null){
+                        letterIssueReceiveDate = letter.received_date
+                    }
+                    else{
+                        letterIssueReceiveDate = letter.received_date
+                    }
                     let letterPath = letter.letter_path.replace("public/","");
                     let truncatedSubject = letter.subject.length > 100 ?
                         `<div class="text-block" id="textBlock${letter.id}">
@@ -261,7 +269,7 @@
                                                                             </td>
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
-                        <td><small>${letter.received_date}</small></td>
+                        <td><small>${letterIssueReceiveDate}</small></td>
                         <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                     </tr>`;
                 });
