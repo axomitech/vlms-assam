@@ -89,7 +89,7 @@ class ReportModel extends Model
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
             ->join('user_departments','user_departments.id','=','letters.user_id')
             ->join('users','users.id','=','user_departments.user_id')
-            ->select('crn','subject','letter_no','received_date','letter_path','letters.id AS letter_id','name')
+            ->select('crn','subject','letter_no','received_date','letter_path','letters.id AS letter_id','name','issue_date')
             ->where('letters.department_id', '=', session('role_dept'))
             ->where('letters.letter_category_id', '=', $category_id)
             ->where('letters.stage_status', 1)

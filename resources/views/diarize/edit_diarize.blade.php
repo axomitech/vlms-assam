@@ -159,7 +159,12 @@
                                                                     readonly>
                                                                 <label class="text text-danger diary_date fw-bold"></label>
                                                             </div>
-
+                                                            <div class="col-md-12">
+                                                                <label class="form-label fw-bold">ECR No.<span
+                                                                    class="text text-danger fw-bold">*</span></label>
+                                                                <input type="text" class="form-control" placeholder="Letter ECR No." name="ecr_no" id="ecr_no" value="{{$letterData['ecr_no']}}">
+                                                                <label class="text text-danger ecr_no"></label>
+                                                            </div>
                                                             <div class="col-md-12">
                                                                 <input type="hidden" name="receipt"
                                                                      @if($letterData['receipt'] == true) value="1" @else value="0" @endif>

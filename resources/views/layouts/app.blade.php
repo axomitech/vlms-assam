@@ -479,8 +479,8 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item p-3">
-                            <a href="{{ route('test') }}" class="nav-link"
-                                style="background-color: #B58C18; width:90%; border-radius:0.75rem">
+                            <a href="#" class="nav-link"
+                                style="background-color: #B58C18; width:90%; border-radius:0.75rem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>
                                     Logout
