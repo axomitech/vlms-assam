@@ -161,7 +161,12 @@
                                                                     readonly>
                                                                 <label class="text text-danger diary_date fw-bold"></label>
                                                             </div>
-
+                                                            <div class="col-md-12">
+                                                                <label class="form-label fw-bold">ECR No.<span
+                                                                    class="text text-danger fw-bold">*</span></label>
+                                                                <input type="text" class="form-control" placeholder="Letter ECR No." name="ecr_no" id="ecr_no">
+                                                                <label class="text text-danger ecr_no"></label>
+                                                            </div>
                                                             <div class="col-md-3">
                                                                 <input type="hidden" name="receipt"
                                                                     value="{{ $receipt }}">

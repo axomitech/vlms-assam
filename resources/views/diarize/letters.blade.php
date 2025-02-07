@@ -77,11 +77,13 @@
                                                 <td><a href="" href="" class="letter-link" data-toggle="modal"
                                                     data-target=".bd-example-modal-lg"
                                                     data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
+                                                    <br>
+                                                    ECR No.:{{$value['ecr_no']}}
                                                     <br>Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -134,7 +136,7 @@
                                                                             class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
                                                                             title="Assign Letter"
                                                                             style="min-height: 30px; font-size: 12px;">
-                                                                            @if (Auth::user()->id == $diarizedBy[$value['crn']])
+                                                                            @if (Auth::user()->id == $value['diarizer_id'])
                                                                             Pull Up
                                                                             <i class="fas fa-arrow-up ml-1"></i>
                                                                             @else
@@ -152,7 +154,7 @@
                                                                         
                                                         @if (!$assignedLetters[$i - 1])
                                                             <div class="mb-1">
-                                                                @if (Auth::user()->id == $diarizedBy[$value['crn']])
+                                                                @if (Auth::user()->id == $value['diarizer_id'])
                                                                 @if ($legacy == 0)
                                                                     @if ($value['receipt'] == true)
                                                                     
@@ -237,7 +239,8 @@
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> ECR No.:{{$value['ecr_no']}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -295,7 +298,8 @@
                                                 Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                 <br>Recieved
                                                 Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                <br> ECR No.:{{$value['ecr_no']}}
+                                                <br> Diarized By: <b>{{$value['name']}}</b>
                                             </td>
                                             <td style="width: 30%;">
                                                 @if (strlen($value['subject']) > 100)
@@ -452,7 +456,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> ECR No.:{{$value['ecr_no']}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -566,7 +571,8 @@
                                                 <br>
                                                 Recieved
                                                 Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                <br> ECR No.:{{$value['ecr_no']}}
+                                                <br> Diarized By: <b>{{$value['name']}}</b>
                                             </td>
                                             <td style="width: 30%;">
                                                 @if (strlen($value['subject']) > 100)
@@ -709,7 +715,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> ECR No.:{{$value['ecr_no']}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -828,7 +835,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> ECR No.:{{$value['ecr_no']}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -985,7 +993,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> ECR No.:{{$value['ecr_no']}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -1141,7 +1150,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: {{$diarizerName[$value['crn']]}}
+                                                    <br> ECR No.:{{$value['ecr_no']}}
+                                                    <br> Diarized By: <b>{{$value['name']}}</b>
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)

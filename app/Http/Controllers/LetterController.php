@@ -89,7 +89,8 @@ class LetterController extends Controller
                     $request->receipt,
                     $request->sub_category,
                     $request->legacy,
-                    $request->other_sub_category
+                    $request->other_sub_category,
+                    $request->ecr_no
                 ];
 
                 $letterId = Letter::storeLetter($letterDetails);
@@ -205,8 +206,6 @@ class LetterController extends Controller
         $hod = Common::getSingleColumnValue('assign_deligates',[
             'deligate_id'=>session('role_user')
         ],'hod_id');
-        $diarizedBy = [];
-        $diarizerName = [];
         $assignedByDeligate = [];
         foreach($letters AS $value){
             if(session('role') == 1){
@@ -238,17 +237,6 @@ class LetterController extends Controller
             $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
             $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
             $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
-            
-            $diarizedBy[$value['crn']] =  Common::getSingleColumnValue('letters',[
-                'id'=>$value['letter_id']
-            ],'user_id');
-            $userId =  Common::getSingleColumnValue('user_departments',[
-                'id'=>$diarizedBy[$value['crn']]
-            ],'user_id');
-            $diarizerName[$value['crn']] =  Common::getSingleColumnValue('users',[
-                'id'=>$userId
-            ],'name');
-            $diarizedBy[$value['crn']] = $userId;
             $i++;
         }
         $actionSents = ActionSent::getForwardedActions();
@@ -269,6 +257,7 @@ class LetterController extends Controller
            ['user_departments.department_id','=',session('role_dept')],
             ['stage_status','>=',3]
         ],$letterIds);
+        
         $receiverId = Common::getSingleColumnValue('user_departments',[
             'department_id'=>session('role_dept'),
             'user_id'=>Auth::user()->id,
@@ -318,12 +307,12 @@ class LetterController extends Controller
             ,$assignedByDeligate);
             
        if($legacy <= 0){
-           return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','diarizedBy','diarizerName','deligateAssignedLetters'));
+           return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','deligateAssignedLetters'));
 
 
         }else{
             
-        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','diarizedBy','diarizerName','deligateAssignedLetters'));
+        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','deligateAssignedLetters'));
 
         }
     }
@@ -363,10 +352,8 @@ class LetterController extends Controller
             $letterData['letter_path'] = $value['letter_path'];
             $letterData['other_sub_category'] = $value['letter_other_sub_categories'];
             $letterData['issue_date'] = $value['issue_date'];
+            $letterData['ecr_no'] = $value['ecr_no'];
         }
-        // print_r($letterData);
-        // echo $letterData['address'];
-        // die();
         $priorities = LetterPriority::getAllPriorities();
         $letterCategories = LetterCategory::getAllLetterCategories();
         return view('diarize.edit_diarize', compact('priorities', 'letterCategories', 'letterData'));
@@ -437,6 +424,7 @@ class LetterController extends Controller
                     $request->legacy,
                     $crn,
                     $request->other_sub_category,
+                    $request->ecr_no
                 ];
 
                 Letter::updateLetter($letterDetails,$letter);
