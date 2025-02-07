@@ -138,6 +138,33 @@
             </div>
         </div>
     </div>
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs plate">
+                            <div class="card-body">
+                                <iframe src="" style="width: 100%; height: 400px;" id="letter-view"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section('scripts')
     @include('layouts.scripts')
     <script>
@@ -235,6 +262,13 @@
                 ]
             }).buttons().container().appendTo(
                 '#letter-table_wrapper .col-md-6:eq(0)'); // Adjust the container as per your layout
+        });
+    </script>
+    <script>
+        $(document).on('click', '.assign-link', function() {
+            $('#letter-view').attr('src', $(this).data('letter_path'));
+            $('#assign-div').show();
+            $('#exampleModalLabel').html("<strong>Letter No.: "+$(this).data('letter')+"</strong>");
         });
     </script>
 @endsection

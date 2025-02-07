@@ -62,7 +62,11 @@ class SearchController extends Controller
 
                 $table .= '<tr>';
                 $table .= '<td>' . $i++ . '.</td>';
-                $table .= '<td><small><b>' . $result->crn . '</b><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: '.$diarizerName[$result->crn].'</small></td>';
+                $table .= '<td><small><a href="" class="assign-link"
+                                                                            data-toggle="modal"
+                                                                            data-target=".bd-example-modal-lg"
+                                                                            data-letter="'.$result->letter_no.'"
+                                                                            data-letter_path="'.storageUrl($result->letter_path).'"><b>' . $result->crn . '</b></a><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: '.$diarizerName[$result->crn].'</small></td>';
                 $table .= '<td><small><i>Subject</i>: ' . $result->subject . '<br><i>Letter No.</i>: ' . $result->letter_no . '<br><i>Letter Date</i>: ' . date_format(date_create($result->letter_date), "d/m/Y") . '</small></td>';
                 $table .= '<td><small><i>' . $from_to . '</i>: ' . $name_designation . '</small></td>';
                 $table .= '<td><small>' . $result->category_name . '</small></td>';
