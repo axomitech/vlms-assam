@@ -172,6 +172,33 @@
             </section>
         </div>
     </div>
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs plate">
+                            <div class="card-body">
+                                <iframe src="" style="width: 100%; height: 400px;" id="letter-view"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -194,7 +221,7 @@
         let categoryId = $(this).data('category-id');
         let categoryName = $(this).data('category-name');
         let category = $(this).data('category');
-        let url = `/getCategoryReport?category_id=${categoryId}&category=${encodeURIComponent(category)}`;
+        let url = `{{url('getCategoryReport')}}?category_id=${categoryId}&category=${encodeURIComponent(category)}`;
         // Fetch letters using AJAX
         $.ajax({
             url: url,
@@ -206,6 +233,7 @@
 
                 // Build table rows for DataTable
                 response.forEach(function(letter) {
+                    let letterPath = letter.letter_path.replace("public/","");
                     let truncatedSubject = letter.subject.length > 100 ?
                         `<div class="text-block" id="textBlock${letter.id}">
                             <p class="shortText text-justify text-sm">
@@ -223,7 +251,14 @@
 
                     tableBody += `<tr>
                         <td><small>${serialNumber++}</small></td>
-                        <td><small>${letter.crn}</small></td>
+                        <td><small><a href="" class="assign-link"
+                                                                            data-toggle="modal"
+                                                                            data-target=".bd-example-modal-lg"
+                                                                            data-letter="${letter.letter_no}"
+                                                                            data-letter_path="{{ storageUrl('${letterPath}') }}">${letter.crn}</a></small>
+                                                                            <br>
+                                                                            Diarized By: <b>${letter.name}</b>
+                                                                            </td>
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.received_date}</small></td>
@@ -386,6 +421,13 @@
             event.preventDefault();
             showCategoryData("forwarded");
             setActiveBox("forwardedBox");
+        });
+    </script>
+    <script>
+        $(document).on('click', '.assign-link', function() {
+            $('#letter-view').attr('src', $(this).data('letter_path'));
+            $('#assign-div').show();
+            $('#exampleModalLabel').html("<strong>Letter No.: "+$(this).data('letter')+"</strong>");
         });
     </script>
 @endsection
