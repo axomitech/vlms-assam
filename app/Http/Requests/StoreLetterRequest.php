@@ -51,7 +51,7 @@ class StoreLetterRequest extends FormRequest
             'recipient_email' => 'nullable|email',
             'organization' => 'required',
             'address' => 'nullable',
-            'ecr_no' => 'required',
+            'ecr_no' => 'nullable',
         ];
     }
 
