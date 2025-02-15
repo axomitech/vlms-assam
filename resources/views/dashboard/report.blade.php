@@ -265,10 +265,20 @@
                                                                             data-letter="${letter.letter_no}"
                                                                             data-letter_path="{{ storageUrl('${letterPath}') }}">${letter.crn}</a></small>
                                                                             <br>
-                                                                            Diarized By: <b>${letter.name}</b>
+                                                                            Diarized By: ${letter.name}
                                                                             </td>
                         <td style="width: 30%;">${truncatedSubject}</td>
-                        <td><small>${letter.letter_no}</small></td>
+                        <td><small>
+                            <b>${letter.letter_no}</b>
+                            <br>
+                            <b>${letter.ecr_no}</b>
+                            <br>
+                            Sender:<b>${letter.sender_name}</b>
+                            <br>
+                            ${letter.sender_designation}
+                            <br>
+                            ${letter.organization}
+                            </small></td>
                         <td><small>${letterIssueReceiveDate}</small></td>
                         <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                     </tr>`;
