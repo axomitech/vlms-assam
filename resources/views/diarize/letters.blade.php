@@ -78,12 +78,12 @@
                                                     data-target=".bd-example-modal-lg"
                                                     data-letter="{{ $value['letter_id'] }}" data-letter_path="{{ storageUrl($value['letter_path']) }}">{{ $value['crn'] }}</a>
                                                     <br>
-                                                    ECR No.:{{$value['ecr_no']}}
+                                                    ECR No.:<b>{{$value['ecr_no']}}</b>
                                                     <br>Diarize
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -101,17 +101,17 @@
                                                         @else
                                                             {{ $value['subject'] }}
                                                     @endif
-                                                    <br>Letter No: {{ $value['letter_no'] }}
+                                                    <br>Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
 
                                                 <td>
-                                                    {{ $value->recipient_name }}
+                                                    <b>{{ $value->recipient_name }}
                                                     {{ $value->sender_name }},
                                                     <br>
-                                                    {{ $value->sender_designation }},{{ $value['organization'] }}
+                                                    {{ $value->sender_designation }},{{ $value['organization'] }}</b>
                                                 </td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
@@ -239,8 +239,8 @@
                                                     Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                     <br>Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> ECR No.:{{$value['ecr_no']}}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -258,13 +258,13 @@
                                                         @else
                                                             {{ $value['subject'] }}
                                                     @endif
-                                                    <br>Letter No: {{ $value['letter_no'] }}
+                                                    <br>Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
-                                                <td>{{ $value['sender_name'] }},<br>
-                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
+                                                <td><b>{{ $value['sender_name'] }},<br>
+                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}</b></td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
                                                     @if ($value['stage_status']  == 1 || $value['stage_status']  == 2 || $value['stage_status'] == 6 || $value['stage_status'] == 3)
@@ -298,8 +298,8 @@
                                                 Date:{{ \Carbon\Carbon::parse($value['diary_date'])->format('d/m/Y') }}
                                                 <br>Recieved
                                                 Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                <br> ECR No.:{{$value['ecr_no']}}
-                                                <br> Diarized By: <b>{{$value['name']}}</b>
+                                                <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                <br> Diarized By: {{$value['name']}}
                                             </td>
                                             <td style="width: 30%;">
                                                 @if (strlen($value['subject']) > 100)
@@ -317,14 +317,14 @@
                                                     @else
                                                         {{ $value['subject'] }}
                                                 @endif
-                                                <br>Letter No: {{ $value['letter_no'] }}
+                                                <br>Letter No: <b>{{ $value['letter_no'] }}</b>
                                                 <br>Letter Date:
                                                 {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                             </td>
 
-                                            <td>{{ $value['sender_name'] }},<br>
+                                            <td><b>{{ $value['sender_name'] }},<br>
                                                 {{ $value['sender_designation'] }},{{ $value['organization'] }}</td>
-                                            <td>{{ $value['category_name'] }}</td>
+                                            <td>{{ $value['category_name'] }}</b></td>
                                             <td>
                                                 @if (session('role') == 2)
                                                     <div class="mb-1">
@@ -456,8 +456,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> ECR No.:{{$value['ecr_no']}}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -475,13 +475,13 @@
                                                         @else
                                                             {{ $value['subject'] }}
                                                     @endif
-                                                    <br>Letter No: {{ $value['letter_no'] }}
+                                                    <br>Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
-                                                <td>{{ $value['sender_name'] }},<br>
-                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                <td><b>{{ $value['sender_name'] }},<br>
+                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}</b>
                                                 </td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 <td>
@@ -571,8 +571,8 @@
                                                 <br>
                                                 Recieved
                                                 Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                <br> ECR No.:{{$value['ecr_no']}}
-                                                <br> Diarized By: <b>{{$value['name']}}</b>
+                                                <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                <br> Diarized By: {{$value['name']}}
                                             </td>
                                             <td style="width: 30%;">
                                                 @if (strlen($value['subject']) > 100)
@@ -590,13 +590,13 @@
                                                     @else
                                                         {{ $value['subject'] }}
                                                 @endif
-                                                <br>Letter No: {{ $value['letter_no'] }}
+                                                <br>Letter No: <b>{{ $value['letter_no'] }}</b>
                                                 <br>Letter Date:
                                                 {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                             </td>
 
-                                            <td>{{ $value['sender_name'] }},<br>
-                                                {{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                            <td><b>{{ $value['sender_name'] }},<br>
+                                                {{ $value['sender_designation'] }},{{ $value['organization'] }}</b>
                                             </td>
                                             <td>{{ $value['category_name'] }}</td>
                                             <td>
@@ -715,8 +715,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> ECR No.:{{$value['ecr_no']}}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -735,13 +735,13 @@
                                                             {{ $value['subject'] }}
                                                     @endif
                                                     <br>
-                                                    Letter No: {{ $value['letter_no'] }}
+                                                    Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>
                                                     Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
-                                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                <td><b>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}</b>
                                                 </td>
                                                 <td>{{ $value['category_name'] }},{{ $value['organization'] }}</td>
                                                 <td>
@@ -835,8 +835,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> ECR No.:{{$value['ecr_no']}}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -854,13 +854,13 @@
                                                         @else
                                                             {{ $value['subject'] }}
                                                     @endif
-                                                    <br>Letter No: {{ $value['letter_no'] }}
+                                                    <br>Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
-                                                <td>{{ $value['sender_name'] }},<br>
-                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                <td><b>{{ $value['sender_name'] }},<br>
+                                                    {{ $value['sender_designation'] }},{{ $value['organization'] }}</b>
                                                 </td>
                                                 <td>{{ $value['category_name'] }}</td>
                                                 {{-- <td>
@@ -993,8 +993,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> ECR No.:{{$value['ecr_no']}}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -1013,13 +1013,13 @@
                                                             {{ $value['subject'] }}
                                                     @endif
                                                     <br>
-                                                    Letter No: {{ $value['letter_no'] }}
+                                                    Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>
                                                     Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
-                                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                <td><b>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}</b>
                                                 </td>
                                                 <td>{{ $value['category_name'] }},<br>{{ $value['organization'] }}</td>
                                                 {{-- <td>
@@ -1150,8 +1150,8 @@
                                                     <br>
                                                     Recieved
                                                     Date:{{ \Carbon\Carbon::parse($value['received_date'])->format('d/m/Y') }}
-                                                    <br> ECR No.:{{$value['ecr_no']}}
-                                                    <br> Diarized By: <b>{{$value['name']}}</b>
+                                                    <br> ECR No.:<b>{{$value['ecr_no']}}</b>
+                                                    <br> Diarized By: {{$value['name']}}
                                                 </td>
                                                 <td style="width: 30%;">
                                                     @if (strlen($value['subject']) > 100)
@@ -1170,13 +1170,13 @@
                                                             {{ $value['subject'] }}
                                                     @endif
                                                     <br>
-                                                    Letter No: {{ $value['letter_no'] }}
+                                                    Letter No: <b>{{ $value['letter_no'] }}</b>
                                                     <br>
                                                     Letter Date:
                                                     {{ \Carbon\Carbon::parse($value['letter_date'])->format('d/m/Y') }}
                                                 </td>
 
-                                                <td>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}
+                                                <td><b>{{ $value['sender_name'] }}<br>{{ $value['sender_designation'] }},{{ $value['organization'] }}</b>
                                                 </td>
                                                 <td>{{ $value['category_name'] }},{{ $value['organization'] }}</td>
                                                 {{-- <td>

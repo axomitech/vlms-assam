@@ -76,7 +76,7 @@
                                                             <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Letter Category<span
                                                                         class="text text-danger fw-bold">*</span></label>
-                                                                <select class="form-control form-control-sm" name="category"
+                                                                <select class="form-control form-control-sm js-example-basic-single" name="category"
                                                                     id="category">
                                                                     <option value="">Select Category</option>
                                                                     @foreach ($letterCategories as $value)
@@ -91,7 +91,7 @@
                                                             <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Letter Sub Category<span
                                                                         class="text text-danger fw-bold">*</span></label>
-                                                                <select class="form-control form-control-sm" name="sub_category"
+                                                                <select class="form-control form-control-sm js-example-basic-single" name="sub_category"
                                                                     id="sub_category">
                                                                     <option value="">Select Sub Category</option>
                                                                     
@@ -506,6 +506,7 @@ function renderPage(pdf, pageNumber, container) {
         console.error(`Error rendering page ${pageNumber}:`, error);
     });
 }
+$('.js-example-basic-single').select2();
 
     </script>
 @endsection

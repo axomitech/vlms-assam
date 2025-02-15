@@ -329,6 +329,10 @@
                         let serialNumber = 1; // Initialize serial number
     
                         response.forEach(function(letter) {
+                            let ecr_no = letter.ecr_no;
+                            if(ecr_no == null){
+                                ecr_no = "";
+                            }
                             let letterPath = letter.letter_path.replace("public/","");
                             let truncatedSubject = letter.subject.length > 100 ?
                                 `<div class="text-block" id="textBlock${letter.id}">
@@ -351,10 +355,12 @@
                                                                             data-toggle="modal"
                                                                             data-target=".bd-example-modal-lg"
                                                                             data-letter="${letter.letter_no}"
-                                                                            data-letter_path="{{ storageUrl('${letterPath}') }}">${letter.crn}</a></small><br>Diarized By: <b>${letter.name}</b></td>
+                                                                            data-letter_path="{{ storageUrl('${letterPath}') }}">${letter.crn}</a></small><br>Diarized By:${letter.name}</td>
                                 <td style="width: 30%;">${truncatedSubject}</td>
-                                <td><small>${letter.letter_no}</small></td>
-                                <td><small>${letter.recipient_name}</small></td>
+                                <td><small><b>${letter.letter_no}</b>
+                            <br>
+                            <b>${ecr_no}</b></small></td>
+                                <td><small><b>${letter.recipient_name}</b></small></td>
                                 <td><small>${letter.issue_date}</small></td>
                                 <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                             </tr>`;
