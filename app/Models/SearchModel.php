@@ -67,7 +67,7 @@ class SearchModel extends Model
         if (!empty($inputData['received_from']) && !empty($inputData['received_to'])) {
             $query->whereBetween('received_date', [$inputData['received_from'], $inputData['received_to']]);
         }
-
+        $query = $query->whereIn('legacy',[true,false]);
         $query->orderBy('letters.id', 'desc');
 
         return $query->get();

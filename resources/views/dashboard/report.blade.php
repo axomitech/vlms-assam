@@ -241,6 +241,10 @@
                     else{
                         letterIssueReceiveDate = letter.received_date
                     }
+                    let ecr_no = letter.ecr_no;
+                    if(ecr_no == null){
+                        ecr_no = "";
+                    }
                     let letterPath = letter.letter_path.replace("public/","");
                     let truncatedSubject = letter.subject.length > 100 ?
                         `<div class="text-block" id="textBlock${letter.id}">
@@ -271,7 +275,7 @@
                         <td><small>
                             <b>${letter.letter_no}</b>
                             <br>
-                            <b>${letter.ecr_no}</b>
+                            <b>${ecr_no}</b>
                             <br>
                             Sender:<b>${letter.sender_name}</b>
                             <br>
