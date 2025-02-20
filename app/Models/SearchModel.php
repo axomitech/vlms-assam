@@ -40,19 +40,32 @@ class SearchModel extends Model
 
         // Add text search filter
         if (!empty($inputData['text_search'])) {
-            $searchTerm = strtolower($inputData['text_search']);
-            $query->where(function ($q) use ($searchTerm) {
-                $q->orWhere(DB::raw('lower(REPLACE(letter_no, \'\\\\\', \'\'))'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(subject)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(senders.organization)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(recipients.organization)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(senders.sender_name)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(recipients.recipient_name)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(senders.sender_email)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(recipients.recipient_email)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(letter_categories.category_name)'), 'like', '%' . $searchTerm . '%')
-                  ->orWhere(DB::raw('lower(letter_sub_categories.sub_category_name)'), 'like', '%' . $searchTerm . '%');
+            $searchTerm = $inputData['text_search'];
+            // $query->where(function ($q) use ($searchTerm) {
+            //     $q->orWhere(DB::raw('lower(REPLACE(letter_no, \'\\\\\', \'\'))'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(subject)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(senders.organization)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(recipients.organization)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(senders.sender_name)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(recipients.recipient_name)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(senders.sender_email)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(recipients.recipient_email)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(letter_categories.category_name)'), 'like', '%' . $searchTerm . '%')
+            //       ->orWhere(DB::raw('lower(letter_sub_categories.sub_category_name)'), 'like', '%' . $searchTerm . '%');
+            // });
+            $query->where(function ($q) use ($searchTerm){
+                $q->where('letter_no', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('subject', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('senders.organization', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('recipients.organization', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('senders.sender_name', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('recipients.recipient_name', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('senders.sender_email', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('recipients.recipient_email', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('letter_categories.category_name', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('letter_sub_categories.sub_category_name', 'like', '%' . $searchTerm . '%');
             });
+            
         }
 
         // Other filters (e.g., category, subcategory)
@@ -67,7 +80,6 @@ class SearchModel extends Model
         if (!empty($inputData['received_from']) && !empty($inputData['received_to'])) {
             $query->whereBetween('received_date', [$inputData['received_from'], $inputData['received_to']]);
         }
-        $query = $query->whereIn('legacy',[true,false]);
         $query->orderBy('letters.id', 'desc');
 
         return $query->get();
