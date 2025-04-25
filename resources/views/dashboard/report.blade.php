@@ -211,7 +211,28 @@
         responsive: true,
         lengthChange: false,
         autoWidth: false,
-        buttons: ["excel", "pdf", "print"]
+        lengthMenu: [
+        [10, 25, 50, -1], // values
+        [10, 25, 50, 'All'] // labels
+    ],
+    pageLength: 5, 
+       buttons: [
+        {
+            extend: 'excelHtml5',
+            text: 'Export Excel',
+            className: 'btn btn-primary btn-sm me-2'
+        },
+        {
+            extend: 'pdfHtml5',
+            text: 'Export PDF',
+            className: 'btn btn-info btn-sm me-2 ml-1'
+        },
+        {
+            extend: 'print',
+            text: 'Print',
+            className: 'btn btn-success btn-sm ml-1'
+        }
+    ]
     });
 
     // Fetch and display category data when category card is clicked
@@ -292,7 +313,7 @@
                 dataTable.clear();  // Clear existing data
                 dataTable.rows.add($(tableBody));  // Add the new rows
                 dataTable.draw();  // Redraw the table
-
+                dataTable.buttons().container().appendTo('#lettersList_wrapper .col-md-6:eq(0)');
                 // Show/hide views
                 $('#cardsContainer').hide();
                 $('#categoryCardsContainer').hide();
