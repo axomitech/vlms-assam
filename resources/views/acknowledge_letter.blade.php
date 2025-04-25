@@ -51,7 +51,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h5 class="card-title"><u>Letter Details</u></h5>
-                                        <p class="card-text"><p>Diarize No.: {{ $result->crn}}</p></p>
+                                        @isset($result->crn)
+                                        <p class="card-text"><p>Diarize No.: {{ $result->crn}}</p></p>   
+                                        @endisset
                                         <p class="card-text">Letter No.:  {{ $letter_no}}</p>
                                         <p class="card-text">Subject: {{ $letter_subject}}</p>
                                         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#viewLetterModal" id="view_letter">View Letter</button>
