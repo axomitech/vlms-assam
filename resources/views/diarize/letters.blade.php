@@ -123,6 +123,19 @@
                                                 </td>
                                                 <td>
                                                     @if (session('role') == 1)
+                                                    <a href="" class="refer-link"
+                                                                            data-toggle="modal"
+                                                                            data-target=".bd-example-modal-lg"
+                                                                            data-letter="{{ $value['letter_id'] }}"
+                                                                            data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                            <span
+                                                                                class="btn btn-sm btn-warning w-100 d-flex align-items-center justify-content-center"
+                                                                                title="Refer Letter"
+                                                                                style="min-height: 30px; font-size: 12px;">
+                                                                                Refer a Letter
+                                                                                <i class="fas fa-paper-plane ml-1"></i>
+                                                                            </span>
+                                                                        </a>
                                                     @if ($value['stage_status'] == 1) 
                                                     @if ($value['receipt'] == true)
                                                                         <div class="mb-1">
@@ -1288,6 +1301,36 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-5" id="refer-div">
+                            <div class="card card-primary card-outline card-outline-tabs">
+                                <div class="card-body">
+                                    <form id="refer-form">
+                                        <div class="form-group">
+                                            <label class="form-label fw-bold">Reference Letter<span
+                                                class="text text-danger fw-bold">*</span></label>
+                                        <select class="form-control js-example-basic-multiple" name="refer_letters[]"
+                                            id="refer_letters" multiple="multiple">
+                                            <option value="">Letter No</option>
+                                            @foreach ($letterNos as $value)
+                                                <option value="{{ $value['letter_no'] }}">
+                                                    {{ $value['letter_no'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label class="text text-danger refer_letters fw-bold"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="hidden" name="assign_letter" class="assign_letter"
+                                                value="">
+                                        </div>
+                                        <button type="button" class="btn btn-primary save-btn"
+                                            data-url="{{route('refer')}}" data-form="#refer-form"
+                                            data-message="That you want to refer to this letter!"
+                                            id="refer-btn">REFER</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-7">
                             <div class="card card-primary card-outline card-outline-tabs plate">
                                 <div class="card-body">
@@ -1306,9 +1349,16 @@
 
 @section('scripts')
     <script>
-        $(document).on('click', '.file-btn, .assign-link', function() {
+        $(document).on('click', '.file-btn, .assign-link, .letter-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
             $('#assign-div').show();
+            $('#refer-div').hide();
+            $('#exampleModalLabel').html("<strong>Assign Letter within CMO</strong>");
+        });$(document).on('click', '.file-btn, .refer-link', function() {
+            $('#letter-view').attr('src', $(this).data('letter_path'));
+            $('#assign-div').hide();
+            $('#refer-div').show();
+            $('#exampleModalLabel').html("<strong>Add Reference Letter(s)</strong>");
         });
     </script>
 
@@ -1484,7 +1534,7 @@
             });
         });
 
-        $(document).on('click', '.assign-link', function() {
+        $(document).on('click', '.assign-link,.refer-link', function() {
 
             $('.assign_letter').val($(this).data('letter'));
             $('.forward_from').val($(this).data('forward'));
@@ -1546,6 +1596,7 @@
             $('#assign-div').hide();
             $('#letter-view').attr('src', $(this).data('letter_path'));
         });
+        $('.js-example-basic-multiple').select2();
     </script>
 @endsection
 @endsection

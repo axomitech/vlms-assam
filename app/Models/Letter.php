@@ -236,4 +236,8 @@ class Letter extends Model
         }
        return $actionTakens;
     }
+
+    public static function getAllLetterNo(){
+        return Letter::select('letter_no')->get(); 
+    }
 }

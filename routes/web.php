@@ -86,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/department/edit', [App\Http\Controllers\AdminController::class, 'edit_department'])->name('department.edit');   
     Route::get('/file_view', [App\Http\Controllers\FilePreviewController::class, 'index'])->name('file_view');
     Route::post('/change_password',[App\Http\Controllers\ChangePasswordController::class,'changePassword'])->name('change_password');
+    Route::post('/refer',[App\Http\Controllers\ReferenceController::class,'store'])->name('refer');
 });
 
 
