@@ -1331,6 +1331,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-5" id="refer-letter-div" hidden>
+                            <div class="card card-primary card-outline card-outline-tabs">
+                                <div class="card-body">
+                                    <iframe src="" style="width: 100%; height: 400px;" id="refer-letter-view"></iframe>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-7">
                             <div class="card card-primary card-outline card-outline-tabs plate">
                                 <div class="card-body">
@@ -1338,6 +1345,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div id="refers" class="row">
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1535,7 +1545,8 @@
         });
 
         $(document).on('click', '.assign-link,.refer-link', function() {
-
+            $('#refers').html("");
+            $('#refer-letter-div').hide();
             $('.assign_letter').val($(this).data('letter'));
             $('.forward_from').val($(this).data('forward'));
 
@@ -1593,10 +1604,32 @@
 
         });
         $(document).on('click','.letter-link',function(){
+            $('#refers').html("");
             $('#assign-div').hide();
             $('#letter-view').attr('src', $(this).data('letter_path'));
+            $.get("{{route('reference')}}",{
+                letter:$(this).data('letter')
+            },function(j){
+                if(j.length > 1){
+                    var div = "";
+                    for(var i = 1; i < j.length; i++){
+                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='"+j[i].letter_id+"' data-refer_letter_path='"+j[i].letter_path+"'><b>"+j[i].letter_no+"</b></a></div>";
+                    }
+                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>"+div);
+                }else{
+                    $('#refer-letter-div').hide();
+                }
+            });
         });
         $('.js-example-basic-multiple').select2();
+        $(document).on('click','.refer-letter-link',function(e){
+            e.preventDefault();
+            $('#refer-letter-div').removeAttr("hidden");
+            $('#refer-letter-div').show();
+            $('#refer-letter-view').attr('src', $(this).data('refer_letter_path'));
+
+        });
+
     </script>
 @endsection
 @endsection

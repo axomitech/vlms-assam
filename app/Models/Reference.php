@@ -22,4 +22,12 @@ class Reference extends Model
             'reference_letter_id'=> $references[1]
         ])->count();
     }
+
+    public static function getReference($letter){
+        return Reference::Where([
+            'refer_letter_id'=> $letter
+        ])->join('letters','letters.id','=','references.reference_letter_id')
+        ->select('letter_no','letter_path','reference_letter_id')
+        ->get();
+    }
 }

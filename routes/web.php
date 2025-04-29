@@ -87,6 +87,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/file_view', [App\Http\Controllers\FilePreviewController::class, 'index'])->name('file_view');
     Route::post('/change_password',[App\Http\Controllers\ChangePasswordController::class,'changePassword'])->name('change_password');
     Route::post('/refer',[App\Http\Controllers\ReferenceController::class,'store'])->name('refer');
+    Route::get('/reference',[App\Http\Controllers\ReferenceController::class,'getReferenceLetter'])->name('reference');
 });
 
 

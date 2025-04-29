@@ -6,6 +6,7 @@ use App\Http\Requests\StoreReferenceRequest;
 use App\Http\Requests\UpdateReferenceRequest;
 use App\Models\Reference;
 use App\Models\Common;
+use Illuminate\Http\Request;
 use DB;
 class ReferenceController extends Controller
 {
@@ -30,8 +31,9 @@ class ReferenceController extends Controller
      */
     public function store(StoreReferenceRequest $request)
     {
+        $jData = [];
         if($request->ajax()){
-            $jData = [];
+            
         
             DB::beginTransaction();
     
@@ -108,5 +110,26 @@ class ReferenceController extends Controller
     public function destroy(Reference $reference)
     {
         //
+    }
+
+    public function getReferenceLetter(Request $request){
+        $jData[0] = [
+            'letter_id'=>'',
+            'letter_no'=>'',
+            'letter_path'=>''
+        ];
+        if($request->ajax()){
+            $referenceLetters = Reference::getReference($request->letter);
+            $i = 1;
+            foreach($referenceLetters AS $value){
+                $jData[$i] = [
+                    'letter_id'=>$value['reference_letter_id'],
+                    'letter_no'=>$value['letter_no'],
+                    'letter_path'=>storageUrl($value['letter_path'])
+                ];
+                $i++;
+            }
+        }
+        return response()->json($jData,200);
     }
 }
