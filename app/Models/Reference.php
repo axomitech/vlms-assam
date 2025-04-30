@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reference extends Model
 {
     use HasFactory;
+    protected $table = "letter_references";
     public static function storeReferences($references){
         $reference = new Reference;
         $reference->refer_letter_id = $references[0];
