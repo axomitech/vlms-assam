@@ -174,7 +174,7 @@
     </div>
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
@@ -184,13 +184,23 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-7">
                         <div class="card card-primary card-outline card-outline-tabs plate">
                             <div class="card-body">
                                 <iframe src="" style="width: 100%; height: 400px;" id="letter-view"></iframe>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-5" id="refer-letter-div" hidden>
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-body">
+                                <iframe src="" style="width: 100%; height: 400px;" id="refer-letter-view"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="refers" class="row">
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -211,7 +221,28 @@
         responsive: true,
         lengthChange: false,
         autoWidth: false,
-        buttons: ["excel", "pdf", "print"]
+        lengthMenu: [
+        [10, 25, 50, -1], // values
+        [10, 25, 50, 'All'] // labels
+    ],
+    pageLength: 5, 
+       buttons: [
+        {
+            extend: 'excelHtml5',
+            text: 'Export Excel',
+            className: 'btn btn-primary btn-sm me-2'
+        },
+        {
+            extend: 'pdfHtml5',
+            text: 'Export PDF',
+            className: 'btn btn-info btn-sm me-2 ml-1'
+        },
+        {
+            extend: 'print',
+            text: 'Print',
+            className: 'btn btn-success btn-sm ml-1'
+        }
+    ]
     });
 
     // Fetch and display category data when category card is clicked
@@ -263,7 +294,7 @@
 
                     tableBody += `<tr>
                         <td><small>${serialNumber++}</small></td>
-                        <td><small><a href="" class="assign-link"
+                        <td><small><a href="" class="assign-link"           data-id="${letter.letter_id}"
                                                                             data-toggle="modal"
                                                                             data-target=".bd-example-modal-lg"
                                                                             data-letter="${letter.letter_no}"
@@ -292,7 +323,7 @@
                 dataTable.clear();  // Clear existing data
                 dataTable.rows.add($(tableBody));  // Add the new rows
                 dataTable.draw();  // Redraw the table
-
+                dataTable.buttons().container().appendTo('#lettersList_wrapper .col-md-6:eq(0)');
                 // Show/hide views
                 $('#cardsContainer').hide();
                 $('#categoryCardsContainer').hide();
@@ -450,6 +481,28 @@
             $('#letter-view').attr('src', $(this).data('letter_path'));
             $('#assign-div').show();
             $('#exampleModalLabel').html("<strong>Letter No.: "+$(this).data('letter')+"</strong>");
+            $.get("{{route('reference')}}",{
+                letter:$(this).data('id')
+            },function(j){
+                if(j.length > 1){
+                    var div = "";
+                    for(var i = 1; i < j.length; i++){
+                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='"+j[i].letter_id+"' data-refer_letter_path='"+j[i].letter_path+"'><b>"+j[i].letter_no+"</b></a></div>";
+                    }
+                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>"+div);
+                }else{
+                    $('#refer-letter-div').hide();
+                }
+            });
         });
+
+        $(document).on('click','.refer-letter-link',function(e){
+            e.preventDefault();
+            $('#refer-letter-div').removeAttr("hidden");
+            $('#refer-letter-div').show();
+            $('#refer-letter-view').attr('src', $(this).data('refer_letter_path'));
+
+        });
+
     </script>
 @endsection
