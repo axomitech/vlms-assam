@@ -1364,7 +1364,8 @@
             $('#assign-div').show();
             $('#refer-div').hide();
             $('#exampleModalLabel').html("<strong>Assign Letter within CMO</strong>");
-        });$(document).on('click', '.file-btn, .refer-link', function() {
+        });
+        $(document).on('click', '.file-btn, .refer-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
             $('#assign-div').hide();
             $('#refer-div').show();
