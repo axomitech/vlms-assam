@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reference extends Model
 {
     use HasFactory;
+    protected $table = "letter_references";
     public static function storeReferences($references){
         $reference = new Reference;
         $reference->refer_letter_id = $references[0];
@@ -26,7 +27,7 @@ class Reference extends Model
     public static function getReference($letter){
         return Reference::Where([
             'refer_letter_id'=> $letter
-        ])->join('letters','letters.id','=','references.reference_letter_id')
+        ])->join('letters','letters.id','=','letter_references.reference_letter_id')
         ->select('letter_no','letter_path','reference_letter_id')
         ->get();
     }
