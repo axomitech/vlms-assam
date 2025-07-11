@@ -1,13 +1,19 @@
 @extends('layouts.app')
 <style>
-     #preview {
-            width: 100%; /* Full width */
-            height: 450px; /* Define the height for the scrollable container */
-            overflow-y: auto; /* Enable vertical scrolling */
-            border: 1px solid #ccc; /* Optional: Add a border for clarity */
-            padding: 5px; /* Add padding for spacing */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
-        }
+    #preview {
+        width: 100%;
+        /* Full width */
+        height: 450px;
+        /* Define the height for the scrollable container */
+        overflow-y: auto;
+        /* Enable vertical scrolling */
+        border: 1px solid #ccc;
+        /* Optional: Add a border for clarity */
+        padding: 5px;
+        /* Add padding for spacing */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        /* Optional: Add a subtle shadow */
+    }
 </style>
 @section('content')
     <div class="row">
@@ -16,10 +22,10 @@
                 <div class="col-md-6">
                     <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40">
                         <!-- <div class="box-header">
-                                                <div class="box-tools">
-                                                <p style="font-size:18px;font-weight:bold;margin-bottom: 9px; color:#173F5F;">Actions</p>
-                                                </div>
-                                            </div> -->
+                                                                <div class="box-tools">
+                                                                <p style="font-size:18px;font-weight:bold;margin-bottom: 9px; color:#173F5F;">Actions</p>
+                                                                </div>
+                                                            </div> -->
                         <div class="box-body">
                             <section class="content">
                                 <div class="container-fluid">
@@ -32,7 +38,8 @@
                                                     <li class="nav-item">
                                                         <a class="nav-link active active-link" id="custom-tabs-one-home-tab"
                                                             data-toggle="pill" href="#custom-tabs-one-home" role="tab"
-                                                            aria-controls="custom-tabs-one-home" aria-selected="true"><strong>Letter Details</strong>
+                                                            aria-controls="custom-tabs-one-home"
+                                                            aria-selected="true"><strong>Letter Details</strong>
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
@@ -41,9 +48,9 @@
                                                             href="#custom-tabs-one-profile" role="tab"
                                                             aria-controls="custom-tabs-one-profile" aria-selected="false">
                                                             @if ($receipt == 1)
-                                                            <strong>Sender Details</strong>
+                                                                <strong>Sender Details</strong>
                                                             @else
-                                                            <strong>Recipient Details</strong>
+                                                                <strong>Recipient Details</strong>
                                                             @endif
                                                         </a>
                                                     </li>
@@ -76,8 +83,9 @@
                                                             <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Letter Category<span
                                                                         class="text text-danger fw-bold">*</span></label>
-                                                                <select class="form-control form-control-sm js-example-basic-single" name="category"
-                                                                    id="category">
+                                                                <select
+                                                                    class="form-control form-control-sm js-example-basic-single"
+                                                                    name="category" id="category">
                                                                     <option value="">Select Category</option>
                                                                     @foreach ($letterCategories as $value)
                                                                         <option value="{{ $value['id'] }}">
@@ -91,13 +99,17 @@
                                                             <div class="col-md-6">
                                                                 <label class="form-label fw-bold">Letter Sub Category<span
                                                                         class="text text-danger fw-bold">*</span></label>
-                                                                <select class="form-control form-control-sm js-example-basic-single" name="sub_category"
-                                                                    id="sub_category">
+                                                                <select
+                                                                    class="form-control form-control-sm js-example-basic-single"
+                                                                    name="sub_category" id="sub_category">
                                                                     <option value="">Select Sub Category</option>
-                                                                    
+
                                                                 </select>
-                                                                <input type="hidden" class="form-control" name="other_sub_category" id="other_sub_category" placeholder="Other Sub Category">
-                                                                <label class="text text-danger sub_category fw-bold other_sub_category"></label>
+                                                                <input type="hidden" class="form-control"
+                                                                    name="other_sub_category" id="other_sub_category"
+                                                                    placeholder="Other Sub Category">
+                                                                <label
+                                                                    class="text text-danger sub_category fw-bold other_sub_category"></label>
 
                                                             </div>
                                                             <div class="col-md-6">
@@ -127,27 +139,32 @@
 
                                                             <div class="col-md-6">
                                                                 @php
-                                                                    $issue_date = "";
-                                                                    $read_only = "";
+                                                                    $issue_date = '';
+                                                                    $read_only = '';
                                                                 @endphp
                                                                 @if ($receipt == 1)
                                                                     <label class="form-label fw-bold">Received Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @else
-                                                                @php
-                                                                    $issue_date = \Carbon\Carbon::now()->format('Y-m-d');
-                                                                    $read_only = "readonly";
-                                                                @endphp
+                                                                    @php
+                                                                        $issue_date = \Carbon\Carbon::now()->format(
+                                                                            'Y-m-d',
+                                                                        );
+                                                                        $read_only = 'readonly';
+                                                                    @endphp
                                                                     <label class="form-label fw-bold">Issue Date<span
                                                                             class="text text-danger fw-bold">*</span></label>
                                                                 @endif
                                                                 <!-- Issue date is modified here -->
-                                                                @if($legacy != 1)
-                                                                <input type="date" name="received_date"
-                                                                id="received_date" class="form-control form-control-sm" value="{{$issue_date}}" {{$read_only}}>
+                                                                @if ($legacy != 1)
+                                                                    <input type="date" name="received_date"
+                                                                        id="received_date"
+                                                                        class="form-control form-control-sm"
+                                                                        value="{{ $issue_date }}">
                                                                 @else
-                                                                <input type="date" name="received_date"
-                                                                id="received_date" class="form-control form-control-sm">
+                                                                    <input type="date" name="received_date"
+                                                                        id="received_date"
+                                                                        class="form-control form-control-sm">
                                                                 @endif
                                                                 <label
                                                                     class="text text-danger received_date fw-bold"></label>
@@ -163,13 +180,15 @@
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <label class="form-label fw-bold">ECR No.</label>
-                                                                <input type="text" class="form-control" placeholder="Letter ECR No." name="ecr_no" id="ecr_no">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Letter ECR No." name="ecr_no"
+                                                                    id="ecr_no">
                                                                 <label class="text text-danger ecr_no"></label>
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <input type="hidden" name="receipt"
                                                                     value="{{ $receipt }}">
-                                                            <input type="hidden" name="legacy"
+                                                                <input type="hidden" name="legacy"
                                                                     value="{{ $legacy }}">
                                                                 <button type="button" class="btn btn-warning btn-sm"
                                                                     data-target="#custom-tabs-one-home"
@@ -417,15 +436,16 @@
 
         // });
 
-        $(document).on('change','#category',function(){
-            if($(this).val() != "10"){
-                $.get("{{route('letter_sub_category')}}",{
-                category:$(this).val()
-                },function(j){
+        $(document).on('change', '#category', function() {
+            if ($(this).val() != "10") {
+                $.get("{{ route('letter_sub_category') }}", {
+                    category: $(this).val()
+                }, function(j) {
 
                     var option = "<option value=''>Select Sub Category</option>";
-                    for(var i = 1; i < j.length; i++){
-                        option += "<option value='"+j[i].category_id+"'>"+j[i].category_name+"</option>";
+                    for (var i = 1; i < j.length; i++) {
+                        option += "<option value='" + j[i].category_id + "'>" + j[i].category_name +
+                            "</option>";
                     }
                     $('#sub_category').html(option);
                 });
@@ -433,81 +453,82 @@
 
         });
 
-        $(document).on('change','#category',function(){
-            if($(this).val() == 10 || $(this).val() == 11){
-                $('#other_sub_category').attr('type','text');
-                $('#sub_category').prop('hidden',true);
-                $('#other_sub_category').attr('placeholder',$.trim($("#category option:selected").text()));
-            }else{
-                $('#other_sub_category').attr('type','hidden');
-                $('#sub_category').prop('hidden',false);
+        $(document).on('change', '#category', function() {
+            if ($(this).val() == 10 || $(this).val() == 11) {
+                $('#other_sub_category').attr('type', 'text');
+                $('#sub_category').prop('hidden', true);
+                $('#other_sub_category').attr('placeholder', $.trim($("#category option:selected").text()));
+            } else {
+                $('#other_sub_category').attr('type', 'hidden');
+                $('#sub_category').prop('hidden', false);
             }
         })
     </script>
     <script>
-        document.getElementById('letter').addEventListener('change', function (event) {
-    const file = event.target.files[0]; // Get the selected file
-    const preview = document.getElementById('preview');
-    preview.innerHTML = ''; // Clear previous content
+        document.getElementById('letter').addEventListener('change', function(event) {
+            const file = event.target.files[0]; // Get the selected file
+            const preview = document.getElementById('preview');
+            preview.innerHTML = ''; // Clear previous content
 
-    if (file) {
-        if (file.type === 'application/pdf') {
-            const fileReader = new FileReader();
+            if (file) {
+                if (file.type === 'application/pdf') {
+                    const fileReader = new FileReader();
 
-            fileReader.onload = function (e) {
-                const typedArray = new Uint8Array(e.target.result);
+                    fileReader.onload = function(e) {
+                        const typedArray = new Uint8Array(e.target.result);
 
-                // Load the PDF document
-                pdfjsLib.getDocument(typedArray).promise.then(function (pdf) {
-                    const totalPages = pdf.numPages;
+                        // Load the PDF document
+                        pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+                            const totalPages = pdf.numPages;
 
-                    // Render each page
-                    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-                        renderPage(pdf, pageNum, preview);
-                    }
-                }).catch(function (error) {
-                    console.error('Error loading PDF:', error);
-                    preview.innerHTML = '<p>Error loading PDF file.</p>';
+                            // Render each page
+                            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                                renderPage(pdf, pageNum, preview);
+                            }
+                        }).catch(function(error) {
+                            console.error('Error loading PDF:', error);
+                            preview.innerHTML = '<p>Error loading PDF file.</p>';
+                        });
+                    };
+
+                    fileReader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
+                } else {
+                    preview.innerHTML = '<p>Please select a valid PDF file.</p>';
+                }
+            } else {
+                preview.innerHTML = '<p>No file selected.</p>';
+            }
+        });
+
+        function renderPage(pdf, pageNumber, container) {
+            pdf.getPage(pageNumber).then(function(page) {
+                const viewport = page.getViewport({
+                    scale: 0.50
                 });
-            };
 
-            fileReader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
-        } else {
-            preview.innerHTML = '<p>Please select a valid PDF file.</p>';
+                // Create a canvas for the page
+                const canvas = document.createElement('canvas');
+                canvas.classList.add('pdf-page');
+                const ctx = canvas.getContext('2d');
+
+                // Set canvas dimensions
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // Append canvas to container
+                container.appendChild(canvas);
+
+                // Render the page on the canvas
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            }).catch(function(error) {
+                console.error(`Error rendering page ${pageNumber}:`, error);
+            });
         }
-    } else {
-        preview.innerHTML = '<p>No file selected.</p>';
-    }
-});
-
-function renderPage(pdf, pageNumber, container) {
-    pdf.getPage(pageNumber).then(function (page) {
-        const viewport = page.getViewport({ scale: 0.50 });
-
-        // Create a canvas for the page
-        const canvas = document.createElement('canvas');
-        canvas.classList.add('pdf-page');
-        const ctx = canvas.getContext('2d');
-
-        // Set canvas dimensions
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        // Append canvas to container
-        container.appendChild(canvas);
-
-        // Render the page on the canvas
-        const renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-        };
-        page.render(renderContext);
-    }).catch(function (error) {
-        console.error(`Error rendering page ${pageNumber}:`, error);
-    });
-}
-$('.js-example-basic-single').select2();
-
+        $('.js-example-basic-single').select2();
     </script>
 @endsection
 @endsection

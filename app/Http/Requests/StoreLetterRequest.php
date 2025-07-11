@@ -109,7 +109,7 @@ class StoreLetterRequest extends FormRequest
             'organization.required' => 'Please provide organization.',
             'address.required' => 'Please provide address of the organization.',
             'address.alpha_num' => 'Please provide valid address of the organization.',
-            'ecr_no.required' => 'Please provide a ecr number.',
+            // 'ecr_no.required' => 'Please provide a ecr number.',
         ];
     }
 }

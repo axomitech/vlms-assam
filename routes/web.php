@@ -14,9 +14,9 @@ Auth::routes([
     'register' => false, // Registration Routes...
     'reset' => false, // Password Reset Routes...
     'verify' => false, // Email Verification Routes...
-  ]);
+]);
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
     Route::get('/diarize/{receipt}/{legacy}', [App\Http\Controllers\LetterController::class, 'index'])->name('diarize');
@@ -40,13 +40,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/inbox/{id}', [App\Http\Controllers\ActionSentController::class, 'index'])->name('inbox');
     Route::get('/inbox_letters', [App\Http\Controllers\ActionSentController::class, 'inbox'])->name('inbox_letters');
     Route::get('/outbox', [App\Http\Controllers\ActionSentController::class, 'outbox'])->name('outbox');
-    Route::get('/responds/{sent}/{act}/{letter}',[App\Http\Controllers\ActionSentController::class, 'response'])->name('responds');
-    Route::get('/action_response',[App\Http\Controllers\ActionSentController::class, 'getActionResponses'])->name('action_response');
+    Route::get('/responds/{sent}/{act}/{letter}', [App\Http\Controllers\ActionSentController::class, 'response'])->name('responds');
+    Route::get('/action_response', [App\Http\Controllers\ActionSentController::class, 'getActionResponses'])->name('action_response');
     Route::post('/assign_letter', [App\Http\Controllers\LetterAssignController::class, 'store'])->name('assign_letter');
-    Route::get('/letter_sub_category',[App\Http\Controllers\LetterSubCategoryController::class, 'getLetterSubCategory'])->name('letter_sub_category');
-    Route::get("/log", function(){
-        Log::channel('i_love_this_logging_thing')->info("Action log debug test", ['log-string' => ['user'=>1], "run"]);
-     
+    Route::get('/letter_sub_category', [App\Http\Controllers\LetterSubCategoryController::class, 'getLetterSubCategory'])->name('letter_sub_category');
+    Route::get("/log", function () {
+        Log::channel('i_love_this_logging_thing')->info("Action log debug test", ['log-string' => ['user' => 1], "run"]);
+
         return ["result" => true];
     });
     Route::get('/home1', [App\Http\Controllers\HomeController::class, 'box'])->name('home1');
@@ -82,13 +82,60 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/default/access', [App\Http\Controllers\AdminController::class, 'default_access'])->name('user.default.access');
 
     Route::get('/department/view', [App\Http\Controllers\AdminController::class, 'show_department'])->name('department.index');
-    Route::post('/department/add', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department.add');   
-    Route::post('/department/edit', [App\Http\Controllers\AdminController::class, 'edit_department'])->name('department.edit');   
+    Route::post('/department/add', [App\Http\Controllers\AdminController::class, 'add_department'])->name('department.add');
+    Route::post('/department/edit', [App\Http\Controllers\AdminController::class, 'edit_department'])->name('department.edit');
     Route::get('/file_view', [App\Http\Controllers\FilePreviewController::class, 'index'])->name('file_view');
-    Route::post('/change_password',[App\Http\Controllers\ChangePasswordController::class,'changePassword'])->name('change_password');
-    Route::post('/refer',[App\Http\Controllers\ReferenceController::class,'store'])->name('refer');
-    Route::get('/reference',[App\Http\Controllers\ReferenceController::class,'getReferenceLetter'])->name('reference');
+    Route::post('/change_password', [App\Http\Controllers\ChangePasswordController::class, 'changePassword'])->name('change_password');
+    Route::post('/refer', [App\Http\Controllers\ReferenceController::class, 'store'])->name('refer');
+    Route::get('/reference', [App\Http\Controllers\ReferenceController::class, 'getReferenceLetter'])->name('reference');
+
+    //merge pdf routes
+
+    Route::get('/merge/{category}/{subcategory}/{year}', [App\Http\Controllers\MergePDFController::class, 'merge']);
+    Route::get('/merge-month/{category}/{subcategory}/{year}/{month}', [App\Http\Controllers\MergePDFController::class, 'mergeByMonth']);
+
+    //Datewise PDF Merge
+    Route::post('/datewise', [App\Http\Controllers\DatewiseController::class, 'datewise'])->name('submit.datewise');
+    Route::get('/datewise', [App\Http\Controllers\DatewiseController::class, 'index'])->name('datewise');
+    Route::post('/merge-all-pdfs', [App\Http\Controllers\DatewiseController::class, 'mergeAll'])->name('pdf.merge.all');
+
+    //Year wise PDF Merge
+    Route::get('/files/organize', [App\Http\Controllers\FilesDownloadController::class, 'organizeLettersIntoFolders'])->name('files.organize');
+    Route::get('/files/view', [App\Http\Controllers\FilesDownloadController::class, 'viewLettersFolderWise'])->name('files.view');
+    Route::get('/merge-pdf/{category}/{subcategory}/{year}/receipt', [App\Http\Controllers\MergePDFController::class, 'merge'])->name('pdf.merge');
+    Route::get('/merge-pdf/{category}/{subcategory}/{year}/issue', [App\Http\Controllers\MergePDFController::class, 'IssueByYearMerge'])->name('pdf.merge.Issue');
+
+    // download month view
+    Route::get('/files/organize', [App\Http\Controllers\MonthwiseController::class, 'organizeLettersIntoFolders'])->name('files.organize');
+    Route::get('/files/month-view', [App\Http\Controllers\MonthwiseController::class, 'viewLettersFolderWise'])->name('files.month-view');
+    Route::get('/merge-pdf/{category}/{subcategory}/{year}/{month}/receipt', [App\Http\Controllers\MergePDFController::class, 'mergeByMonth'])->name('pdf.merge.month');
+    Route::get('/merge-pdf/{category}/{subcategory}/{year}/{month}/issue', [App\Http\Controllers\MergePDFController::class, 'IssueMergeByMonth'])->name('pdf.merge.month.Issue');
+    // Route::get('/files/folder-view', [App\Http\Controllers\MonthwiseController::class, 'viewLettersFolderWise'])->name('files.view');
+
+    //ministry wise download letter
+    Route::get('/ministry/letter-download', [App\Http\Controllers\MinistryLetterController::class, 'showDownloadView'])->name('files.ministry_letter_download');
+
+    //ministry wise download letter - Received
+    Route::get('/received-download', [App\Http\Controllers\ReceivedMinistryController::class, 'showDownloadView1'])->name('files.received_ministry_letter_download');
+
+    //Year wise PDF Merge - Received
+    Route::get('/received-files/view', [App\Http\Controllers\ReceivedFilesDownloadController::class, 'viewLettersFolderWise1'])->name('files.received_view');
+
+    // download month view
+
+    Route::get('/received-file-view', [App\Http\Controllers\ReceivedMonthwiseController::class, 'viewLettersFolderWise'])->name('files.received-month-view');
+
+
+    // Filtering Year & Month in Dashboard
+    Route::get('/letters/filter/year/{year}', [App\Http\Controllers\LetterController::class, 'filterByYear']);
+    Route::get('/letters/filter/year/{year}/month/{month}', [App\Http\Controllers\LetterController::class, 'filterByMonth']);
+
+    // Letter Reports
+    Route::get('/files/organize', [App\Http\Controllers\LetterReportController::class, 'organizeLettersIntoFolders'])->name('files.organize');
+    Route::get('/files/letter-report', [App\Http\Controllers\LetterReportController::class, 'viewLettersFolderWise'])->name('files.letter-report');
+    // Route::get('/merge-pdf/{category}/{subcategory}/{year}/{month}', [App\Http\Controllers\MergePDFController::class, 'mergeByMonth'])->name('pdf.merge.month');
+
+    // Letter Reports-Received Letter
+    Route::get('/files/organize', [App\Http\Controllers\ReceivedLetterReportController::class, 'organizeLettersIntoFolders'])->name('files.organize');
+    Route::get('/received-letter-report', [App\Http\Controllers\ReceivedLetterReportController::class, 'viewLettersFolderWise'])->name('files.received-letter-report');
 });
-
-
-

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-@include('layouts.header')
+    @include('layouts.header')
 
 
     <div class="row mt-3">
@@ -280,7 +280,8 @@
                         <div class="col-md-5" id="refer-letter-div" hidden>
                             <div class="card card-primary card-outline card-outline-tabs">
                                 <div class="card-body">
-                                    <iframe src="" style="width: 100%; height: 400px;" id="refer-letter-view"></iframe>
+                                    <iframe src="" style="width: 100%; height: 400px;"
+                                        id="refer-letter-view"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +299,7 @@
 @endsection
 
 @section('scripts')
-@include('layouts.scripts')
+    @include('layouts.scripts')
 
     <script>
         $(document).ready(function() {
@@ -333,7 +334,7 @@
 
                         // Build table rows
                         response.forEach(function(letter) {
-                            let letterPath = letter.letter_path.replace("public/","");
+                            let letterPath = letter.letter_path.replace("public/", "");
                             let truncatedSubject = letter.subject.length > 100 ?
                                 `<div class="text-block" id="textBlock${letter.id}">
                             <p class="shortText text-justify text-sm">
@@ -413,23 +414,25 @@
         $(document).on('click', '.assign-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
             $('#assign-div').show();
-            $('#exampleModalLabel').html("<strong>Letter No.: "+$(this).data('letter')+"</strong>");
-            $.get("{{route('reference')}}",{
-                letter:$(this).data('id')
-            },function(j){
-                if(j.length > 1){
+            $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
+            $.get("{{ route('reference') }}", {
+                letter: $(this).data('id')
+            }, function(j) {
+                if (j.length > 1) {
                     var div = "";
-                    for(var i = 1; i < j.length; i++){
-                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='"+j[i].letter_id+"' data-refer_letter_path='"+j[i].letter_path+"'><b>"+j[i].letter_no+"</b></a></div>";
+                    for (var i = 1; i < j.length; i++) {
+                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='" +
+                            j[i].letter_id + "' data-refer_letter_path='" + j[i].letter_path + "'><b>" + j[
+                                i].letter_no + "</b></a></div>";
                     }
-                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>"+div);
-                }else{
+                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
+                } else {
                     $('#refer-letter-div').hide();
                 }
             });
         });
 
-        $(document).on('click','.refer-letter-link',function(e){
+        $(document).on('click', '.refer-letter-link', function(e) {
             e.preventDefault();
             $('#refer-letter-div').removeAttr("hidden");
             $('#refer-letter-div').show();

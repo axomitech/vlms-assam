@@ -25,13 +25,13 @@ class LetterController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($receipt,$legacy)
+    public function index($receipt, $legacy)
     {
         $receipt = decrypt($receipt);
         $legacy = decrypt($legacy);
         $priorities = LetterPriority::getAllPriorities();
         $letterCategories = LetterCategory::getAllLetterCategories();
-        return view('diarize.diarize', compact('priorities', 'letterCategories', 'receipt','legacy'));
+        return view('diarize.diarize', compact('priorities', 'letterCategories', 'receipt', 'legacy'));
     }
 
     /**
@@ -187,55 +187,55 @@ class LetterController extends Controller
 
 
     public function showLetters($legacy)
-    {  
+    {
         $legacy = decrypt($legacy);
         $legacyStatus = false;
-        if($legacy == 1){
+        if ($legacy == 1) {
             $legacyStatus = true;
         }
         $letters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>1,
-            'legacy'=>$legacyStatus
-        ],[]);
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 1,
+            'legacy' => $legacyStatus
+        ], []);
         $assignedLetters = [];
         $assignedSentLetters = [];
         $delegatgeLetters = [];
         $i = 0;
         $condition = [];
-        $hod = Common::getSingleColumnValue('assign_deligates',[
-            'deligate_id'=>session('role_user')
-        ],'hod_id');
+        $hod = Common::getSingleColumnValue('assign_deligates', [
+            'deligate_id' => session('role_user')
+        ], 'hod_id');
         $assignedByDeligate = [];
-        foreach($letters AS $value){
-            if(session('role') == 1){
+        foreach ($letters as $value) {
+            if (session('role') == 1) {
                 $condition = [
-                    'letter_id'=>$value['letter_id'],
-                    'user_id'=>session('role_user')
+                    'letter_id' => $value['letter_id'],
+                    'user_id' => session('role_user')
                 ];
-            }else if(session('role') == 3){
+            } else if (session('role') == 3) {
                 $condition = [
-                    'letter_id'=>$value['letter_id'],
-                    'receiver_id'=>session('role_user'),
-                    'in_hand'=> true,
+                    'letter_id' => $value['letter_id'],
+                    'receiver_id' => session('role_user'),
+                    'in_hand' => true,
                 ];
-            }else if(session('role') == 2){
+            } else if (session('role') == 2) {
                 $assignCount = LetterAssign::checkLetterAssign($value['letter_id']);
-                if($assignCount > 0){
+                if ($assignCount > 0) {
                     $assignedByDeligate[$i] = $value['letter_id'];
                 }
                 $condition = [
-                    'letter_id'=>$value['letter_id'],
+                    'letter_id' => $value['letter_id'],
                     // 'receiver_id'=>Common::getSingleColumnValue('assign_deligates',[
                     //     'deligate_id'=>session('role_user')
                     // ],'hod_id'),
-                    'receiver_id'=>session('role_user'),
-                    'in_hand'=> true,
+                    'receiver_id' => session('role_user'),
+                    'in_hand' => true,
                 ];
             }
             //$assignedLetters[$i] = LetterAssign::checkLetterAssign($value['letter_id']);
-            $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
-            $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
+            $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns', $condition, 'id');
+            $assignedLetters[$i] = Common::getSingleColumnValue('letter_assigns', $condition, 'id');
             $delegatgeLetters[$i] = AssignDeligate::hodDeligateForLetter($value['letter_id']);
             $i++;
         }
@@ -245,85 +245,78 @@ class LetterController extends Controller
         foreach ($actionSents as $value) {
             $letterIds[$i] = $value['letter_id'];
             $condition = [
-                'letter_id'=>$value['letter_id'],
-                'receiver_id'=>session('role_user'),
-                'in_hand'=> true,
+                'letter_id' => $value['letter_id'],
+                'receiver_id' => session('role_user'),
+                'in_hand' => true,
             ];
-            $assignedSentLetters[$i] = Common::getSingleColumnValue('letter_assigns',$condition,'id');
-            
+            $assignedSentLetters[$i] = Common::getSingleColumnValue('letter_assigns', $condition, 'id');
+
             $i++;
         }
         $sentLetters = Letter::showLetterAndSender([
-           ['user_departments.department_id','=',session('role_dept')],
-            ['stage_status','>=',3]
-        ],$letterIds);
-        
-        $receiverId = Common::getSingleColumnValue('user_departments',[
-            'department_id'=>session('role_dept'),
-            'user_id'=>Auth::user()->id,
-            'role_id'=>session('role')
-        ],'id');
-        $deligateId = Common::getSingleColumnValue('assign_deligates',[
-            'hod_id'=>session('role_user')
-        ],'deligate_id');
+            ['user_departments.department_id', '=', session('role_dept')],
+            ['stage_status', '>=', 3]
+        ], $letterIds);
+
+        $receiverId = Common::getSingleColumnValue('user_departments', [
+            'department_id' => session('role_dept'),
+            'user_id' => Auth::user()->id,
+            'role_id' => session('role')
+        ], 'id');
+        $deligateId = Common::getSingleColumnValue('assign_deligates', [
+            'hod_id' => session('role_user')
+        ], 'deligate_id');
         $inboxLetters = Letter::showInboxLetters([
             'action_sents.receiver_id' => session('role_user'),
-        ],$assignedLetters);
-        
+        ], $assignedLetters);
+
         $completedLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>4
-        ],[]);
-        $actionTakenLetters = Letter::actionTakenLetters(['action_status_id','>',1]);
-        $actionLetters = Letter::showLetterAndSender([
-            
-        ],$actionTakenLetters);
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 4
+        ], []);
+        $actionTakenLetters = Letter::actionTakenLetters(['action_status_id', '>', 1]);
+        $actionLetters = Letter::showLetterAndSender([], $actionTakenLetters);
         $archivedLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>5
-        ],[]);
-        $inProcess = Letter::actionTakenLetters(['action_status_id','=',2]);
-        $inProcessLetters = Letter::showLetterAndSender([
-            
-        ],$inProcess);
-        $completed = Letter::actionTakenLetters(['action_status_id','=',3]);
-        $deptCompletedLetters = Letter::showLetterAndSender([
-            
-        ],$completed);
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 5
+        ], []);
+        $inProcess = Letter::actionTakenLetters(['action_status_id', '=', 2]);
+        $inProcessLetters = Letter::showLetterAndSender([], $inProcess);
+        $completed = Letter::actionTakenLetters(['action_status_id', '=', 3]);
+        $deptCompletedLetters = Letter::showLetterAndSender([], $completed);
         $archivedLetters = Letter::showLetterAndSender([
-            'user_departments.department_id'=>session('role_dept'),
-            'stage_status'=>5
-        ],[]);
-        if(session('role') == 1 ){
+            'user_departments.department_id' => session('role_dept'),
+            'stage_status' => 5
+        ], []);
+        if (session('role') == 1) {
             $departmentUsers = UserDepartment::getFirstReceiverDepartment(session('role_dept'));
-        }else{
-            $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'),3);
-
+        } else {
+            $departmentUsers = UserDepartment::getAllUserDepartment(session('role_dept'), 3);
         }
-        
-        $deligateAssignedLetters = Letter::showLetterAndSender([
-            ['user_departments.department_id','=',session('role_dept')]
-        ]
-            ,$assignedByDeligate);
-    $letterNos = Letter::getAllLetterNo();  
-       if($legacy <= 0){
-           return view('diarize.letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','inProcessLetters','deptCompletedLetters','hod','deligateAssignedLetters','letterNos'));
 
+        $deligateAssignedLetters = Letter::showLetterAndSender(
+            [
+                ['user_departments.department_id', '=', session('role_dept')]
+            ],
+            $assignedByDeligate
+        );
+        $letterNos = Letter::getAllLetterNo();
+        if ($legacy <= 0) {
+            return view('diarize.letters', compact('letters', 'sentLetters', 'inboxLetters', 'archivedLetters', 'completedLetters', 'actionLetters', 'departmentUsers', 'assignedLetters', 'deligateId', 'delegatgeLetters', 'assignedSentLetters', 'legacy', 'inProcessLetters', 'deptCompletedLetters', 'hod', 'deligateAssignedLetters', 'letterNos'));
+        } else {
 
-        }else{
-            
-        return view('diarize.legacy_letters',compact('letters','sentLetters','inboxLetters','archivedLetters','completedLetters','actionLetters','departmentUsers','assignedLetters','deligateId','delegatgeLetters','assignedSentLetters','legacy','deligateAssignedLetters','letterNos'));
-
+            return view('diarize.legacy_letters', compact('letters', 'sentLetters', 'inboxLetters', 'archivedLetters', 'completedLetters', 'actionLetters', 'departmentUsers', 'assignedLetters', 'deligateId', 'delegatgeLetters', 'assignedSentLetters', 'legacy', 'deligateAssignedLetters', 'letterNos'));
         }
     }
 
-   public function editDiarized($letterId){
+    public function editDiarized($letterId)
+    {
         $letterId = decrypt($letterId);
         $letters = Letter::showLetterAndSender([
-            'letters.id'=>$letterId
-        ],[]);
+            'letters.id' => $letterId
+        ], []);
         $letterData = [];
-        foreach($letters AS $value){
+        foreach ($letters as $value) {
             $letterData['letter_no'] = $value['letter_no'];
             $letterData['letter_date'] = $value['letter_date'];
             $letterData['receipt'] = $value['receipt'];
@@ -375,6 +368,26 @@ class LetterController extends Controller
         //
     }
 
+    // Filter in Dashboard bar Chart Code - Year & Months
+    public function filterByYear($year)
+    {
+        $letters = Letter::with('category') // assuming relation exists
+            ->whereYear('letter_date', $year)
+            ->get();
+
+        return view('letter.filtered_list', compact('letters', 'year'));
+    }
+
+    public function filterByMonth($year, $month)
+    {
+        $letters = Letter::with('category')
+            ->whereYear('letter_date', $year)
+            ->whereMonth('letter_date', $month)
+            ->get();
+        session(['month' => $month]);
+        session(['year' => $year]);
+        return view('letter.filtered_list', compact('letters', 'year', 'month'));
+    }
     /**
      * Update the specified resource in storage.
      */
@@ -398,16 +411,16 @@ class LetterController extends Controller
                 }
             } else {
 
-                $letterPath = Common::getSingleColumnValue('letters',[
-                    'id'=>$letter->id
-                ],'letter_path');
+                $letterPath = Common::getSingleColumnValue('letters', [
+                    'id' => $letter->id
+                ], 'letter_path');
             }
             DB::beginTransaction();
 
             try {
-                $crn = Common::getSingleColumnValue('letters',[
-                    'id'=>$letter->id
-                ],'crn');
+                $crn = Common::getSingleColumnValue('letters', [
+                    'id' => $letter->id
+                ], 'crn');
                 $letterDetails = [
 
                     $request->category,
@@ -427,10 +440,10 @@ class LetterController extends Controller
                     $request->ecr_no
                 ];
 
-                Letter::updateLetter($letterDetails,$letter);
+                Letter::updateLetter($letterDetails, $letter);
                 $abbreviation = Department::getDepartmentAbbreviation(session('role_dept'));
                 $year = Carbon::now()->year;
-                
+
                 if ($request->receipt == 1) {
                     $senderDetails = [
 
