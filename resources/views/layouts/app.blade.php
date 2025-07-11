@@ -419,7 +419,7 @@
                                         <i class="fas fa-angle-left arrow-icon"></i>
                                     </label>
 
-                                    <div class="submenu" id="actionBox">
+                                    <div class="submenu">
                                         <!-- 📊 Overall Report -->
                                         <div class="menu-item">
                                             <a href="{{ route('reports') }}" class="submenu-link">
@@ -921,46 +921,56 @@
             }
 
             const submenuMap = [{
-                    id: 'menu-download', // Letter Download (parent)
+                    id: 'menu-download',
                     routes: [
                         'datewise',
-                        'received-month-view',
-                        'month-view',
-                        'received_view',
-                        'view',
-                        'received_ministry_letter_download',
-                        'ministry_letter_download'
+                        'received-file-view',
+                        'files/month-view',
+                        'files/view',
+                        'received-files/view',
+                        'received-download',
+                        'ministry/letter-download'
                     ]
                 },
                 {
                     id: 'menu-download-month',
-                    routes: ['received-month-view', 'month-view']
+                    routes: ['received-file-view', 'files/month-view']
                 },
                 {
                     id: 'menu-download-year',
-                    routes: ['received_view', 'view']
+                    routes: ['files/view', 'received-files/view']
                 },
                 {
                     id: 'menu-download-ministry',
-                    routes: ['received_ministry_letter_download', 'ministry_letter_download']
+                    routes: ['received-download', 'ministry/letter-download']
                 },
                 {
-                    id: 'menu-dak-status', // Reports
-                    routes: ['receipt_box', 'issue_box', 'action_box', 'reports',
-                        'received-letter-report', 'letter-report'
+                    id: 'menu-dak-status',
+                    routes: [
+                        'receipt_box',
+                        'issue_box',
+                        'action_box',
+                        'report'
+                    ]
+                },
+                {
+                    id: 'menu-letter-report',
+                    routes: [
+                        'files/letter-report',
+                        'received-letter-report'
                     ]
                 },
 
                 {
-                    id: 'menu-letters', // Letters
+                    id: 'menu-letters',
                     routes: ['home1', 'letters']
                 },
                 {
-                    id: 'menu-diarized', // Diarize
+                    id: 'menu-diarized',
                     routes: ['diarize']
                 },
                 {
-                    id: 'menu-newdiarized', // Nested inside Diarized
+                    id: 'menu-newdiarized',
                     routes: ['diarize']
                 }
             ];
