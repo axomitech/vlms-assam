@@ -21,7 +21,7 @@ class Letter extends Model
         $letter->letter_priority_id = $letterDetails[1];
         $letter->letter_no = $letterDetails[5];
         $letter->letter_date = $letterDetails[2];
-        
+
         $letter->diary_date = $letterDetails[4];
         $letter->subject = $letterDetails[6];
         $letter->letter_path = $letterDetails[7];
@@ -33,7 +33,7 @@ class Letter extends Model
         if ($letterDetails[9] == 0) {
             $letter->receipt = false;
             $letter->issue_date = $letterDetails[3];
-        }else{
+        } else {
             $letter->received_date = $letterDetails[3];
         }
         if ($letterDetails[11] == 0) {
@@ -75,7 +75,7 @@ class Letter extends Model
             'legacy' => $legacy,
             'crn' => $letterDetails[12],
             'letter_other_sub_categories' => $letterDetails[13],
-            'ecr_no'=>$letterDetails[14]
+            'ecr_no' => $letterDetails[14]
         ]);
     }
 
@@ -125,9 +125,9 @@ class Letter extends Model
                 'users.id AS diarizer_id',
                 'letters.ecr_no'
             );
-            if(count($condition) > 0){
-                $lettersDetails = $lettersDetails->where($condition);
-            }  // Apply the given condition
+        if (count($condition) > 0) {
+            $lettersDetails = $lettersDetails->where($condition);
+        }  // Apply the given condition
 
         // If letters array is not empty, filter the results further with whereIn
         if (count($letters) > 0) {
@@ -135,9 +135,8 @@ class Letter extends Model
         }
         if (count($letters) == 0 && count($condition) == 0) {
             $lettersDetails = [];
-        }else{
-        $lettersDetails = $lettersDetails->orderBy('letters.id', 'DESC')->get();
-
+        } else {
+            $lettersDetails = $lettersDetails->orderBy('letters.id', 'DESC')->get();
         }
         // Order by letters.id in descending order
         return $lettersDetails;
@@ -149,25 +148,25 @@ class Letter extends Model
     public static function showInboxLetters($condition, $assignedLetterIds)
     {
         $receivedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
-            ->join('user_departments','letters.user_id','=','user_departments.id')
-            ->join('users','users.id','=','user_departments.user_id')
+            ->join('user_departments', 'letters.user_id', '=', 'user_departments.id')
+            ->join('users', 'users.id', '=', 'user_departments.user_id')
             ->join('action_sents', 'letters.id', '=', 'action_sents.letter_id')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Join for letter categories
             ->where($condition)
-            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name','users.name')
+            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name', 'users.name')
             ->orderBy('letters.id', 'DESC')
-            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name','users.name') // Added category_name
+            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name', 'users.name') // Added category_name
             ->get();
 
         $assignedLetters = Letter::join('senders', 'letters.id', '=', 'senders.letter_id')
-            ->join('user_departments','letters.user_id','=','user_departments.id')
-            ->join('users','users.id','=','user_departments.user_id')
+            ->join('user_departments', 'letters.user_id', '=', 'user_departments.id')
+            ->join('users', 'users.id', '=', 'user_departments.user_id')
             ->join('letter_assigns', 'letters.id', '=', 'letter_assigns.letter_id')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id') // Join for letter categories
             ->whereIn('letter_assigns.id', $assignedLetterIds)
-            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name','users.name')
+            ->groupBy('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name', 'users.name')
             ->orderBy('letters.id', 'DESC')
-            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name','users.name') // Added category_name
+            ->select('letter_no', 'subject', 'sender_name', 'letter_path', 'letters.id AS letter_id', 'organization', 'crn', 'stage_status', 'letter_categories.category_name', 'users.name') // Added category_name
             ->get();
         return [
             $receivedLetters,
@@ -220,24 +219,36 @@ class Letter extends Model
         return $lettersDetails;
     }
 
-    public static function actionTakenLetters($condition){
-        $letters = Letter::join('letter_actions','letters.id','=','letter_actions.letter_id')
-        ->join('action_department_maps','letter_actions.id','=','action_department_maps.letter_action_id')->where([
-            'action_department_maps.department_id'=>session('role_dept'),
-        ])->where([
-            $condition
-        ])
-        ->select('letters.id')->get();
+    public static function actionTakenLetters($condition)
+    {
+        $letters = Letter::join('letter_actions', 'letters.id', '=', 'letter_actions.letter_id')
+            ->join('action_department_maps', 'letter_actions.id', '=', 'action_department_maps.letter_action_id')->where([
+                'action_department_maps.department_id' => session('role_dept'),
+            ])->where([
+                $condition
+            ])
+            ->select('letters.id')->get();
         $actionTakens = [];
         $i = 0;
-        foreach($letters AS $value){
+        foreach ($letters as $value) {
             $actionTakens[$i] = $value['id'];
             $i++;
         }
-       return $actionTakens;
+        return $actionTakens;
     }
 
-    public static function getAllLetterNo(){
-        return Letter::select('letter_no')->get(); 
+    public function category()
+    {
+        return $this->belongsTo(\App\Models\LetterCategory::class, 'letter_category_id');
+    }
+
+    public function subCategory()
+    {
+        return $this->belongsTo(\App\Models\LetterSubCategory::class, 'letter_sub_category_id');
+    }
+
+    public static function getAllLetterNo()
+    {
+        return Letter::select('letter_no')->get();
     }
 }
