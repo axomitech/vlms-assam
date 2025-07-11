@@ -689,6 +689,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
+                                        //hi
                                         <a href="{{ route('user') }}" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>User</p>
