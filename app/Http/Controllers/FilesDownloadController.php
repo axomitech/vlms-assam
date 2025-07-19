@@ -11,21 +11,21 @@ use Carbon\Carbon;
 
 class FilesDownloadController extends Controller
 {
-    /**
-     * Organize letters into year-wise folders based on category and subcategory.
-     */
+
     public function organizeLettersIntoFolders()
     {
         $letters = Letter::with(['category', 'subCategory'])
-            ->whereNotNull('issue_date') // Only letters with issue_date
+            ->whereNotNull('issue_date')
             ->get();
 
         foreach ($letters as $letter) {
             $categoryId = $letter->letter_category_id;
             $subCategoryId = $letter->letter_sub_category_id;
+
+            $subFolder = ($subCategoryId === null || $subCategoryId == 0) ? 'others' : $subCategoryId;
             $year = Carbon::parse($letter->issue_date)->format('Y');
 
-            $folderPath = "public/letters/$categoryId/$subCategoryId/$year";
+            $folderPath = "public/letters/{$categoryId}/{$subFolder}/{$year}";
 
             if (!Storage::exists($folderPath)) {
                 Storage::makeDirectory($folderPath);
@@ -34,11 +34,11 @@ class FilesDownloadController extends Controller
             if ($letter->letter_path && Storage::exists("public/letters/" . $letter->letter_path)) {
                 $currentPath = "public/letters/" . $letter->letter_path;
                 $fileName = basename($letter->letter_path);
-                $newPath = "$folderPath/$fileName";
+                $newPath = "{$folderPath}/{$fileName}";
 
                 if (!Storage::exists($newPath)) {
                     Storage::move($currentPath, $newPath);
-                    $letter->letter_path = "$categoryId/$subCategoryId/$year/$fileName";
+                    $letter->letter_path = "{$categoryId}/{$subFolder}/{$year}/{$fileName}";
                     $letter->save();
                 }
             }
@@ -47,9 +47,7 @@ class FilesDownloadController extends Controller
         return redirect()->route('files.view')->with('success', 'Letters organized into folders successfully.');
     }
 
-    /**
-     * View letters grouped by category > subcategory > year.
-     */
+
     public function viewLettersFolderWise()
     {
         $letters = Letter::with(['category', 'subCategory'])
@@ -60,24 +58,28 @@ class FilesDownloadController extends Controller
             ->get()
             ->groupBy([
                 'letter_category_id',
-                'letter_sub_category_id',
+                function ($letter) {
+                    return ($letter->letter_sub_category_id === null || $letter->letter_sub_category_id == 0)
+                        ? 'others'
+                        : $letter->letter_sub_category_id;
+                },
                 function ($letter) {
                     return Carbon::parse($letter->issue_date)->format('Y');
                 }
             ]);
 
-        $categories = LetterCategory::pluck('category_name', 'id');
-        $subCategories = LetterSubCategory::pluck('sub_category_name', 'id');
+        $categories = LetterCategory::pluck('category_name', 'id')->toArray();
+        $subCategories = LetterSubCategory::pluck('sub_category_name', 'id')->toArray();
+        $subCategories['others'] = 'Others / Miscellaneous';
 
         return view('files.view', compact('letters', 'categories', 'subCategories'));
     }
 
-    /**
-     * Download individual letter file by path.
-     */
+
     public function downloadLetter($categoryId, $subCategoryId, $year, $fileName)
     {
-        $path = "public/letters/$categoryId/$subCategoryId/$year/$fileName";
+        $subFolder = ($subCategoryId === null || $subCategoryId == 0) ? 'others' : $subCategoryId;
+        $path = "public/letters/{$categoryId}/{$subFolder}/{$year}/{$fileName}";
 
         if (Storage::exists($path)) {
             return Storage::download($path);

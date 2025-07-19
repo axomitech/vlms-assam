@@ -106,7 +106,8 @@ class DatewiseController extends Controller
                 $table .= '<td><small><i>Subject</i>: ' . $result->subject . '<br><i>Letter No.</i>: ' . $result->letter_no . '<br><i>Letter Date</i>: ' . date_format(date_create($result->letter_date), "d/m/Y") . '</small></td>';
                 $table .= '<td><small><i>' . $from_to . '</i>: ' . $name_designation . '</small></td>';
                 $table .= '<td><small>' . $result->category_name . '</small></td>';
-                $table .= '<td><small>' . $result->sub_category_name . '</small></td>';
+                // $table .= '<td><small>' . $result->sub_category_name . '</small></td>';
+                $table .= '<td><small>' . (!empty($result->sub_category_name) ? $result->sub_category_name : $result->letter_other_sub_categories) . '</small></td>';
                 $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->letter_id]) . '"><i class="fas fa-download" style="color: #174060"></i></a></td>';
                 $table .= '</tr>';
             }

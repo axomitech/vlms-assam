@@ -4,38 +4,40 @@
     <style>
         body {
             font-family: "Segoe UI", sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
         }
 
         .summary-box {
-            background: #eaf4ff;
-            border-left: 4px solid #0d6efd;
-            border-radius: 12px;
-            padding: 14px 24px;
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 14px 24px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #0d6efd;
+            background-color: #eaf4ff;
+            border-radius: 12px;
+            font-size: 1rem;
         }
 
         .letter-header,
         .letter-card {
             display: flex;
             align-items: center;
-            background: #fff;
-            border-radius: 12px;
-            padding: 0.4rem 0.75rem;
+            padding: 0.5rem 0.75rem;
             margin-bottom: 8px;
+            border-radius: 12px;
+            background-color: #fff;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-            transition: background 0.2s ease;
+            transition: background 0.2s ease-in-out;
         }
 
         .letter-card:hover {
-            background: #f9fbff;
+            background-color: #f9fbff;
         }
 
         .letter-header {
-            background: #f1f5f9;
+            background-color: #f1f5f9;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.78rem;
@@ -55,17 +57,14 @@
         }
 
         .letter-col.sl-no {
-            max-width: 60px;
             flex: 0 0 60px;
+            max-width: 60px;
             text-align: center;
             font-weight: bold;
-            padding: 0 4px;
         }
 
         .letter-col.text-end {
             text-align: left !important;
-            word-wrap: break-word;
-            white-space: normal;
         }
 
         .letter-col.text-center {
@@ -73,57 +72,44 @@
         }
 
         .badge-status {
-            background-color: #d1f4e2;
-            color: #0f5132;
-            border-radius: 10px;
             padding: 3px 8px;
             font-size: 0.75rem;
             font-weight: 600;
+            border-radius: 10px;
+            background-color: #d1f4e2;
+            color: #0f5132;
         }
 
-        .category-list {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .category-list ul {
-            margin-top: 4px;
-            padding-left: 0.8rem;
-            font-weight: normal;
-            font-size: 0.75rem;
-        }
-
+        /* Search Bar */
         .search-bar {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
             gap: 10px;
+            margin-bottom: 1.5rem;
         }
 
         .search-bar input[type="text"] {
             flex: 1;
+            min-width: 240px;
             padding: 8px 12px;
             border: 1px solid #ced4da;
             border-radius: 8px;
-            min-width: 240px;
         }
 
         .search-bar .btn {
             padding: 8px 14px;
-            border-radius: 8px;
             font-size: 0.9rem;
+            border-radius: 8px;
         }
 
         .dropdown-menu {
-            border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-            background-color: #ffffff;
+            width: 250px;
             padding: 10px 14px !important;
             font-size: 0.85rem;
-            width: 250px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
         }
 
         .dropdown-menu h6 {
@@ -142,14 +128,14 @@
 
         .dropdown-menu .form-select,
         .dropdown-menu input[type="date"] {
-            font-size: 0.85rem;
             padding: 6px 8px;
+            font-size: 0.85rem;
             border-radius: 6px;
         }
 
         .dropdown-menu .btn-sm {
-            font-size: 0.75rem;
             padding: 4px 8px;
+            font-size: 0.75rem;
         }
 
         .dropdown-menu .d-flex.gap-2 {
@@ -160,6 +146,19 @@
             font-size: 0.75rem;
         }
 
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-list ul {
+            margin-top: 4px;
+            padding-left: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: normal;
+        }
+
         .scrollable-table {
             overflow-x: auto;
             white-space: nowrap;
@@ -168,30 +167,30 @@
 
         #customPagination {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             padding: 1rem 0;
-            border-top: 1px solid #e3e3e3;
             margin-top: 20px;
+            border-top: 1px solid #e3e3e3;
             gap: 10px;
         }
 
         #paginationContainer {
             display: flex;
             gap: 4px;
-            list-style: none;
             padding-left: 0;
+            list-style: none;
             margin: 0;
         }
 
         #paginationContainer .page-item .page-link {
             padding: 6px 12px;
-            border: 1px solid #d4d4d4;
-            border-radius: 6px;
             font-size: 0.85rem;
             background-color: #fff;
             color: #333;
+            border: 1px solid #d4d4d4;
+            border-radius: 6px;
             text-decoration: none;
             transition: all 0.2s ease-in-out;
         }
@@ -204,27 +203,25 @@
 
         #paginationContainer .page-item.active .page-link {
             background-color: #0d6efd;
-            color: white;
-            border-color: #0d6efd;
+            color: #fff;
             font-weight: 600;
+            border-color: #0d6efd;
         }
 
         #paginationContainer .page-item.disabled .page-link {
-            color: #999;
             background-color: #f8f9fa;
+            color: #999;
             pointer-events: none;
         }
 
         #pageSizeDropdown {
-            border: 1px solid #d4d4d4;
-            border-radius: 6px;
             padding: 6px 12px;
             font-size: 0.85rem;
+            border-radius: 6px;
+            border: 1px solid #d4d4d4;
             appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="%23000" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position-x: 95%;
-            background-position-y: 50%;
+            background: #fff url('data:image/svg+xml;utf8,<svg fill="%23000" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+            background-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -246,7 +243,7 @@
             .summary-box {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 6px;
             }
 
             .dropdown-menu {
@@ -254,7 +251,6 @@
             }
         }
     </style>
-
 
 
 
@@ -270,10 +266,6 @@
             <div class="card">
                 <div class="card-body">
 
-
-
-
-
                     @php
                         use Carbon\Carbon;
                         use Illuminate\Support\Facades\DB;
@@ -285,13 +277,6 @@
 
                         $startOfMonth = Carbon::createFromDate($year, $month, 1)->startOfMonth();
                         $endOfMonth = Carbon::createFromDate($year, $month, 1)->endOfMonth();
-
-                        $monthlyLetters = $letters->filter(function ($letter) use ($startOfMonth, $endOfMonth) {
-                            return ($letter->issued_date >= $startOfMonth && $letter->issued_date <= $endOfMonth) ||
-                                ($letter->received_date >= $startOfMonth && $letter->received_date <= $endOfMonth);
-                        });
-
-                        $totalLetters = $letters->count();
 
                         $totalIssued = $letters
                             ->filter(function ($letter) use ($startOfMonth, $endOfMonth) {
@@ -305,9 +290,10 @@
                             })
                             ->count();
 
+                        $totalLetters = $totalIssued + $totalReceived;
+
                         $overallLetters = \App\Models\Letter::count();
                     @endphp
-
 
 
                     <link rel="stylesheet"
@@ -331,7 +317,7 @@
                             align-items: center;
                             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
                             transition: transform 0.2s ease;
-                            min-height: 80px;
+                            min-height: 110px;
                         }
 
                         .summary-card:hover {
@@ -386,7 +372,6 @@
 
 
                     <div class="summary-cards">
-                        <!-- Monthly Total Letters -->
                         <div class="summary-card bg-monthly">
                             <div class="summary-text">
                                 <div class="summary-value">{{ $totalLetters }}</div>
@@ -395,8 +380,6 @@
                             </div>
                             <div><i class="fa fa-envelope summary-icon"></i></div>
                         </div>
-
-                        <!-- Monthly Issued -->
                         <div class="summary-card bg-issued">
                             <div class="summary-text">
                                 <div class="summary-value">{{ $totalIssued }}</div>
@@ -405,8 +388,6 @@
                             </div>
                             <div><i class="fa fa-paper-plane summary-icon"></i></div>
                         </div>
-
-                        <!-- Monthly Received -->
                         <div class="summary-card bg-received">
                             <div class="summary-text">
                                 <div class="summary-value">{{ $totalReceived }}</div>
@@ -416,7 +397,6 @@
                             <div><i class="fa fa-inbox summary-icon"></i></div>
                         </div>
 
-                        <!-- Overall Total Letters -->
                         <div class="summary-card bg-total">
                             <div class="summary-text">
                                 <div class="summary-value">{{ $overallLetters }}</div>
@@ -549,7 +529,9 @@
                                 <div class="letter-col">{{ $letter->letter_date }}</div>
                                 <div class="letter-col">{{ $letter->received_date }}</div>
                                 <div class="letter-col">{{ $letter->category->category_name ?? 'N/A' }}</div>
-                                <div class="letter-col">{{ $letter->subCategory->sub_category_name ?? 'N/A' }}</div>
+                                <div class="letter-col">
+                                    {{ optional($letter->subCategory)->sub_category_name ?? ($letter->letter_other_sub_categories ?? 'Others/Miscellaneous Department') }}
+                                </div>
                                 <div class="letter-col">{{ $letter->issue_date }}</div>
                                 <div class="letter-col text-center">
                                     <button class="btn btn-sm btn-outline-secondary" disabled>
@@ -661,7 +643,6 @@
                 renderPagination(1);
             });
 
-            // Search Logic
             function performSearch(query) {
                 const q = query.toLowerCase().trim();
                 letterCards.forEach(row => {
@@ -685,8 +666,6 @@
                 searchInput.value = '';
                 letterCards.forEach(row => row.style.display = 'flex');
             });
-
-            // 📤 Export to Excel
             document.querySelector('.search-bar .btn-outline-success').addEventListener('click', function() {
                 const wb = XLSX.utils.book_new();
                 const ws_data = [
@@ -699,7 +678,7 @@
                     if (row.style.display !== 'none') {
                         const cols = Array.from(row.querySelectorAll('.letter-col')).map(col => col
                             .innerText.trim());
-                        cols.pop(); // remove Archive column
+                        cols.pop();
                         ws_data.push(cols);
                     }
                 });
@@ -709,7 +688,6 @@
                 XLSX.writeFile(wb, 'Letters_Report.xlsx');
             });
 
-            // Column Filters
             const toggleColumnDisplay = (columnIndex) => {
                 document.querySelectorAll('.letter-card, .letter-header').forEach(row => {
                     row.querySelectorAll('.letter-col').forEach((col, i) => {
@@ -734,7 +712,6 @@
                 });
             }
 
-            // Toggle Filter Sections
             const toggleSection = (checkboxId, sectionId) => {
                 const checkbox = document.getElementById(checkboxId);
                 if (!checkbox) return;
@@ -748,7 +725,6 @@
             toggleSection('monthWise', 'monthWiseOptions');
             toggleSection('yearWise', 'yearWiseOptions');
 
-            // Date Filter
             document.querySelector('.btn-primary')?.addEventListener('click', function() {
                 const fromDate = document.getElementById('fromDate')?.value;
                 const toDate = document.getElementById('toDate')?.value;
@@ -762,15 +738,12 @@
                 }
             });
 
-            // Month-wise View
-
             document.getElementById('monthWiseView')?.addEventListener('click', () => {
                 const year = document.getElementById('monthWiseYear')?.value;
                 const month = document.getElementById('monthWiseMonth')?.value;
                 if (year && month) {
                     const url = `/letters/filter/year/${year}/month/${month}`;
                     if (window.location.href === window.location.origin + url) {
-                        // Same URL, force reload
                         window.location.reload();
                     } else {
                         window.location.href = url;
@@ -795,12 +768,10 @@
                 document.querySelectorAll('.letter-card').forEach(row => row.style.display = '');
             });
 
-            //Export Buttons
             document.getElementById('exportPdf')?.addEventListener('click', function() {
                 alert('Export to PDF demo triggered!');
             });
-
-            // Reset button
+            s
             document.getElementById('resetView').addEventListener('click', function() {
                 window.location.href = "{{ route('dashboard') }}";
             });

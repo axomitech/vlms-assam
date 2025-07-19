@@ -1,3 +1,10 @@
+@php
+    function sanitizeId($value)
+    {
+        return strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $value));
+    }
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -169,7 +176,6 @@
         }
     </style>
 
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <div class="col-md-12 mb-3">
@@ -197,7 +203,7 @@
             @foreach ($groupedLetters as $categoryId => $subCats)
                 @foreach ($subCats as $subCategoryId => $years)
                     @php
-                        $subCategoryName = $subCategories[$subCategoryId] ?? 'Unknown Subcategory';
+                        $subCategoryName = $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments';
                         $letterCount = collect($years)->flatten(2)->count();
                         $totalLetterCount += $letterCount;
                     @endphp
@@ -229,9 +235,22 @@
                         @foreach ($months as $month => $lettersGroup)
                             <div id="month-{{ $subCategoryId }}-{{ $year }}-{{ $month }}"
                                 class="nested-month">
-                                <div class="mb-2 mt-3"><strong>{{ $month }} {{ $year }} - Letters</strong>
+                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="showMonths(this)">
+                                        <i class="fa fa-arrow-left"></i> Back to Months
+                                    </button>
+                                    <div style="max-width: 300px; width: 100%;">
+                                        <input type="text" class="form-control table-search-input"
+                                            placeholder="Search letters..."
+                                            data-table-id="table-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
+                                    </div>
                                 </div>
-                                <table class="letter-table">
+
+                                <div class="mb-2"><strong>{{ $month }} {{ $year }} - Letters</strong>
+                                </div>
+
+                                <table class="letter-table"
+                                    id="table-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
                                     <thead>
                                         <tr>
                                             <th>SL No</th>
@@ -239,7 +258,9 @@
                                             <th>Letter No</th>
                                             <th>CRN No</th>
                                             <th>ECR No</th>
-                                            <th>Action</th>
+                                            <th>Category</th>
+                                            <th>Sub Category</th>
+                                            <th>Download</th>
                                         </tr>
                                     </thead>
                                     <tbody class="paginated-body">
@@ -250,6 +271,9 @@
                                                 <td>{{ $letter->letter_no ?? 'N/A' }}</td>
                                                 <td>{{ $letter->crn ?? 'N/A' }}</td>
                                                 <td>{{ $letter->ecr_no ?? 'N/A' }}</td>
+                                                <td>{{ $categories[$letter->letter_category_id] ?? 'N/A' }}</td>
+                                                <td>{{ optional($letter->subCategory)->sub_category_name ?? ($letter->letter_other_sub_categories ?? 'Others/Miscellaneous Department') }}
+                                                </td>
                                                 <td>
                                                     <a href="{{ asset(str_replace('public/', 'storage/', $letter->letter_path)) }}"
                                                         class="btn btn-sm btn-outline-primary" target="_blank">
@@ -260,8 +284,9 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <div class="pagination-buttons mt-2 d-flex flex-wrap gap-2"
-                                    id="pagination-buttons-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
+
+                                <div
+                                    class="pagination-buttons mt-2 d-flex flex-wrap gap-2 justify-content-center align-items-center">
                                 </div>
                             </div>
                         @endforeach
@@ -272,17 +297,18 @@
     </div>
 
     <script>
-        const rowsPerPage = 5;
+        const rowsPerPage = 25;
 
         function paginateTables() {
-            document.querySelectorAll('.nested-month').forEach(monthSection => {
-                const tableBody = monthSection.querySelector('.paginated-body');
-                const rows = Array.from(tableBody.querySelectorAll('tr'));
-                const paginationContainer = monthSection.querySelector('.pagination-buttons');
+            $('.nested-month').each(function() {
+                const $monthSection = $(this);
+                const $tableBody = $monthSection.find('.paginated-body');
+                const $rows = $tableBody.find('tr');
+                const $paginationContainer = $monthSection.find('.pagination-buttons');
 
-                if (!rows.length) return;
+                if (!$rows.length) return;
 
-                const totalPages = Math.ceil(rows.length / rowsPerPage);
+                const totalPages = Math.ceil($rows.length / rowsPerPage);
                 let currentPage = 1;
 
                 function showPage(page) {
@@ -290,78 +316,133 @@
                     const start = (page - 1) * rowsPerPage;
                     const end = start + rowsPerPage;
 
-                    rows.forEach((row, i) => {
-                        row.style.display = (i >= start && i < end) ? 'table-row' : 'none';
+                    $rows.each(function(index) {
+                        $(this).toggle(index >= start && index < end);
                     });
 
-                    paginationContainer.innerHTML = '';
+                    $paginationContainer.empty();
+
+                    const $prevBtn = $('<button>', {
+                        text: 'Previous',
+                        class: 'btn btn-sm btn-outline-primary',
+                        disabled: currentPage === 1
+                    }).on('click', () => showPage(currentPage - 1));
+
+                    $paginationContainer.append($prevBtn);
+
                     for (let i = 1; i <= totalPages; i++) {
-                        const btn = document.createElement('button');
-                        btn.innerText = i;
-                        btn.className = 'btn btn-sm btn-outline-primary';
-                        if (i === currentPage) btn.classList.add('active');
-                        btn.addEventListener('click', () => showPage(i));
-                        paginationContainer.appendChild(btn);
+                        const $btn = $('<button>', {
+                            text: i,
+                            class: 'btn btn-sm btn-outline-primary'
+                        });
+
+                        if (i === currentPage) $btn.addClass('active');
+
+                        $btn.on('click', () => showPage(i));
+                        $paginationContainer.append($btn);
                     }
+
+                    const $nextBtn = $('<button>', {
+                        text: 'Next',
+                        class: 'btn btn-sm btn-outline-primary',
+                        disabled: currentPage === totalPages
+                    }).on('click', () => showPage(currentPage + 1));
+
+                    $paginationContainer.append($nextBtn);
                 }
 
                 showPage(1);
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            paginateTables();
-
-            let total = 0;
-            document.querySelectorAll('#subcategoryCardList .card-button').forEach(card => {
-                total += parseInt(card.dataset.letterCount) || 0;
-            });
-            document.getElementById('letterCountStatic').innerText = total;
-        });
-
         function showOnlyThis(id) {
-            document.querySelectorAll('.nested-section').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.nested-month').forEach(el => el.style.display = 'none');
-            document.getElementById('subcategoryCardList').style.display = 'none';
-            document.getElementById('resetView').style.display = 'inline-block';
-            document.getElementById(id).style.display = 'block';
+            $('.nested-section, .nested-month').hide();
+            $('#subcategoryCardList').hide();
+            $('#resetView').show();
+            $('#' + id).show();
         }
 
-        function toggleMonth(id) {
-            const current = document.getElementById(id);
-            if (!current) return;
-            const parent = current.closest('.nested-section');
-            parent.querySelectorAll('.nested-month').forEach(el => el.style.display = 'none');
-            current.style.display = 'block';
-            paginateTables(); // Refresh pagination for this month
+        function toggleMonth(id, el) {
+            const $current = $('#' + id);
+            if (!$current.length) return;
+
+            const $section = $current.closest('.nested-section');
+            $section.find('.nested-month').hide();
+
+            const $monthCardGrid = $(el).closest('.card-grid');
+            if ($monthCardGrid.length) $monthCardGrid.hide();
+
+            $current.show();
+            paginateTables();
         }
 
-        document.getElementById('resetView').addEventListener('click', function() {
-            document.querySelectorAll('.nested-section').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.nested-month').forEach(el => el.style.display = 'none');
-            document.getElementById('subcategoryCardList').style.display = 'flex';
-            document.getElementById('resetView').style.display = 'none';
-            document.getElementById('subcategorySearch').value = '';
-            filterSubcategories('');
-        });
+        function showMonths(button) {
+            const $nestedMonth = $(button).closest('.nested-month');
+            const $nestedSection = $nestedMonth.closest('.nested-section');
 
-        document.getElementById('subcategorySearch').addEventListener('input', function() {
-            filterSubcategories(this.value);
-        });
+            $nestedMonth.hide();
+            $nestedSection.find('.card-grid').css('display', 'flex');
+        }
 
         function filterSubcategories(query) {
             query = query.toLowerCase().trim();
-            const cards = document.querySelectorAll('#subcategoryCardList .card-button');
             let totalVisible = 0;
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
+
+            $('#subcategoryCardList .card-button').each(function() {
+                const $card = $(this);
+                const text = $card.text().toLowerCase();
                 const match = text.includes(query);
-                card.style.display = match ? 'flex' : 'none';
+                $card.css('display', match ? 'flex' : 'none');
+
                 if (match) {
-                    totalVisible += parseInt(card.dataset.letterCount) || 0;
+                    totalVisible += parseInt($card.data('letterCount')) || 0;
                 }
             });
-            document.getElementById('letterCountStatic').innerText = totalVisible;
+
+            $('#letterCountStatic').text(totalVisible);
         }
+
+        $(document).on('input', '.table-search-input', function() {
+            const $input = $(this);
+            const tableId = $input.data('tableId');
+            const $table = $('#' + tableId);
+            if (!$table.length) return;
+
+            const query = $input.val().toLowerCase();
+            const $rows = $table.find('tbody tr');
+
+            $rows.each(function() {
+                const $row = $(this);
+                const text = $row.text().toLowerCase();
+                $row.toggle(text.includes(query));
+            });
+
+            const $paginationContainer = $table.closest('.nested-month').find('.pagination-buttons');
+            if ($paginationContainer.length) {
+                $paginationContainer.css('display', query ? 'none' : 'flex');
+            }
+        });
+
+        $(document).ready(function() {
+            paginateTables();
+
+            let total = 0;
+            $('#subcategoryCardList .card-button').each(function() {
+                total += parseInt($(this).data('letterCount')) || 0;
+            });
+            $('#letterCountStatic').text(total);
+
+            $('#resetView').on('click', function() {
+                $('.nested-section, .nested-month').hide();
+                $('#subcategoryCardList').css('display', 'flex');
+                $('#resetView').hide();
+                $('#subcategorySearch').val('');
+                filterSubcategories('');
+            });
+
+            $('#subcategorySearch').on('input', function() {
+                filterSubcategories($(this).val());
+            });
+        });
     </script>
 @endsection

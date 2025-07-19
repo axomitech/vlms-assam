@@ -21,19 +21,15 @@ class DashboardController extends Controller
 
         $departmentId = session('role_dept');
 
-        // Base query
-        $baseQuery = DB::table('letters')
-            ->where('department_id', $departmentId);
 
-        // Weekly Receipt Data
         $weeklyReceiptDataQuery = DB::table('letters')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
             ->selectRaw("
-            letter_categories.category_name,
-            letter_category_id,
-            CEIL(EXTRACT(DAY FROM received_date)::numeric / 7) AS week_of_month,
-            COUNT(*) AS count
-        ")
+                letter_categories.category_name,
+                letter_category_id,
+                CEIL(EXTRACT(DAY FROM received_date)::numeric / 7) AS week_of_month,
+                COUNT(*) AS count
+            ")
             ->where('letters.receipt', true)
             ->where('letters.department_id', $departmentId);
 
@@ -48,7 +44,7 @@ class DashboardController extends Controller
 
         $receivedLetters = $weeklyReceiptData;
 
-        // General letters and categories
+
         $letters = Letter::showLetterAndSender(['user_departments.department_id' => $departmentId], []);
 
         $letter_category = Letter::join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
@@ -56,24 +52,34 @@ class DashboardController extends Controller
             ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
             ->get();
 
-        // Filters for count queries
-        $filteredQuery = DB::table('letters')
-            ->where('department_id', '=', $departmentId);
+        $receiptQuery = DB::table('letters')
+            ->where('department_id', '=', $departmentId)
+            ->where('receipt', '=', true);
+
+        $issueQuery = DB::table('letters')
+            ->where('department_id', '=', $departmentId)
+            ->where('receipt', '=', false);
+
 
         if (!$isOverall) {
-            $filteredQuery->whereRaw('EXTRACT(YEAR FROM letter_date) = ?', [$selectedYearInt])
-                ->whereRaw('EXTRACT(MONTH FROM letter_date) = ?', [$selectedMonth]);
+            $receiptQuery->whereRaw('EXTRACT(YEAR FROM received_date) = ?', [$selectedYearInt])
+                ->whereRaw('EXTRACT(MONTH FROM received_date) = ?', [$selectedMonth]);
+
+            $issueQuery->whereRaw('EXTRACT(YEAR FROM issue_date) = ?', [$selectedYearInt])
+                ->whereRaw('EXTRACT(MONTH FROM issue_date) = ?', [$selectedMonth]);
         }
 
-        $receipt_count = (clone $filteredQuery)->where('receipt', '=', true)->count();
-        // dd($receipt_count);
-        $issue_count = (clone $filteredQuery)->where('receipt', '=', false)->count();
-        // $issue_count = (clone $filteredQuery)->whereNotNull('letter_date')->count();
+        $receipt_count = $receiptQuery->count();
+        $issue_count = $issueQuery->count();
 
-        // dd($issue_count);
-        $archive_count = (clone $filteredQuery)->where('stage_status', '=', 5)->count();
-
-        // dd($archive_count);
+        $archive_count = DB::table('letters')
+            ->where('department_id', '=', $departmentId)
+            ->when(!$isOverall, function ($query) use ($selectedYearInt, $selectedMonth) {
+                return $query->whereRaw('EXTRACT(YEAR FROM letter_date) = ?', [$selectedYearInt])
+                    ->whereRaw('EXTRACT(MONTH FROM letter_date) = ?', [$selectedMonth]);
+            })
+            ->where('stage_status', '=', 5)
+            ->count();
 
         // Other stats
         $diarized_count = HomeModel::get_diarized_count();
@@ -117,7 +123,6 @@ class DashboardController extends Controller
             'sessionMonth'
         ));
     }
-
 
     public function receipt_box()
     {

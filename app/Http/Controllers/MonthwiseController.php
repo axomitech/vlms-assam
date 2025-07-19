@@ -11,9 +11,7 @@ use Carbon\Carbon;
 
 class MonthwiseController extends Controller
 {
-    /**
-     * Organize only letters with issue_date into year/month/category/subcategory folders.
-     */
+
     public function organizeLettersIntoFolders()
     {
         $letters = Letter::with(['category', 'subCategory'])
@@ -21,38 +19,38 @@ class MonthwiseController extends Controller
             ->get();
 
         foreach ($letters as $letter) {
-            $categoryId = $letter->letter_category_id ?? 'UnknownCategory';
-            $subCategoryId = $letter->letter_sub_category_id ?? 'UnknownSubCategory';
+            $categoryId = $letter->letter_category_id ?? 'unknown-category';
+            $subCategoryId = $letter->letter_sub_category_id;
+
+
+            $subFolder = ($subCategoryId === null || $subCategoryId == 0) ? 'others' : $subCategoryId;
+
             $year = Carbon::parse($letter->issue_date)->format('Y');
             $month = Carbon::parse($letter->issue_date)->format('F');
 
-            $folderPath = "public/letters/$categoryId/$subCategoryId/$year/$month";
+            $folderPath = "public/letters/{$categoryId}/{$subFolder}/{$year}/{$month}";
 
-            // Create folder if not exists
             if (!Storage::exists($folderPath)) {
                 Storage::makeDirectory($folderPath);
             }
 
-            // Move the file if it exists
             if ($letter->letter_path && Storage::exists("public/letters/" . $letter->letter_path)) {
                 $currentPath = "public/letters/" . $letter->letter_path;
                 $fileName = basename($letter->letter_path);
-                $newPath = "$folderPath/$fileName";
+                $newPath = "{$folderPath}/{$fileName}";
 
                 if (!Storage::exists($newPath)) {
                     Storage::move($currentPath, $newPath);
-                    $letter->letter_path = "$categoryId/$subCategoryId/$year/$month/$fileName";
+                    $letter->letter_path = "{$categoryId}/{$subFolder}/{$year}/{$month}/{$fileName}";
                     $letter->save();
                 }
             }
         }
 
-        return redirect()->route('files.view')->with('success', 'Letters with issue date organized successfully.');
+        return redirect()->route('files.month-view')->with('success', 'Letters with issue date organized successfully.');
     }
 
-    /**
-     * View folder-wise list of letters with issue_date.
-     */
+
     public function viewLettersFolderWise()
     {
         $letters = Letter::with(['category', 'subCategory'])
@@ -63,7 +61,11 @@ class MonthwiseController extends Controller
             ->get()
             ->groupBy([
                 'letter_category_id',
-                'letter_sub_category_id',
+                function ($letter) {
+                    return ($letter->letter_sub_category_id === null || $letter->letter_sub_category_id == 0)
+                        ? 'others'
+                        : $letter->letter_sub_category_id;
+                },
                 function ($letter) {
                     return Carbon::parse($letter->issue_date)->format('Y');
                 },
@@ -72,8 +74,9 @@ class MonthwiseController extends Controller
                 }
             ]);
 
-        $categories = LetterCategory::pluck('category_name', 'id');
-        $subCategories = LetterSubCategory::pluck('sub_category_name', 'id');
+        $categories = LetterCategory::pluck('category_name', 'id')->toArray();
+        $subCategories = LetterSubCategory::pluck('sub_category_name', 'id')->toArray();
+        $subCategories['others'] = 'Others / Miscellaneous';
 
         return view('files.month-view', [
             'groupedLetters' => $letters,

@@ -21,7 +21,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- AJAX response will populate here -->
                                 </tbody>
                             </table>
                         </div>
@@ -129,16 +128,13 @@
 
             const dashboardUrl = "{{ route('dashboard') }}";
 
-            // Handle back button click to reset view
+
             $('#resetView').on('click', function() {
-                // Check if the letters table is visible
                 if ($('#lettersTable').is(':visible')) {
-                    // If on the category page, reset to the main view
                     $('#lettersTable').hide();
                     $('#cardsContainer').show();
                     $('#selectedCategoryName').html('<strong>Receipts</strong>');
                 } else {
-                    // Redirect to the dashboard if on the initial view
                     window.location.href = dashboardUrl;
                 }
             });

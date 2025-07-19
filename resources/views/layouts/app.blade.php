@@ -270,12 +270,12 @@
 
 
 
-                <!-- Sidebar Menu -->
+
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         @if (session('role') > 1)
-                            <!--Dashboard-->
+
                             <div class="menu-item">
                                 <a href="{{ route('dashboard') }}" class="menu-link">
                                     <i class="menu-icon fas fa-th-large"></i>
@@ -284,7 +284,7 @@
                             </div>
 
 
-                            <!--Inbox-->
+
 
                             <div class="menu-item">
                                 <a href="{{ route('home1') }}" class="menu-link">
@@ -294,7 +294,6 @@
                             </div>
 
                             @if (session('role_dept') == 1)
-                                <!-- Letter Download -->
                                 <div class="menu-item">
                                     <input type="checkbox" id="menu-download" class="menu-toggle" />
                                     <label for="menu-download" class="menu-link">
@@ -312,7 +311,7 @@
                                             </a>
                                         </div>
 
-                                        <!-- By Month -->
+
                                         <div class="menu-item">
                                             <input type="checkbox" id="menu-download-month" class="menu-toggle" />
                                             <label for="menu-download-month" class="submenu-link">
@@ -334,7 +333,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- By Year -->
+
                                         <div class="menu-item">
                                             <input type="checkbox" id="menu-download-year" class="menu-toggle" />
                                             <label for="menu-download-year" class="submenu-link">
@@ -356,7 +355,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- By Ministry -->
+
                                         <div class="menu-item">
                                             <input type="checkbox" id="menu-download-ministry" class="menu-toggle" />
                                             <label for="menu-download-ministry" class="submenu-link">
@@ -395,6 +394,13 @@
                                         <p>Issued Items</p>
                                     </a>
                                 </div>
+                                <div class="menu-item">
+                                    <a href="{{ route('receipt_box') }}" class="menu-link">
+                                        <i class="fas fa-envelope-open-text" style="font-size: 20px;"></i>
+                                        <p>Receipt Items</p>
+                                    </a>
+                                </div>
+
 
                                 <div class="menu-item">
                                     <a href="{{ route('action_box') }}" class="menu-link">
@@ -420,7 +426,7 @@
                                     </label>
 
                                     <div class="submenu">
-                                        <!-- 📊 Overall Report -->
+
                                         <div class="menu-item">
                                             <a href="{{ route('reports') }}" class="submenu-link">
                                                 <i class="fas fa-list-alt"></i>
@@ -428,7 +434,7 @@
                                             </a>
                                         </div>
 
-                                        <!-- 📂 Overall Letter Report (Nested Submenu) -->
+
                                         <div class="menu-item">
                                             <input type="checkbox" id="menu-letter-report" class="menu-toggle" />
                                             <label for="menu-letter-report" class="submenu-link">
@@ -486,7 +492,6 @@
                             @endif
                         @endif
                         @if (session('role') == 1)
-                            <!-- DASHBOARD -->
                             <div class="menu-item">
                                 <a href="{{ route('dashboard') }}" class="menu-link">
                                     <i class="menu-icon fas fa-th-large"></i>
@@ -494,7 +499,7 @@
                                 </a>
                             </div>
 
-                            <!-- Letter Download -->
+
                             <div class="menu-item">
                                 <input type="checkbox" id="menu-download" class="menu-toggle" />
                                 <label for="menu-download" class="menu-link">
@@ -512,7 +517,7 @@
                                         </a>
                                     </div>
 
-                                    <!-- By Month -->
+
                                     <div class="menu-item">
                                         <input type="checkbox" id="menu-download-month" class="menu-toggle" />
                                         <label for="menu-download-month" class="submenu-link">
@@ -534,7 +539,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- By Year -->
+
                                     <div class="menu-item">
                                         <input type="checkbox" id="menu-download-year" class="menu-toggle" />
                                         <label for="menu-download-year" class="submenu-link">
@@ -556,7 +561,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- By Ministry -->
+
                                     <div class="menu-item">
                                         <input type="checkbox" id="menu-download-ministry" class="menu-toggle" />
                                         <label for="menu-download-ministry" class="submenu-link">
@@ -580,7 +585,7 @@
                                 </div>
                             </div>
 
-                            <!-- REPORT -->
+
 
 
                             <div class="menu-item">
@@ -592,7 +597,7 @@
                                 </label>
 
                                 <div class="submenu" id="actionBox">
-                                    <!-- 📨 Other Report Links -->
+
                                     <div class="menu-item">
                                         <a href="{{ route('receipt_box') }}" class="submenu-link">
                                             <i class="fas fa-envelope-open-text"></i>
@@ -617,7 +622,7 @@
 
 
 
-                            <!-- LETTERS -->
+
                             <div class="menu-item">
                                 <input type="checkbox" id="menu-letters" class="menu-toggle" />
                                 <label for="menu-letters" class="menu-link">
@@ -637,7 +642,7 @@
                                 </div>
                             </div>
 
-                            <!-- DIARIZED -->
+
                             <div class="menu-item">
                                 <input type="checkbox" id="menu-diarized" class="menu-toggle" />
                                 <label for="menu-diarized" class="menu-link">
@@ -646,7 +651,7 @@
                                     <i class="fas fa-angle-left arrow-icon"></i>
                                 </label>
                                 <div class="submenu">
-                                    <!-- Nested New Diarized -->
+
                                     <div class="menu-item">
                                         <input type="checkbox" id="menu-newdiarized" class="menu-toggle" />
                                         <label for="menu-newdiarized" class="submenu-link">
@@ -668,7 +673,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Legacy Diarized -->
+
                                     <a href="#" class="submenu-link">
                                         <i class="fas fa-archive"></i>
                                         <p>Legacy Diarize</p>
@@ -707,10 +712,10 @@
                             </li> --}}
 
                             <div class="menu-item has-submenu">
-                                <!-- Hidden checkbox toggle -->
+
                                 <input type="checkbox" id="toggle-settings" class="menu-toggle" hidden>
 
-                                <!-- Label acting as clickable toggle -->
+
                                 <label for="toggle-settings"
                                     class="menu-link d-flex justify-content-between align-items-center submenu-link">
                                     <div>
@@ -720,7 +725,7 @@
                                     <i class="fas fa-angle-left arrow-icon"></i>
                                 </label>
 
-                                <!-- Submenu that toggles open -->
+
                                 <div class="submenu">
                                     <div class="menu-item">
                                         <a href="{{ route('user') }}" class="submenu-link">
