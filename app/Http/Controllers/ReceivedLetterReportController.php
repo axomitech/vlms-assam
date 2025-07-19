@@ -11,12 +11,10 @@ use Carbon\Carbon;
 
 class ReceivedLetterReportController extends Controller
 {
-    /**
-     * Organize only received_date letters into folders
-     */
+
     public function organizeLettersIntoFolders()
     {
-        // Filter only letters with received_date
+
         $letters = Letter::with(['category', 'subCategory'])
             ->whereNotNull('received_date')
             ->get();
@@ -49,17 +47,15 @@ class ReceivedLetterReportController extends Controller
         return redirect()->route('files.view')->with('success', 'Only issue date letters organized successfully.');
     }
 
-    /**
-     * View only received_date letters grouped folder-wise
-     */
+
     public function viewLettersFolderWise()
     {
-        // Filter only letters with received_date
+
         $letters = Letter::with(['category', 'subCategory'])
             ->whereNotNull('received_date')
             ->orderBy('letter_category_id')
             ->orderBy('letter_sub_category_id')
-            ->orderBy('received_date') // Use received_date instead of received_date
+            ->orderBy('received_date')
             ->get()
             ->groupBy([
                 'letter_category_id',

@@ -144,7 +144,7 @@
 
                             <div id="category-{{ $categoryId }}" class="nested-folder">
                                 @foreach ($subCatGroup as $subCategoryId => $years)
-                                    @php $subCategoryName = $subCategories[$subCategoryId] ?? 'Unknown Subcategory'; @endphp
+                                    @php $subCategoryName = $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments'; @endphp
 
                                     <div class="folder"
                                         onclick="toggleFolder('subcategory-{{ $categoryId }}-{{ $subCategoryId }}')">
@@ -207,12 +207,10 @@
     </div>
 
     <script>
-        // Back button click redirect to dashboard
         document.getElementById('resetView').addEventListener('click', function() {
             window.location.href = "{{ route('dashboard') }}";
         });
 
-        // Toggle folder view
         function toggleFolder(id) {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";

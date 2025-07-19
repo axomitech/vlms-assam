@@ -1,19 +1,41 @@
 @extends('layouts.app')
 @section('content')
     <style>
+        :root {
+            --color-received: #3087d8;
+            --color-issued: #e66e0d;
+            --color-action: #39a013;
+            --color-archive: #d8a706;
+            --color-light-box: #d3e0eb;
+
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --text-white: #fff;
+
+            --border-color: #dee2e6;
+            --bg-legend: #f8f9fa;
+            --hover-bg: #f1f1f1;
+
+            --transition-fast: 0.2s ease;
+            --transition-medium: 0.3s ease;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
         .legend-item {
             display: flex;
             align-items: center;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            background-color: var(--bg-legend);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 6px 12px;
             font-size: 14px;
-            color: #333;
             font-weight: 500;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
+            color: #333;
             margin: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: var(--transition-fast);
+            cursor: pointer;
         }
 
         .legend-item::before {
@@ -27,53 +49,63 @@
         }
 
         .legend-item:hover {
-            background-color: #f1f1f1;
+            background-color: var(--hover-bg);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
+
         .dashboard-box {
             padding: 15px;
             border-radius: 1rem;
-            color: white;
+            color: var(--text-white);
             height: 100%;
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+        }
+
+        .dashboard-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
         }
 
         .bg-received {
-            background-color: #3087d8;
+            background-color: var(--color-received);
         }
 
         .bg-issued {
-            background-color: #e66e0d;
+            background-color: var(--color-issued);
         }
 
         .bg-action {
-            background-color: #39a013;
+            background-color: var(--color-action);
         }
 
         .bg-archive {
-            background-color: #d8a706;
+            background-color: var(--color-archive);
         }
 
         .bg-light-box {
-            background-color: #d3e0eb;
-            color: #000100;
+            background-color: var(--color-light-box);
+            color: #000;
         }
 
         .dashboard-box h3 {
             font-size: 18px;
             margin-bottom: 0;
+            font-weight: 600;
         }
 
         .dashboard-box img {
             width: 100%;
             height: 80%;
+            object-fit: contain;
         }
 
+        /* Card Container */
         .box {
             background-color: #fff;
             border-radius: 1rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--box-shadow);
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -81,14 +113,15 @@
         .section-heading {
             font-size: 18px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-dark);
             margin-bottom: 20px;
         }
+
 
         .modern-label {
             font-size: 13px;
             font-weight: 600;
-            color: #6c757d;
+            color: var(--text-muted);
             margin-bottom: 5px;
             display: block;
         }
@@ -101,7 +134,7 @@
             border: 1px solid #ced4da;
             margin-bottom: 12px;
             background-color: #fff;
-            transition: all 0.3s ease;
+            transition: var(--transition-medium);
         }
 
         .modern-select:focus {
@@ -114,16 +147,24 @@
             width: 100%;
             padding: 8px 12px;
             background-color: #007bff;
-            color: white;
+            color: var(--text-white);
             font-weight: 600;
             font-size: 13px;
             border: none;
             border-radius: 6px;
-            transition: background-color 0.3s ease;
+            transition: background-color var(--transition-medium);
         }
 
         .btn-view-data:hover {
             background-color: #0056b3;
+        }
+
+        .legend-item {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #fff;
+            background-color: var(--color);
         }
 
         #myPieChart {
@@ -133,20 +174,13 @@
             transform-origin: top;
         }
 
+
         .legend-color-box {
             display: inline-block;
             width: 20px;
             height: 13px;
             margin-right: 8px;
             border-radius: 4px;
-        }
-
-        .legend-item {
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #fff;
-            background-color: var(--color);
         }
     </style>
 
@@ -560,6 +594,7 @@
 @endsection
 @section('scripts')
     @include('layouts.scripts')
+
     <script>
         let originalDatasets = [];
         let activeCategoryLabels = new Set();
@@ -570,8 +605,9 @@
 
             legendItems.forEach(item => {
                 const label = item.innerText.trim();
-                activeCategoryLabels.add(label); // initially all active
+                activeCategoryLabels.add(label);
                 item.style.cursor = 'pointer';
+                item.style.opacity = 1;
 
                 item.addEventListener('click', () => {
                     if (activeCategoryLabels.has(label)) {
@@ -596,17 +632,17 @@
             const ctxWeekChart = document.getElementById('weekBarChart').getContext('2d');
 
             const categoryColors = {
-                1: '#E55674', // President's Secretariat
-                2: '#3090CF', // PMO
-                3: '#E07D38', // Union Minister
-                4: '#E6B84B', // MP
-                5: '#D0D2D7', // MLA
-                6: '#42A7A7', // Supreme Court/High Court
-                7: '#8759E6', // GoI/Ministry/Department
-                8: '#CC8136', // GoA Department
-                9: '#a451a5', // Governor's Secretariat
-                10: '#CC5170', // Others/Miscellaneous
-                11: '#285CAB' // Foreign Delegates
+                1: '#E55674',
+                2: '#3090CF',
+                3: '#E07D38',
+                4: '#E6B84B',
+                5: '#D0D2D7',
+                6: '#42A7A7',
+                7: '#8759E6',
+                8: '#CC8136',
+                9: '#a451a5',
+                10: '#CC5170',
+                11: '#285CAB'
             };
 
             const monthMap = [
@@ -616,8 +652,9 @@
 
             const today = new Date();
             const currentMonthName = monthMap[today.getMonth()];
-            const weekLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'].map(week => `${week} `);
+            // document.getElementById('monthLabel').innerText = `Month: ${currentMonthName}`;
 
+            const weekLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'].map(week => `${week} `);
             const categoryMap = {};
             let totalCount = 0;
 
@@ -694,12 +731,16 @@
                 }
             });
 
-            originalDatasets = datasets;
-            setupInteractiveLegend(chartInstance);
+            // Deep clone to prevent mutation
+            originalDatasets = datasets.map(ds => ({
+                ...ds,
+                data: [...ds.data]
+            }));
 
+            setupInteractiveLegend(chartInstance);
             document.getElementById('totalCount').innerText = totalCount;
 
-            // 📌 Bar Click Event Handling
+
             document.getElementById('weekBarChart').onclick = function(evt) {
                 const points = chartInstance.getElementsAtEventForMode(evt, 'nearest', {
                     intersect: true
@@ -715,21 +756,15 @@
                     const value = dataset.data[weekIndex];
 
                     if (value > 0) {
-                        // alert(`📊 ${categoryLabel}`);
-
                         const filteredDataset = originalDatasets.find(ds => ds.label === categoryLabel);
                         if (filteredDataset) {
                             chartInstance.data.datasets = [filteredDataset];
                             chartInstance.update();
                         }
 
-                        // Optional: update legend opacity
                         document.querySelectorAll('.legend-item').forEach(item => {
-                            if (item.innerText.trim() === categoryLabel) {
-                                item.style.opacity = 1;
-                            } else {
-                                item.style.opacity = 0.4;
-                            }
+                            const label = item.innerText.trim();
+                            item.style.opacity = label === categoryLabel ? 1 : 0.4;
                         });
 
                         activeCategoryLabels.clear();
@@ -760,7 +795,7 @@
                 target.parentElement.appendChild(overviewMonthLabel);
             }
 
-            // Initialize DataTable
+
             $("#letter-table").DataTable({
                 responsive: true,
                 lengthChange: false,
@@ -768,14 +803,14 @@
                 buttons: ["excel", "pdf", "print"]
             }).buttons().container().appendTo('#letter-table_wrapper .col-md-6:eq(0)');
 
-            // Initialize all charts
+
             initializeWeekBarChart(@json($receivedLetters));
             initializeDakPieChart(@json($letter_category));
             initializeStatusPieChart({{ $receipt_count }}, {{ $action_count }}, {{ $issue_count }},
                 {{ $archive_count }});
         });
 
-        // Pie Chart for Source Summary
+
         function initializeDakPieChart(dakData) {
             const ctxDakPieChart = document.getElementById('dakPieChart').getContext('2d');
             const categoryNames = dakData.map(item => item.category_name);

@@ -47,8 +47,22 @@
             margin-bottom: 5px;
         }
 
-        .letter-info span {
-            margin-right: 10px;
+        .letter-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .letter-date {
+            min-width: 120px;
+        }
+
+        .letter-no {
+            min-width: 160px;
+        }
+
+        .letter-crn {
+            width: 180px;
         }
 
         .pagination-buttons {
@@ -97,49 +111,60 @@
 
                     @foreach ($groupedLetters as $categoryId => $subCats)
                         @foreach ($subCats as $subCategoryId => $years)
-                            @php $subCategoryName = $subCategories[$subCategoryId] ?? 'Unknown Subcategory'; @endphp
+                            @php
+                                $subCategoryName = $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments';
+                                $safeCatId = preg_replace('/[^a-zA-Z0-9_-]/', '', $categoryId);
+                                $safeSubcatId = preg_replace('/[^a-zA-Z0-9_-]/', '', $subCategoryId);
+                            @endphp
 
                             <div class="folder subcat-folder"
-                                onclick="toggleFolder('subcat-{{ $categoryId }}-{{ $subCategoryId }}')">
+                                onclick="toggleFolder('subcat-{{ $safeCatId }}-{{ $safeSubcatId }}')">
                                 📂 {{ $serial++ }}. {{ $subCategoryName }}
                             </div>
 
-                            <div id="subcat-{{ $categoryId }}-{{ $subCategoryId }}" class="nested-folder">
+                            <div id="subcat-{{ $safeCatId }}-{{ $safeSubcatId }}" class="nested-folder">
                                 @foreach ($years as $year => $months)
                                     <div class="year-folder"
-                                        onclick="toggleFolder('year-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}')">
+                                        onclick="toggleFolder('year-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}')">
                                         📁 {{ $year }} — Total Months: {{ count($months) }}
                                     </div>
 
-                                    <div id="year-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}"
+                                    <div id="year-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}"
                                         class="nested-folder">
                                         <div class="pdf-link">
                                             <span><strong>📅 Year: {{ $year }}</strong></span>
-                                            <a href="{{ route('pdf.merge', [$categoryId, $subCategoryId, $year]) }}"
+                                            <a href="{{ route('pdf.merge.Issue', [$categoryId, $subCategoryId, $year]) }}"
                                                 class="btn btn-sm btn-outline-success" target="_blank">
-                                                📎 Download Year-wise PDF
+                                                📌 Download Year-wise PDF
                                             </a>
                                         </div>
 
                                         @foreach ($months as $month => $lettersGroup)
+                                            @php $safeMonth = preg_replace('/[^a-zA-Z0-9_-]/', '', $month); @endphp
                                             <div class="month-folder"
-                                                onclick="toggleFolder('month-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}-{{ $month }}')">
+                                                onclick="toggleFolder('month-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}-{{ $safeMonth }}')">
                                                 <div class="pdf-link mb-2">
                                                     🗓️ {{ $month }} —
                                                     Letters:<strong>{{ count($lettersGroup) }}</strong>
-                                                    <a href="{{ route('pdf.merge.month', [$categoryId, $subCategoryId, $year, $month]) }}"
+                                                    <a href="{{ route('pdf.merge.month.Issue', [$categoryId, $subCategoryId, $year, $month]) }}"
                                                         class="btn btn-sm btn-outline-primary" target="_blank"
                                                         style="margin-left: 10px;">
-                                                        📎 Download Month-wise PDF
+                                                        📌 Download Month-wise PDF
                                                     </a>
                                                 </div>
                                             </div>
 
-                                            <div id="month-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}-{{ $month }}"
+                                            <div id="month-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}-{{ $safeMonth }}"
                                                 class="pdf-list">
+
+                                                <input type="text" class="form-control form-control-sm search-box"
+                                                    placeholder="🔍 Search {{ $month }} {{ $year }}"
+                                                    oninput="searchLetters('letters-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}-{{ $safeMonth }}', this.value)"
+                                                    style="max-width: 240px; font-size: 12px; padding: 4px 8px; border: 1px solid #ced4da; border-radius: 4px; margin-bottom: 10px;">
+
                                                 @foreach ($lettersGroup as $index => $letter)
                                                     <div class="letter-row" data-index="{{ $index }}"
-                                                        data-group="letters-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
+                                                        data-group="letters-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}-{{ $safeMonth }}">
                                                         <div class="letter-info">
                                                             <span class="letter-date">📅
                                                                 {{ \Carbon\Carbon::parse($letter->received_date)->format('d-m-Y') }}</span>
@@ -147,6 +172,10 @@
                                                                 {{ $letter->letter_no ?? 'No Letter No' }}</span>
                                                             <span class="letter-crn">🔖
                                                                 {{ $letter->crn ?? 'No CRN' }}</span>
+                                                            <span class="letter-subcategory">
+                                                                <i class="fa fa-tags text-info"></i>
+                                                                {{ optional($letter->subCategory)->sub_category_name ?? ($letter->letter_other_sub_categories ?? 'Others/Miscellaneous Department') }}
+                                                            </span>
                                                         </div>
                                                         <a href="{{ asset(str_replace('public/', 'storage/', $letter->letter_path)) }}"
                                                             class="btn btn-sm btn-outline-primary" target="_blank">
@@ -156,7 +185,7 @@
                                                 @endforeach
 
                                                 <div class="pagination-buttons"
-                                                    id="pagination-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
+                                                    id="pagination-{{ $safeCatId }}-{{ $safeSubcatId }}-{{ $year }}-{{ $safeMonth }}">
                                                 </div>
                                             </div>
                                         @endforeach
@@ -236,5 +265,15 @@
                 }
             });
         });
+
+        function searchLetters(group, value) {
+            const searchTerm = value.toLowerCase().trim();
+            const rows = document.querySelectorAll(`[data-group="${group}"]`);
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? 'flex' : 'none';
+            });
+        }
     </script>
 @endsection

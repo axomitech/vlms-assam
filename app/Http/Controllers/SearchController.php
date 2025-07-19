@@ -31,6 +31,7 @@ class SearchController extends Controller
                 <th style="width:50%">Letter</th>
                 <th>Office Details</th>
                 <th>Category</th>
+                <th>Sub Category</th>
                 <th>Download</th>
             </tr>
         </thead>
@@ -42,15 +43,15 @@ class SearchController extends Controller
         $diarizerName = [];
         if (!empty($results)) {
             foreach ($results as $result) {
-                $diarizedBy[$result->crn] =  Common::getSingleColumnValue('letters',[
-                    'id'=>$result->letter_id
-                ],'user_id');
-                $userId =  Common::getSingleColumnValue('user_departments',[
-                    'id'=>$diarizedBy[$result->crn]
-                ],'user_id');
-                $diarizerName[$result->crn] =  Common::getSingleColumnValue('users',[
-                    'id'=>$userId
-                ],'name');
+                $diarizedBy[$result->crn] =  Common::getSingleColumnValue('letters', [
+                    'id' => $result->letter_id
+                ], 'user_id');
+                $userId =  Common::getSingleColumnValue('user_departments', [
+                    'id' => $diarizedBy[$result->crn]
+                ], 'user_id');
+                $diarizerName[$result->crn] =  Common::getSingleColumnValue('users', [
+                    'id' => $userId
+                ], 'name');
 
                 $has_data = 1;
 
@@ -65,11 +66,13 @@ class SearchController extends Controller
                 $table .= '<td><small><a href="" class="assign-link"
                                                                             data-toggle="modal"
                                                                             data-target=".bd-example-modal-lg"
-                                                                            data-letter="'.$result->letter_no.'"
-                                                                            data-letter_path="'.storageUrl($result->letter_path).'"><b>' . $result->crn . '</b></a><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: '.$diarizerName[$result->crn].'</small></td>';
+                                                                            data-letter="' . $result->letter_no . '"
+                                                                            data-letter_path="' . storageUrl($result->letter_path) . '"><b>' . $result->crn . '</b></a><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: ' . $diarizerName[$result->crn] . '</small></td>';
                 $table .= '<td><small><i>Subject</i>: ' . $result->subject . '<br><i>Letter No.</i>: ' . $result->letter_no . '<br><i>Letter Date</i>: ' . date_format(date_create($result->letter_date), "d/m/Y") . '</small></td>';
                 $table .= '<td><small><i>' . $from_to . '</i>: ' . $name_designation . '</small></td>';
                 $table .= '<td><small>' . $result->category_name . '</small></td>';
+                // $table .= '<td><small>' . $result->sub_category_name . '</small></td>';
+                $table .= '<td><small>' . (!empty($result->sub_category_name) ? $result->sub_category_name : $result->letter_other_sub_categories) . '</small></td>';
                 $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->letter_id]) . '"><i class="fas fa-download" style="color: #174060"></i></a></td>';
                 $table .= '</tr>';
             }

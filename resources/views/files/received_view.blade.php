@@ -100,11 +100,24 @@
             font-size: 13px;
         }
 
+        .search-input {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 13px;
+            width: 250px;
+        }
+
         @media (max-width: 768px) {
             .letter-row {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 6px;
+            }
+
+            .search-input {
+                width: 100%;
+                margin-top: 8px;
             }
         }
     </style>
@@ -122,7 +135,7 @@
                 <div class="card-body">
                     <div class="col-md-12" id="category-section">
                         @foreach ($letters as $categoryId => $subCatGroup)
-                            @php $categoryName = $categories[$categoryId] ?? 'Unknown Category'; @endphp
+                            @php $categoryName = $categories[$categoryId] ?? 'Others/Miscellaneous '; @endphp
 
                             <div class="category-wrapper" id="category-wrapper-{{ $categoryId }}">
                                 <div class="folder" onclick="openCategory('{{ $categoryId }}')">
@@ -137,7 +150,7 @@
                                 </div>
 
                                 @foreach ($subCatGroup as $subCategoryId => $years)
-                                    @php $subCategoryName = $subCategories[$subCategoryId] ?? 'Unknown Subcategory'; @endphp
+                                    @php $subCategoryName = $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments'; @endphp
 
                                     <div class="folder"
                                         onclick="toggleSubCategory('{{ $categoryId }}', '{{ $subCategoryId }}')">
@@ -154,9 +167,12 @@
 
                                             <div id="year-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}"
                                                 class="pdf-list">
-
                                                 <div class="pdf-link">
                                                     <span><strong>📅 Year: {{ $year }}</strong></span>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm search-input mx-2"
+                                                        placeholder="🔍 Search Date, Letter No, CRN..."
+                                                        onkeyup="filterLetters(this, 'letter-container-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}')">
                                                     <a href="{{ route('pdf.merge', [$categoryId, $subCategoryId, $year]) }}"
                                                         class="btn btn-sm btn-outline-primary" target="_blank">
                                                         ⬇️ Download Merged PDF
@@ -175,6 +191,10 @@
                                                                     {{ $letter->letter_no ?? 'No Letter No' }}</span>
                                                                 <span class="letter-crn">🔖
                                                                     {{ $letter->crn ?? 'No CRN' }}</span>
+                                                                <span class="letter-subcategory">
+                                                                    <i class="fa fa-tags text-info"></i>
+                                                                    {{ optional($letter->subCategory)->sub_category_name ?? ($letter->letter_other_sub_categories ?? 'Others/Miscellaneous Department') }}
+                                                                </span>
                                                             </div>
 
                                                             <a href="{{ asset(str_replace('public/', 'storage/', $letter->letter_path)) }}"
@@ -202,7 +222,6 @@
     </div>
 
     <script>
-        // Back to dashboard
         document.getElementById('resetView').addEventListener('click', function() {
             window.location.href = "{{ route('dashboard') }}";
         });
@@ -244,7 +263,6 @@
 
             el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
 
-            // If showing, initialize pagination
             if (el.style.display === "block") {
                 const yearParts = id.split("-");
                 const groupKey = `letters-${yearParts[1]}-${yearParts[2]}-${yearParts[3]}`;
@@ -259,15 +277,11 @@
             const total = rows.length;
             const totalPages = Math.ceil(total / perPage);
 
-            // Hide all rows first
             rows.forEach(row => row.style.display = 'none');
-
-            // Show only current page
             for (let i = page * perPage; i < (page + 1) * perPage && i < total; i++) {
                 rows[i].style.display = 'flex';
             }
 
-            // Render pagination
             const paginationContainer = document.getElementById(containerId);
             paginationContainer.innerHTML = '';
 
@@ -277,6 +291,26 @@
                 btn.innerText = `${i * perPage + 1} - ${Math.min((i + 1) * perPage, total)}`;
                 btn.onclick = () => paginateLetters(group, i);
                 paginationContainer.appendChild(btn);
+            }
+        }
+
+        function filterLetters(inputElement, containerId) {
+            const filterText = inputElement.value.toLowerCase();
+            const container = document.getElementById(containerId);
+            const letterRows = container.querySelectorAll('.letter-row');
+
+            letterRows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(filterText) ? 'flex' : 'none';
+            });
+
+            const paginationId = 'pagination-' + containerId.split("letter-container-")[1];
+            const pagination = document.getElementById(paginationId);
+            pagination.style.display = filterText.trim() ? 'none' : 'block';
+
+            if (!filterText.trim()) {
+                const groupKey = 'letters-' + containerId.split("letter-container-")[1];
+                paginateLetters(groupKey, 0);
             }
         }
     </script>
