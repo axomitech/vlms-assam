@@ -178,34 +178,47 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <div class="col-md-12 mb-3">
         <button class="btn btn-dark btn-sm" id="resetView" style="display: none;">
             <i class="fa fa-arrow-left"></i> Back
         </button>
     </div>
 
-    <h4 class="report-heading"><i class="fa fa-clipboard-list"></i> Issued Letters Summary – Department-wise Overview</h4>
+    <h4 class="report-heading"><i class="fa fa-clipboard-list"></i> Issue Letters Summary – Department-wise Overview</h4>
 
     <div class="mb-4 d-flex flex-wrap justify-content-center align-items-center gap-3">
+
         <div class="position-relative" style="width: 380px;">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="subcategorySearch" class="form-control search-input"
                 placeholder="Search Departments...">
         </div>
+
+        @php
+            $totalLetterCount = 0;
+            foreach ($groupedLetters as $categoryId => $subCats) {
+                foreach ($subCats as $subCategoryId => $years) {
+                    $totalLetterCount += collect($years)->flatten(2)->count();
+                }
+            }
+        @endphp
+
         <div class="d-flex align-items-center fw-semibold" style="font-size: 0.95rem;" id="filteredLetterCount">
-            <b> Total Issued Letters:</b> &nbsp;<span id="letterCountStatic">0</span>
+            <b>Total Issue Letters:</b> &nbsp;<span id="letterCountStatic">{{ $totalLetterCount }}</span>
         </div>
     </div>
 
     <div class="container-fluid">
-        @php $totalLetterCount = 0; @endphp
+
         <div id="subcategoryCardList" class="card-grid">
             @foreach ($groupedLetters as $categoryId => $subCats)
                 @foreach ($subCats as $subCategoryId => $years)
                     @php
                         $subCategoryName = $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments';
                         $letterCount = collect($years)->flatten(2)->count();
-                        $totalLetterCount += $letterCount;
                     @endphp
                     <div class="card-button" onclick="showOnlyThis('subcat-{{ $categoryId }}-{{ $subCategoryId }}')"
                         data-letter-count="{{ $letterCount }}">
@@ -216,6 +229,7 @@
             @endforeach
         </div>
 
+
         @foreach ($groupedLetters as $categoryId => $subCats)
             @foreach ($subCats as $subCategoryId => $years)
                 <div id="subcat-{{ $categoryId }}-{{ $subCategoryId }}" class="nested-section">
@@ -224,8 +238,9 @@
                         </div>
                         <div class="card-grid">
                             @foreach ($months as $month => $lettersGroup)
+                                @php $monthSafe = sanitizeId($month); @endphp
                                 <div class="month-card"
-                                    onclick="toggleMonth('month-{{ $subCategoryId }}-{{ $year }}-{{ $month }}', this)">
+                                    onclick="toggleMonth('month-{{ $subCategoryId }}-{{ $year }}-{{ $monthSafe }}')">
                                     <div style="font-size: 1.4rem; color: #0d6efd;">{{ count($lettersGroup) }}</div>
                                     <span>{{ $month }}<br>Total Letters</span>
                                 </div>
@@ -233,16 +248,18 @@
                         </div>
 
                         @foreach ($months as $month => $lettersGroup)
-                            <div id="month-{{ $subCategoryId }}-{{ $year }}-{{ $month }}"
+                            @php $monthSafe = sanitizeId($month); @endphp
+                            <div id="month-{{ $subCategoryId }}-{{ $year }}-{{ $monthSafe }}"
                                 class="nested-month">
                                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                                     <button class="btn btn-sm btn-outline-secondary" onclick="showMonths(this)">
                                         <i class="fa fa-arrow-left"></i> Back to Months
                                     </button>
+
                                     <div style="max-width: 300px; width: 100%;">
                                         <input type="text" class="form-control table-search-input"
                                             placeholder="Search letters..."
-                                            data-table-id="table-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
+                                            data-table-id="table-{{ $subCategoryId }}-{{ $year }}-{{ $monthSafe }}">
                                     </div>
                                 </div>
 
@@ -250,11 +267,11 @@
                                 </div>
 
                                 <table class="letter-table"
-                                    id="table-{{ $subCategoryId }}-{{ $year }}-{{ $month }}">
+                                    id="table-{{ $subCategoryId }}-{{ $year }}-{{ $monthSafe }}">
                                     <thead>
                                         <tr>
                                             <th>SL No</th>
-                                            <th>Issue Date</th>
+                                            <th>Received Date</th>
                                             <th>Letter No</th>
                                             <th>CRN No</th>
                                             <th>ECR No</th>
@@ -267,7 +284,8 @@
                                         @foreach ($lettersGroup as $index => $letter)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($letter->issue_date)->format('d-m-Y') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($letter->issue_date)->format('d-m-Y') }}
+                                                </td>
                                                 <td>{{ $letter->letter_no ?? 'N/A' }}</td>
                                                 <td>{{ $letter->crn ?? 'N/A' }}</td>
                                                 <td>{{ $letter->ecr_no ?? 'N/A' }}</td>
@@ -276,9 +294,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ asset(str_replace('public/', 'storage/', $letter->letter_path)) }}"
-                                                        class="btn btn-sm btn-outline-primary" target="_blank">
-                                                        Download
-                                                    </a>
+                                                        class="btn btn-sm btn-outline-primary" target="_blank">Download</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -299,60 +315,60 @@
     <script>
         const rowsPerPage = 25;
 
+        function applyPagination($rows, $paginationContainer) {
+            const totalPages = Math.ceil($rows.length / rowsPerPage);
+            let currentPage = 1;
+
+            function showPage(page) {
+                currentPage = page;
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                $rows.hide().slice(start, end).show();
+                $paginationContainer.empty();
+
+                const $prevBtn = $('<button>', {
+                    text: 'Previous',
+                    class: 'btn btn-sm btn-outline-secondary',
+                    disabled: currentPage === 1
+                }).on('click', () => showPage(currentPage - 1));
+                $paginationContainer.append($prevBtn);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const $btn = $('<button>', {
+                        text: i,
+                        class: 'btn btn-sm btn-outline-primary'
+                    });
+                    if (i === currentPage) $btn.addClass('active');
+                    $btn.on('click', () => showPage(i));
+                    $paginationContainer.append($btn);
+                }
+
+                const $nextBtn = $('<button>', {
+                    text: 'Next',
+                    class: 'btn btn-sm btn-outline-secondary',
+                    disabled: currentPage === totalPages
+                }).on('click', () => showPage(currentPage + 1));
+                $paginationContainer.append($nextBtn);
+            }
+
+            if (totalPages > 0) showPage(1);
+        }
+
         function paginateTables() {
             $('.nested-month').each(function() {
                 const $monthSection = $(this);
-                const $tableBody = $monthSection.find('.paginated-body');
-                const $rows = $tableBody.find('tr');
+                const $rows = $monthSection.find('tbody tr');
                 const $paginationContainer = $monthSection.find('.pagination-buttons');
-
-                if (!$rows.length) return;
-
-                const totalPages = Math.ceil($rows.length / rowsPerPage);
-                let currentPage = 1;
-
-                function showPage(page) {
-                    currentPage = page;
-                    const start = (page - 1) * rowsPerPage;
-                    const end = start + rowsPerPage;
-
-                    $rows.each(function(index) {
-                        $(this).toggle(index >= start && index < end);
-                    });
-
-                    $paginationContainer.empty();
-
-                    const $prevBtn = $('<button>', {
-                        text: 'Previous',
-                        class: 'btn btn-sm btn-outline-primary',
-                        disabled: currentPage === 1
-                    }).on('click', () => showPage(currentPage - 1));
-
-                    $paginationContainer.append($prevBtn);
-
-                    for (let i = 1; i <= totalPages; i++) {
-                        const $btn = $('<button>', {
-                            text: i,
-                            class: 'btn btn-sm btn-outline-primary'
-                        });
-
-                        if (i === currentPage) $btn.addClass('active');
-
-                        $btn.on('click', () => showPage(i));
-                        $paginationContainer.append($btn);
-                    }
-
-                    const $nextBtn = $('<button>', {
-                        text: 'Next',
-                        class: 'btn btn-sm btn-outline-primary',
-                        disabled: currentPage === totalPages
-                    }).on('click', () => showPage(currentPage + 1));
-
-                    $paginationContainer.append($nextBtn);
-                }
-
-                showPage(1);
+                if ($rows.length) applyPagination($rows, $paginationContainer);
             });
+        }
+
+        function toggleMonth(id) {
+            const $current = $('#' + id);
+            $current.show().siblings('.nested-month').hide();
+            $current.closest('.nested-section').find('.card-grid').hide();
+            setTimeout(() => paginateTables(), 50);
         }
 
         function showOnlyThis(id) {
@@ -362,79 +378,36 @@
             $('#' + id).show();
         }
 
-        function toggleMonth(id, el) {
-            const $current = $('#' + id);
-            if (!$current.length) return;
-
-            const $section = $current.closest('.nested-section');
-            $section.find('.nested-month').hide();
-
-            const $monthCardGrid = $(el).closest('.card-grid');
-            if ($monthCardGrid.length) $monthCardGrid.hide();
-
-            $current.show();
-            paginateTables();
-        }
-
         function showMonths(button) {
-            const $nestedMonth = $(button).closest('.nested-month');
-            const $nestedSection = $nestedMonth.closest('.nested-section');
-
-            $nestedMonth.hide();
-            $nestedSection.find('.card-grid').css('display', 'flex');
+            const $section = $(button).closest('.nested-section');
+            $section.find('.nested-month').hide();
+            $section.find('.card-grid').css('display', 'flex');
         }
 
         function filterSubcategories(query) {
             query = query.toLowerCase().trim();
             let totalVisible = 0;
 
+            $('#subcategoryCardList').show();
+            $('#resetView').hide();
+            $('.nested-section, .nested-month').hide();
+
             $('#subcategoryCardList .card-button').each(function() {
                 const $card = $(this);
-                const text = $card.text().toLowerCase();
-                const match = text.includes(query);
-                $card.css('display', match ? 'flex' : 'none');
-
-                if (match) {
-                    totalVisible += parseInt($card.data('letterCount')) || 0;
-                }
+                const match = $card.text().toLowerCase().includes(query);
+                $card.toggle(match);
+                if (match) totalVisible += parseInt($card.data('letter-count')) || 0;
             });
 
             $('#letterCountStatic').text(totalVisible);
         }
 
-        $(document).on('input', '.table-search-input', function() {
-            const $input = $(this);
-            const tableId = $input.data('tableId');
-            const $table = $('#' + tableId);
-            if (!$table.length) return;
-
-            const query = $input.val().toLowerCase();
-            const $rows = $table.find('tbody tr');
-
-            $rows.each(function() {
-                const $row = $(this);
-                const text = $row.text().toLowerCase();
-                $row.toggle(text.includes(query));
-            });
-
-            const $paginationContainer = $table.closest('.nested-month').find('.pagination-buttons');
-            if ($paginationContainer.length) {
-                $paginationContainer.css('display', query ? 'none' : 'flex');
-            }
-        });
-
         $(document).ready(function() {
             paginateTables();
 
-            let total = 0;
-            $('#subcategoryCardList .card-button').each(function() {
-                total += parseInt($(this).data('letterCount')) || 0;
-            });
-            $('#letterCountStatic').text(total);
-
             $('#resetView').on('click', function() {
                 $('.nested-section, .nested-month').hide();
-                $('#subcategoryCardList').css('display', 'flex');
+                $('#subcategoryCardList').show();
                 $('#resetView').hide();
                 $('#subcategorySearch').val('');
                 filterSubcategories('');
@@ -442,6 +415,26 @@
 
             $('#subcategorySearch').on('input', function() {
                 filterSubcategories($(this).val());
+            });
+
+            $(document).on('input', '.table-search-input', function() {
+                const searchQuery = $(this).val().toLowerCase();
+                const tableId = $(this).data('table-id');
+                const $table = $('#' + tableId);
+                const $rows = $table.find('tbody tr');
+                const $paginationContainer = $table.closest('.nested-month').find('.pagination-buttons');
+
+                $rows.each(function() {
+                    const match = $(this).text().toLowerCase().includes(searchQuery);
+                    $(this).toggle(match);
+                });
+
+                const $filteredRows = $rows.filter(':visible');
+                if ($filteredRows.length) {
+                    applyPagination($filteredRows, $paginationContainer);
+                } else {
+                    $paginationContainer.empty();
+                }
             });
         });
     </script>
