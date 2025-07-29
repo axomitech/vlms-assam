@@ -178,6 +178,9 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <div class="col-md-12 mb-3">
         <button class="btn btn-dark btn-sm" id="resetView" style="display: none;">
             <i class="fa fa-arrow-left"></i> Back
@@ -187,25 +190,35 @@
     <h4 class="report-heading"><i class="fa fa-clipboard-list"></i> Receipt Letters Summary – Department-wise Overview</h4>
 
     <div class="mb-4 d-flex flex-wrap justify-content-center align-items-center gap-3">
+        <!-- Department Search -->
         <div class="position-relative" style="width: 380px;">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="subcategorySearch" class="form-control search-input"
                 placeholder="Search Departments...">
         </div>
+
+        @php
+            $totalLetterCount = 0;
+            foreach ($groupedLetters as $categoryId => $subCats) {
+                foreach ($subCats as $subCategoryId => $years) {
+                    $totalLetterCount += collect($years)->flatten(2)->count();
+                }
+            }
+        @endphp
+
         <div class="d-flex align-items-center fw-semibold" style="font-size: 0.95rem;" id="filteredLetterCount">
-            <b> Total Receipt Letters:</b> &nbsp;<span id="letterCountStatic">0</span>
+            <b>Total Receipt Letters:</b> &nbsp;<span id="letterCountStatic">{{ $totalLetterCount }}</span>
         </div>
     </div>
 
     <div class="container-fluid">
-        @php $totalLetterCount = 0; @endphp
+        <!-- Subcategory Cards -->
         <div id="subcategoryCardList" class="card-grid">
             @foreach ($groupedLetters as $categoryId => $subCats)
                 @foreach ($subCats as $subCategoryId => $years)
                     @php
                         $subCategoryName = $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments';
                         $letterCount = collect($years)->flatten(2)->count();
-                        $totalLetterCount += $letterCount;
                     @endphp
                     <div class="card-button" onclick="showOnlyThis('subcat-{{ $categoryId }}-{{ $subCategoryId }}')"
                         data-letter-count="{{ $letterCount }}">
@@ -216,6 +229,7 @@
             @endforeach
         </div>
 
+        <!-- Nested Sections -->
         @foreach ($groupedLetters as $categoryId => $subCats)
             @foreach ($subCats as $subCategoryId => $years)
                 <div id="subcat-{{ $categoryId }}-{{ $subCategoryId }}" class="nested-section">
@@ -241,6 +255,7 @@
                                     <button class="btn btn-sm btn-outline-secondary" onclick="showMonths(this)">
                                         <i class="fa fa-arrow-left"></i> Back to Months
                                     </button>
+                                    <!-- Letter Search -->
                                     <div style="max-width: 300px; width: 100%;">
                                         <input type="text" class="form-control table-search-input"
                                             placeholder="Search letters..."
@@ -286,8 +301,8 @@
                                     </tbody>
                                 </table>
 
-                                <div class="pagination-buttons mt-2 d-flex flex-wrap gap-2 justify-content-center align-items-center"
-                                    id="pagination-buttons-{{ $subCategoryId }}-{{ $year }}-{{ $monthSafe }}">
+                                <div
+                                    class="pagination-buttons mt-2 d-flex flex-wrap gap-2 justify-content-center align-items-center">
                                 </div>
                             </div>
                         @endforeach
@@ -300,77 +315,59 @@
     <script>
         const rowsPerPage = 25;
 
+        function applyPagination($rows, $paginationContainer) {
+            const totalPages = Math.ceil($rows.length / rowsPerPage);
+            let currentPage = 1;
+
+            function showPage(page) {
+                currentPage = page;
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                $rows.hide().slice(start, end).show();
+                $paginationContainer.empty();
+
+                const $prevBtn = $('<button>', {
+                    text: 'Previous',
+                    class: 'btn btn-sm btn-outline-secondary',
+                    disabled: currentPage === 1
+                }).on('click', () => showPage(currentPage - 1));
+                $paginationContainer.append($prevBtn);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const $btn = $('<button>', {
+                        text: i,
+                        class: 'btn btn-sm btn-outline-primary'
+                    });
+                    if (i === currentPage) $btn.addClass('active');
+                    $btn.on('click', () => showPage(i));
+                    $paginationContainer.append($btn);
+                }
+
+                const $nextBtn = $('<button>', {
+                    text: 'Next',
+                    class: 'btn btn-sm btn-outline-secondary',
+                    disabled: currentPage === totalPages
+                }).on('click', () => showPage(currentPage + 1));
+                $paginationContainer.append($nextBtn);
+            }
+
+            if (totalPages > 0) showPage(1);
+        }
+
         function paginateTables() {
             $('.nested-month').each(function() {
                 const $monthSection = $(this);
-                const $tableBody = $monthSection.find('.paginated-body');
-                if (!$tableBody.length) return;
-
-                const $rows = $tableBody.find('tr');
+                const $rows = $monthSection.find('tbody tr');
                 const $paginationContainer = $monthSection.find('.pagination-buttons');
-                if (!$rows.length || !$paginationContainer.length) return;
-
-                const totalPages = Math.ceil($rows.length / rowsPerPage);
-                let currentPage = 1;
-
-                function showPage(page) {
-                    currentPage = page;
-                    const start = (page - 1) * rowsPerPage;
-                    const end = start + rowsPerPage;
-
-                    $rows.each(function(i) {
-                        $(this).toggle(i >= start && i < end);
-                    });
-
-                    $paginationContainer.empty();
-
-                    const $prevBtn = $('<button>', {
-                        text: 'Previous',
-                        class: 'btn btn-sm btn-outline-secondary',
-                        disabled: currentPage === 1
-                    }).on('click', () => showPage(currentPage - 1));
-
-                    $paginationContainer.append($prevBtn);
-
-                    for (let i = 1; i <= totalPages; i++) {
-                        const $btn = $('<button>', {
-                            text: i,
-                            class: 'btn btn-sm btn-outline-primary'
-                        });
-
-                        if (i === currentPage) $btn.addClass('active');
-                        $btn.on('click', () => showPage(i));
-
-                        $paginationContainer.append($btn);
-                    }
-
-                    const $nextBtn = $('<button>', {
-                        text: 'Next',
-                        class: 'btn btn-sm btn-outline-secondary',
-                        disabled: currentPage === totalPages
-                    }).on('click', () => showPage(currentPage + 1));
-
-                    $paginationContainer.append($nextBtn);
-                }
-
-                showPage(1);
+                if ($rows.length) applyPagination($rows, $paginationContainer);
             });
         }
 
         function toggleMonth(id) {
             const $current = $('#' + id);
-            if (!$current.length) {
-                console.warn("Element not found:", id);
-                return;
-            }
-
-            const $parent = $current.closest('.nested-section');
-            if (!$parent.length) return;
-
-            $parent.find('.nested-month').hide();
-            $parent.find('.card-grid').hide();
-
-            $current.show();
+            $current.show().siblings('.nested-month').hide();
+            $current.closest('.nested-section').find('.card-grid').hide();
             setTimeout(() => paginateTables(), 50);
         }
 
@@ -382,26 +379,24 @@
         }
 
         function showMonths(button) {
-            const $parentSection = $(button).closest('.nested-section');
-            if (!$parentSection.length) return;
-
-            $parentSection.find('.card-grid').css('display', 'flex');
-            $parentSection.find('.nested-month').hide();
+            const $section = $(button).closest('.nested-section');
+            $section.find('.nested-month').hide();
+            $section.find('.card-grid').css('display', 'flex');
         }
 
         function filterSubcategories(query) {
             query = query.toLowerCase().trim();
             let totalVisible = 0;
 
+            $('#subcategoryCardList').show();
+            $('#resetView').hide();
+            $('.nested-section, .nested-month').hide();
+
             $('#subcategoryCardList .card-button').each(function() {
                 const $card = $(this);
-                const text = $card.text().toLowerCase();
-                const match = text.includes(query);
-                $card.css('display', match ? 'flex' : 'none');
-
-                if (match) {
-                    totalVisible += parseInt($card.data('letter-count')) || 0;
-                }
+                const match = $card.text().toLowerCase().includes(query);
+                $card.toggle(match);
+                if (match) totalVisible += parseInt($card.data('letter-count')) || 0;
             });
 
             $('#letterCountStatic').text(totalVisible);
@@ -410,15 +405,9 @@
         $(document).ready(function() {
             paginateTables();
 
-            let total = 0;
-            $('#subcategoryCardList .card-button').each(function() {
-                total += parseInt($(this).data('letter-count')) || 0;
-            });
-            $('#letterCountStatic').text(total);
-
             $('#resetView').on('click', function() {
                 $('.nested-section, .nested-month').hide();
-                $('#subcategoryCardList').css('display', 'flex');
+                $('#subcategoryCardList').show();
                 $('#resetView').hide();
                 $('#subcategorySearch').val('');
                 filterSubcategories('');
@@ -429,16 +418,23 @@
             });
 
             $(document).on('input', '.table-search-input', function() {
-                const $input = $(this);
-                const searchQuery = $input.val().toLowerCase();
-                const tableId = $input.data('table-id');
-                const $rows = $('#' + tableId).find('tbody tr');
+                const searchQuery = $(this).val().toLowerCase();
+                const tableId = $(this).data('table-id');
+                const $table = $('#' + tableId);
+                const $rows = $table.find('tbody tr');
+                const $paginationContainer = $table.closest('.nested-month').find('.pagination-buttons');
 
                 $rows.each(function() {
-                    const $row = $(this);
-                    const rowText = $row.text().toLowerCase();
-                    $row.toggle(rowText.includes(searchQuery));
+                    const match = $(this).text().toLowerCase().includes(searchQuery);
+                    $(this).toggle(match);
                 });
+
+                const $filteredRows = $rows.filter(':visible');
+                if ($filteredRows.length) {
+                    applyPagination($filteredRows, $paginationContainer);
+                } else {
+                    $paginationContainer.empty();
+                }
             });
         });
     </script>
