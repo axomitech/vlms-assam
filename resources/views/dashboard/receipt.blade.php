@@ -79,20 +79,34 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Flex container for heading and month select -->
                         <h5 class="px-5"><strong>Receipts Summary</strong></h5>
-                        <select id="monthSelect" class="form-select" style="width: 200px;">
-                            <option value="1" selected>January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
+                        <div class="d-flex align-items-center gap-3">
+                            <div>
+                                <label for="yearSelect" class="form-label">
+                                    <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
+                                </label>
+                                <select id="yearSelect" class="form-select" style="width: 120px;  margin-right: 20px;">
+                                </select>
+                            </div>
+                            <div>
+                                <label for="monthSelect" class="form-label">
+                                    <i class="fa fa-calendar-alt text-primary me-1"></i> Month
+                                </label>
+                                <select id="monthSelect" class="form-select" style="width: 120px;">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <hr style="border-top: 2px solid #ccc !important;">
                     <!-- Horizontal line below heading and month select -->
@@ -136,6 +150,28 @@
                     </div>
                 </div>
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const monthSelect = document.getElementById("monthSelect");
+                    const yearSelect = document.getElementById("yearSelect");
+
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentYear = now.getFullYear();
+
+
+                    monthSelect.value = currentMonth;
+
+
+                    for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+                        let option = document.createElement("option");
+                        option.value = y;
+                        option.text = y;
+                        if (y === currentYear) option.selected = true;
+                        yearSelect.appendChild(option);
+                    }
+                });
+            </script>
             <script>
                 // Get data from Laravel
                 const categories = @json($categories);

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-@include('layouts.header')
+    @include('layouts.header')
 
     <div class="row mt-3">
         <div class="col-md-12 text-center">
@@ -82,20 +82,34 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Flex container for heading and month select -->
                     <h5 class="px-5"><strong>Issue Summary</strong></h5>
-                    <select id="monthSelect" class="form-select" style="width: 200px;">
-                        <option value="1" selected>January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
+                    <div class="d-flex align-items-center gap-3">
+                        <div>
+                            <label for="yearSelect" class="form-label">
+                                <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
+                            </label>
+                            <select id="yearSelect" class="form-select" style="width: 120px;  margin-right: 20px;">
+                            </select>
+                        </div>
+                        <div>
+                            <label for="monthSelect" class="form-label">
+                                <i class="fa fa-calendar-alt text-primary me-1"></i> Month
+                            </label>
+                            <select id="monthSelect" class="form-select" style="width: 120px;">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <hr style="border-top: 2px solid #ccc !important;">
                 <!-- Horizontal line below heading and month select -->
@@ -111,24 +125,21 @@
                     <div class="labels-container d-flex flex-grow-1 justify-content-between" style="margin-left: 10%;">
                         <!-- Stretch to fill space -->
                         <div class="text-center">
-                            <p
-                                style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
                                 Labels</p> <!-- Bottom border for header -->
                             <ul id="labelList"
                                 style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: left;"></ul>
                             <!-- Left align labels -->
                         </div>
                         <div class="text-center">
-                            <p
-                                style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
                                 Nos</p> <!-- Bottom border for header -->
                             <ul id="countList"
                                 style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
                             <!-- Right align counts -->
                         </div>
                         <div class="text-center">
-                            <p
-                                style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
                                 %</p> <!-- Bottom border for header -->
                             <ul id="percentList"
                                 style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
@@ -139,6 +150,28 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const monthSelect = document.getElementById("monthSelect");
+                const yearSelect = document.getElementById("yearSelect");
+
+                const now = new Date();
+                const currentMonth = now.getMonth() + 1;
+                const currentYear = now.getFullYear();
+
+
+                monthSelect.value = currentMonth;
+
+
+                for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+                    let option = document.createElement("option");
+                    option.value = y;
+                    option.text = y;
+                    if (y === currentYear) option.selected = true;
+                    yearSelect.appendChild(option);
+                }
+            });
+        </script>
         <script>
             // Get data from Laravel
             const categories = @json($categories);
@@ -281,7 +314,8 @@
                         <div class="col-md-5" id="refer-letter-div" hidden>
                             <div class="card card-primary card-outline card-outline-tabs">
                                 <div class="card-body">
-                                    <iframe src="" style="width: 100%; height: 400px;" id="refer-letter-view"></iframe>
+                                    <iframe src="" style="width: 100%; height: 400px;"
+                                        id="refer-letter-view"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -296,11 +330,11 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
 
 @section('scripts')
-@include('layouts.scripts')
+    @include('layouts.scripts')
 
     <script>
         $(document).ready(function() {
@@ -311,16 +345,17 @@
                 autoWidth: false,
                 buttons: ["excel", "pdf", "print"]
             });
-    
+
             // Handle card click
             $('.category-card').on('click', function(e) {
                 e.preventDefault();
-    
+
                 // Get category info
                 let categoryId = $(this).data('category-id');
                 let categoryName = $(this).data('category-name');
 
-                let url = '{{ route("issue_by_category", ["category_id" => ":category_id"]) }}'.replace(':category_id', categoryId);
+                let url = '{{ route('issue_by_category', ['category_id' => ':category_id']) }}'.replace(
+                    ':category_id', categoryId);
 
                 showLoading();
                 // Fetch letters using AJAX
@@ -329,21 +364,21 @@
                     type: 'GET',
                     success: function(response) {
                         console.log(response);
-    
+
                         // Show selected category name
                         $('#selectedCategoryName').html('<strong>Issued from ' +
                             categoryName + '</strong>');
-    
+
                         // Populate table with letters
                         let tableBody = '';
                         let serialNumber = 1; // Initialize serial number
-    
+
                         response.forEach(function(letter) {
                             let ecr_no = letter.ecr_no;
-                            if(ecr_no == null){
+                            if (ecr_no == null) {
                                 ecr_no = "";
                             }
-                            let letterPath = letter.letter_path.replace("public/","");
+                            let letterPath = letter.letter_path.replace("public/", "");
                             let truncatedSubject = letter.subject.length > 100 ?
                                 `<div class="text-block" id="textBlock${letter.id}">
                                   <p class="shortText text-justify text-sm">
@@ -358,7 +393,7 @@
                                   </div>
                               </div>` :
                                 `<p>${letter.subject}</p>`;
-    
+
                             tableBody += `<tr>
                                 <td><small>${serialNumber++}</small></td>
                                 <td><small><a href="" class="assign-link"
@@ -376,12 +411,12 @@
                                 <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                             </tr>`;
                         });
-    
+
                         // Clear and add new data to the DataTable
                         dataTable.clear(); // Clear existing data
                         dataTable.rows.add($(tableBody)); // Add the new data
                         dataTable.draw(); // Redraw the table
-    
+
                         // Show the table and back button, hide cards
                         $('#cardsContainer').hide();
                         $('#lettersTable').show();
@@ -390,9 +425,9 @@
                     }
                 });
             });
-    
+
             const dashboardUrl = "{{ route('dashboard') }}";
-    
+
             // Handle back button click to reset view
             $('#resetView').on('click', function() {
                 // Check if the letters table is visible
@@ -413,22 +448,24 @@
         $(document).on('click', '.assign-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
             $('#assign-div').show();
-            $('#exampleModalLabel').html("<strong>Letter No.: "+$(this).data('letter')+"</strong>");
-            $.get("{{route('reference')}}",{
-                letter:$(this).data('id')
-            },function(j){
-                if(j.length > 1){
+            $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
+            $.get("{{ route('reference') }}", {
+                letter: $(this).data('id')
+            }, function(j) {
+                if (j.length > 1) {
                     var div = "";
-                    for(var i = 1; i < j.length; i++){
-                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='"+j[i].letter_id+"' data-refer_letter_path='"+j[i].letter_path+"'><b>"+j[i].letter_no+"</b></a></div>";
+                    for (var i = 1; i < j.length; i++) {
+                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='" +
+                            j[i].letter_id + "' data-refer_letter_path='" + j[i].letter_path + "'><b>" + j[
+                                i].letter_no + "</b></a></div>";
                     }
-                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>"+div);
-                }else{
+                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
+                } else {
                     $('#refer-letter-div').hide();
                 }
             });
         });
-        $(document).on('click','.refer-letter-link',function(e){
+        $(document).on('click', '.refer-letter-link', function(e) {
             e.preventDefault();
             $('#refer-letter-div').removeAttr("hidden");
             $('#refer-letter-div').show();

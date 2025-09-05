@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-@include('layouts.header')
+    @include('layouts.header')
 
     <div class="row mt-3">
         <div class="col-md-12 text-center">
@@ -76,22 +76,37 @@
                     style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
                     <!-- Full width -->
                     <div class="d-flex justify-content-between align-items-center">
-                        <!-- Flex container for heading and month select -->
+
                         <h5 class="px-5"><strong>Actions Summary</strong></h5>
-                        <select id="monthSelect" class="form-select" style="width: 200px;">
-                            <option value="1" selected>January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
+                        <div class="d-flex align-items-center gap-3">
+                            <div>
+                                <label for="yearSelect" class="form-label">
+                                    <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
+                                </label>
+                                <select id="yearSelect" class="form-select" style="width: 120px; margin-right: 20px;">
+                                </select>
+                            </div>
+                            <div>
+
+                                <label for="monthSelect" class="form-label">
+                                    <i class="fa fa-calendar-alt text-primary me-1"></i> Month
+                                </label>
+                                <select id="monthSelect" class="form-select" style="width: 120px;">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <hr style="border-top: 2px solid #ccc !important;">
                     <!-- Horizontal line below heading and month select -->
@@ -135,6 +150,28 @@
                     </div>
                 </div>
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const monthSelect = document.getElementById("monthSelect");
+                    const yearSelect = document.getElementById("yearSelect");
+
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentYear = now.getFullYear();
+
+
+                    monthSelect.value = currentMonth;
+
+
+                    for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+                        let option = document.createElement("option");
+                        option.value = y;
+                        option.text = y;
+                        if (y === currentYear) option.selected = true;
+                        yearSelect.appendChild(option);
+                    }
+                });
+            </script>
             <script>
                 // Get data from Laravel
                 const categories = @json($categories);
@@ -259,46 +296,49 @@
     </div>
     <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text text-sm text-justify" id="noteModalLabel">File Preview</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-5">
-                  <table class="table table-striped">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr><th>Responses</th></tr>
-                    </thead>
-                    <tbody id="note-body">
-                      
-                      
-                    </tbody>
-                  </table>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text text-sm text-justify" id="noteModalLabel">File Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">X</span></button>
                 </div>
-                <div class="col-md-7">
-                  <div class="card card-primary card-outline card-outline-tabs">
-                    <div class="card-body">
-                      <iframe src="" style="width: 25rem; height:20rem;" id="responseAttached">
-                      </iframe>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <table class="table table-striped">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Responses</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="note-body">
+
+
+                                    </tbody>
+                                </table>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card card-primary card-outline card-outline-tabs">
+                                <div class="card-body">
+                                    <iframe src="" style="width: 25rem; height:20rem;" id="responseAttached">
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
+
                 </div>
-               </div>
-               
-              </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
 @endsection
 
 @section('scripts')
-@include('layouts.scripts')
+    @include('layouts.scripts')
 
     <script>
         $(document).ready(function() {
@@ -354,7 +394,7 @@
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td><small>${letter.letter_no}</small></td>
                         <td><small>${letter.sender_name}</small></td>
-                          
+
                         <td><small>${letter.received_date}</small></td>
                         <td><small><a href="" class="note-link btn btn-sm btn-info" data-action="${letter.letter_action_id}" data-toggle="modal" data-target="#noteModal" data-action_text="${letter.action_description}">View <i class="fas fa-eye"></i><a></small></td>
                     </tr>`;
@@ -398,33 +438,37 @@
 
         });
 
-        $(document).on('click','.note-link',function(e){
-      e.preventDefault();
-     $('.modal-title').text($(this).data('action_text'));
-      var action = $(this).data('action');
-      $.get("{{route('action_notes')}}",{
-        'action':action
-      },function(j){
-        var tr = "";
-        var attachment = "";
-       
-       if(j.length > 1){
-          for(var i = 1; i < j.length; i++){
-          if(j[i].attach != ""){
-            attachment = "<a href='#' class='attach' data-attach='{{str_replace('public','storage/app/',url(''))}}"+j[i].attach+"'><i class='fas fa-file-pdf text-danger'></i></a>";
-          }
-          tr += "<tr><td><b>"+j[i].name+"</b> : "+j[i].note+"<br>Dated:<b>"+j[i].date_day+","+j[i].date_time+"&nbsp;"+attachment+"</b></td></tr>";
-          attachment = "";
-          }
-            $('#note-body').html(tr);
-          }else{
-            $('#note-body').html("<tr><td class='text text-danger'>No responses yet received!</td></tr>");
-          }
-      });
+        $(document).on('click', '.note-link', function(e) {
+            e.preventDefault();
+            $('.modal-title').text($(this).data('action_text'));
+            var action = $(this).data('action');
+            $.get("{{ route('action_notes') }}", {
+                'action': action
+            }, function(j) {
+                var tr = "";
+                var attachment = "";
 
-  })
-  $(document).on('click','.attach',function(){
-    $('#responseAttached').attr('src',$(this).data('attach'));
-  });
+                if (j.length > 1) {
+                    for (var i = 1; i < j.length; i++) {
+                        if (j[i].attach != "") {
+                            attachment =
+                                "<a href='#' class='attach' data-attach='{{ str_replace('public', 'storage/app/', url('')) }}" +
+                                j[i].attach + "'><i class='fas fa-file-pdf text-danger'></i></a>";
+                        }
+                        tr += "<tr><td><b>" + j[i].name + "</b> : " + j[i].note + "<br>Dated:<b>" + j[i]
+                            .date_day + "," + j[i].date_time + "&nbsp;" + attachment + "</b></td></tr>";
+                        attachment = "";
+                    }
+                    $('#note-body').html(tr);
+                } else {
+                    $('#note-body').html(
+                        "<tr><td class='text text-danger'>No responses yet received!</td></tr>");
+                }
+            });
+
+        })
+        $(document).on('click', '.attach', function() {
+            $('#responseAttached').attr('src', $(this).data('attach'));
+        });
     </script>
 @endsection
