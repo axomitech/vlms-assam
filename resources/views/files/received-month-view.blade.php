@@ -18,12 +18,21 @@
             display: none;
         }
 
+        .nested-folder.active {
+            display: block;
+        }
+
         .pdf-list {
             margin-left: 40px;
             background: #f9f9f9;
             padding: 10px;
             border-radius: 4px;
             margin-bottom: 10px;
+            display: none;
+        }
+
+        .pdf-list.active {
+            display: block;
         }
 
         .pdf-link {
@@ -34,7 +43,6 @@
             padding: 8px;
             border-radius: 4px;
             margin-bottom: 6px;
-            gap: 10px;
         }
 
         .letter-row {
@@ -84,6 +92,7 @@
 
         .search-input {
             width: 200px;
+            margin-left: 10px;
         }
 
         @media (max-width: 768px) {
@@ -92,17 +101,9 @@
                 align-items: flex-start;
                 gap: 6px;
             }
-
-            .pdf-link {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .search-input {
-                width: 100%;
-            }
         }
     </style>
+
 
     <div class="col-md-12 text-center mb-3">
         <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
@@ -227,8 +228,7 @@
         function showCategory(categoryId) {
             document.querySelectorAll('.category-folder').forEach(folder => folder.style.display = 'none');
             document.querySelectorAll('.category-content').forEach(content => content.style.display = 'none');
-            const target = document.getElementById('cat-' + categoryId);
-            if (target) target.style.display = 'block';
+            document.getElementById('cat-' + categoryId).style.display = 'block';
             document.getElementById('backToCategories').style.display = 'inline-block';
         }
 
@@ -240,23 +240,12 @@
 
         function toggleFolder(id) {
             const el = document.getElementById(id);
-            if (!el) {
-                console.warn('Element not found:', id);
-                return;
-            }
+            if (!el) return;
 
-            const parent = el.parentElement;
+            // Toggle "active" class instead of inline display
+            el.classList.toggle('active');
 
-            Array.from(parent.children).forEach(child => {
-                if ((child.classList.contains('nested-folder') || child.classList.contains('pdf-list')) && child
-                    .id !== id) {
-                    child.style.display = 'none';
-                }
-            });
-
-            el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
-
-            if (id.startsWith('month-') && el.style.display === "block") {
+            if (id.startsWith('month-') && el.classList.contains('active')) {
                 const parts = id.split("-");
                 const groupKey = `letters-${parts[1]}-${parts[2]}-${parts[3]}`;
                 paginateLetters(groupKey, 0);
@@ -288,22 +277,22 @@
             }
         }
 
-        function filterLetters(input, containerId) {
-            const value = input.value.toLowerCase();
+        function filterLetters(inputElement, containerId) {
+            const filterText = inputElement.value.toLowerCase();
             const container = document.getElementById(containerId);
-            const rows = container.querySelectorAll('.letter-row');
+            const letterRows = container.querySelectorAll('.letter-row');
 
-            rows.forEach(row => {
+            letterRows.forEach(row => {
                 const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(value) ? 'flex' : 'none';
+                row.style.display = text.includes(filterText) ? 'flex' : 'none';
             });
 
-            const paginationId = "pagination-" + containerId.split("letter-container-")[1];
+            const paginationId = 'pagination-' + containerId.split("letter-container-")[1];
             const pagination = document.getElementById(paginationId);
-            pagination.style.display = value.trim() ? 'none' : 'block';
+            pagination.style.display = filterText.trim() ? 'none' : 'block';
 
-            if (!value.trim()) {
-                const groupKey = "letters-" + containerId.split("letter-container-")[1];
+            if (!filterText.trim()) {
+                const groupKey = 'letters-' + containerId.split("letter-container-")[1];
                 paginateLetters(groupKey, 0);
             }
         }

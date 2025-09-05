@@ -18,12 +18,21 @@
             display: none;
         }
 
+        .nested-folder.active {
+            display: block;
+        }
+
         .pdf-list {
             margin-left: 40px;
             background: #f9f9f9;
             padding: 10px;
             border-radius: 4px;
             margin-bottom: 10px;
+            display: none;
+        }
+
+        .pdf-list.active {
+            display: block;
         }
 
         .pdf-link {
@@ -230,34 +239,12 @@
 
         function toggleFolder(id) {
             const el = document.getElementById(id);
-            if (!el) {
-                console.warn("Element not found:", id);
-                return;
-            }
+            if (!el) return;
 
-            const parent = el.parentElement;
+            // Toggle "active" class instead of inline display
+            el.classList.toggle('active');
 
-            if (id.startsWith('subcat-')) {
-                Array.from(parent.children).forEach(child => {
-                    if (child.classList.contains('nested-folder') && child.id.startsWith('subcat-') && child.id !==
-                        id) {
-                        child.style.display = 'none';
-                    }
-                });
-            }
-
-            if (id.startsWith('year-') || id.startsWith('month-')) {
-                Array.from(parent.children).forEach(child => {
-                    if ((child.classList.contains('nested-folder') || child.classList.contains('pdf-list')) && child
-                        .id !== id) {
-                        child.style.display = 'none';
-                    }
-                });
-            }
-
-            el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
-
-            if (id.startsWith('month-') && el.style.display === "block") {
+            if (id.startsWith('month-') && el.classList.contains('active')) {
                 const parts = id.split("-");
                 const groupKey = `letters-${parts[1]}-${parts[2]}-${parts[3]}`;
                 paginateLetters(groupKey, 0);
