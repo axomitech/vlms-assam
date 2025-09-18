@@ -388,21 +388,18 @@ class LetterController extends Controller
         session(['year' => $year]);
         return view('letter.filtered_list', compact('letters', 'year', 'month'));
     }
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(UpdateLetterRequest $request, Letter $letter)
     {
         if ($request->ajax()) {
             $jData = [];
             $letterPath = "";
+
+
             if ($request->hasFile('letter')) {
-
                 if ($request->file('letter')->isValid()) {
-
                     $letterPath = $request->letter->store('public/letters');
                 } else {
-
                     $jData[1] = [
                         'message' => 'The letter upload was unsuccessful! Please try again.',
                         'candidate' => '',
@@ -410,19 +407,19 @@ class LetterController extends Controller
                     ];
                 }
             } else {
-
                 $letterPath = Common::getSingleColumnValue('letters', [
                     'id' => $letter->id
                 ], 'letter_path');
             }
+
             DB::beginTransaction();
 
             try {
                 $crn = Common::getSingleColumnValue('letters', [
                     'id' => $letter->id
                 ], 'crn');
-                $letterDetails = [
 
+                $letterDetails = [
                     $request->category,
                     $request->priority,
                     $request->letter_date,
@@ -441,12 +438,12 @@ class LetterController extends Controller
                 ];
 
                 Letter::updateLetter($letterDetails, $letter);
+
                 $abbreviation = Department::getDepartmentAbbreviation(session('role_dept'));
                 $year = Carbon::now()->year;
 
                 if ($request->receipt == 1) {
                     $senderDetails = [
-
                         $letter->id,
                         $request->sender_name,
                         $request->sender_designation,
@@ -454,7 +451,6 @@ class LetterController extends Controller
                         $request->sender_email,
                         $request->organization,
                         $request->address
-
                     ];
                     Sender::updateSender($senderDetails);
                 } else {
@@ -469,7 +465,9 @@ class LetterController extends Controller
                     ];
                     Recipient::updateRecipient($recipientDetails);
                 }
+
                 DB::commit();
+
                 $jData[1] = [
                     'message' => 'Letter is successfully diarized.',
                     'status' => 'success',
@@ -481,8 +479,27 @@ class LetterController extends Controller
                 session()->flash('ack_check', $request->auto_ack);
             } catch (\Exception $e) {
                 DB::rollback();
+
+
+                if ($e instanceof \Illuminate\Database\QueryException && $e->getCode() === '23505') {
+                    $errorText = $e->getMessage();
+
+                    if (preg_match("/Key \((.*?)\)=\((.*?)\)/", $errorText, $matches)) {
+                        $column = $matches[1];
+                        $value  = $matches[2];
+
+                        $prettyColumn = strtoupper(str_replace('_', ' ', $column));
+
+                        $errorMessage =  $prettyColumn . " '" . $value . "' already exists. Please use a different one.";
+                    } else {
+                        $errorMessage = "Duplicate value found. Please use a different one.";
+                    }
+                } else {
+                    $errorMessage = "Something went wrong! Please try again.";
+                }
+
                 $jData[1] = [
-                    'message' => 'Something went wrong! Please try again.' . $e->getMessage(),
+                    'message' => $errorMessage,
                     'candidate' => '',
                     'status' => 'error'
                 ];
@@ -492,9 +509,7 @@ class LetterController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Letter $letter)
     {
         //
