@@ -127,8 +127,8 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Filtering Year & Month in Dashboard
-    Route::get('/letters/filter/year/{year}', [App\Http\Controllers\LetterController::class, 'filterByYear']);
-    Route::get('/letters/filter/year/{year}/month/{month}', [App\Http\Controllers\LetterController::class, 'filterByMonth']);
+    Route::get('/letters/filter/year/{year}', [App\Http\Controllers\DashboardController::class, 'filterByYear']);
+    Route::get('/letters/filter/year/{year}/month/{month}', [App\Http\Controllers\DashboardController::class, 'filterByMonth']);
 
     // Letter Reports
     Route::get('/files/organize', [App\Http\Controllers\LetterReportController::class, 'organizeLettersIntoFolders'])->name('files.organize');

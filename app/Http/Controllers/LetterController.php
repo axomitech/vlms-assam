@@ -368,26 +368,26 @@ class LetterController extends Controller
         //
     }
 
-    // Filter in Dashboard bar Chart Code - Year & Months
-    public function filterByYear($year)
-    {
-        $letters = Letter::with('category') // assuming relation exists
-            ->whereYear('letter_date', $year)
-            ->get();
+    // // Filter in Dashboard bar Chart Code - Year & Months
+    // public function filterByYear($year)
+    // {
+    //     $letters = Letter::with('category') // assuming relation exists
+    //         ->whereYear('letter_date', $year)
+    //         ->get();
 
-        return view('letter.filtered_list', compact('letters', 'year'));
-    }
+    //     return view('letter.filtered_list', compact('letters', 'year'));
+    // }
 
-    public function filterByMonth($year, $month)
-    {
-        $letters = Letter::with('category')
-            ->whereYear('letter_date', $year)
-            ->whereMonth('letter_date', $month)
-            ->get();
-        session(['month' => $month]);
-        session(['year' => $year]);
-        return view('letter.filtered_list', compact('letters', 'year', 'month'));
-    }
+    // public function filterByMonth($year, $month)
+    // {
+    //     $letters = Letter::with('category')
+    //         ->whereYear('letter_date', $year)
+    //         ->whereMonth('letter_date', $month)
+    //         ->get();
+    //     session(['month' => $month]);
+    //     session(['year' => $year]);
+    //     return view('letter.filtered_list', compact('letters', 'year', 'month'));
+    // }
 
     public function update(UpdateLetterRequest $request, Letter $letter)
     {

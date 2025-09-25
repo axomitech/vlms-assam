@@ -279,21 +279,56 @@
                         $endOfMonth = Carbon::createFromDate($year, $month, 1)->endOfMonth();
 
                         $totalIssued = $letters
-                            ->filter(function ($letter) use ($startOfMonth, $endOfMonth) {
-                                return $letter->issue_date >= $startOfMonth && $letter->issue_date <= $endOfMonth;
-                            })
+                            ->filter(
+                                fn($letter) => $letter->issue_date >= $startOfMonth &&
+                                    $letter->issue_date <= $endOfMonth,
+                            )
                             ->count();
 
                         $totalReceived = $letters
-                            ->filter(function ($letter) use ($startOfMonth, $endOfMonth) {
-                                return $letter->received_date >= $startOfMonth && $letter->received_date <= $endOfMonth;
-                            })
+                            ->filter(
+                                fn($letter) => $letter->received_date >= $startOfMonth &&
+                                    $letter->received_date <= $endOfMonth,
+                            )
                             ->count();
 
                         $totalLetters = $totalIssued + $totalReceived;
 
                         $overallLetters = \App\Models\Letter::count();
+
+                        $weekStart = Carbon::parse($startOfMonth);
+                        $weekEnd = Carbon::parse($endOfMonth);
+
+                        $weeklyIssued = $letters
+                            ->filter(
+                                fn($letter) => $letter->issue_date >= $weekStart && $letter->issue_date <= $weekEnd,
+                            )
+                            ->groupBy(fn($letter) => Carbon::parse($letter->issue_date)->weekOfMonth)
+                            ->map->count();
+
+                        $weeklyReceived = $letters
+                            ->filter(
+                                fn($letter) => $letter->received_date >= $weekStart &&
+                                    $letter->received_date <= $weekEnd,
+                            )
+                            ->groupBy(fn($letter) => Carbon::parse($letter->received_date)->weekOfMonth)
+                            ->map->count();
+
+                        $weeklyTotal = [];
+                        foreach ($weeklyIssued as $week => $count) {
+                            $weeklyTotal[$week] = ($weeklyTotal[$week] ?? 0) + $count;
+                        }
+                        foreach ($weeklyReceived as $week => $count) {
+                            $weeklyTotal[$week] = ($weeklyTotal[$week] ?? 0) + $count;
+                        }
+
+                        $currentWeek = now()->weekOfMonth;
+                        $currentWeeklyIssued = $weeklyIssued[$currentWeek] ?? 0;
+                        $currentWeeklyReceived = $weeklyReceived[$currentWeek] ?? 0;
+                        $currentWeeklyTotal = $weeklyTotal[$currentWeek] ?? 0;
+
                     @endphp
+
 
 
                     <link rel="stylesheet"
@@ -367,6 +402,18 @@
                         .bg-total {
                             background-color: #6c757d;
                         }
+
+                        .bg-weekly-received {
+                            background-color: #942918;
+                        }
+
+                        .bg-weekly-issued {
+                            background-color: #A3A32E;
+                        }
+
+                        .bg-weekly-total {
+                            background-color: #240202;
+                        }
                     </style>
 
 
@@ -406,8 +453,36 @@
                             <div><i class="fa fa-database summary-icon"></i></div>
                         </div>
                     </div>
+                    <div class="summary-cards">
+                        <div class="summary-card bg-weekly-total">
+                            <div class="summary-text">
+                                <div class="summary-value">{{ $currentWeeklyTotal }}</div>
+                                <div class="summary-label">Weekly Total Letters</div>
+                                <div class="summary-month">Week {{ $currentWeek }} - {{ $monthName }}</div>
+                            </div>
+                            <div><i class="fa fa-chart-bar summary-icon"></i></div>
+                        </div>
 
+                        <div class="summary-card bg-weekly-issued">
+                            <div class="summary-text">
+                                <div class="summary-value">{{ $currentWeeklyIssued }}</div>
+                                <div class="summary-label">Weekly Issued</div>
+                                <div class="summary-month">Week {{ $currentWeek }} - {{ $monthName }}</div>
+                            </div>
+                            <div><i class="fa fa-share-square summary-icon"></i></div>
+                        </div>
 
+                        <div class="summary-card bg-weekly-received">
+                            <div class="summary-text">
+                                <div class="summary-value">{{ $currentWeeklyReceived }}</div>
+                                <div class="summary-label">Weekly Received</div>
+                                <div class="summary-month">Week {{ $currentWeek }} - {{ $monthName }}</div>
+                            </div>
+                            <div><i class="fa fa-envelope-open-text summary-icon"></i></div>
+                        </div>
+                        <div class="summary-card">
+                        </div>
+                    </div>
                     <div class="search-bar">
 
                         <div class="dropdown">
@@ -422,7 +497,6 @@
                                 </div>
 
                                 @foreach ([
-            'allLetters' => 'All Letters',
             'dateWise' => 'Date Wise',
             'monthWise' => 'Month Wise',
             'category' => 'Category',
@@ -439,20 +513,6 @@
                                             for="{{ $id }}">{{ $label }}</label>
                                     </div>
                                 @endforeach
-
-                                <div id="allLettersOptions" class="mt-3" style="display: none;">
-                                    <label class="form-label fw-bold text-primary">Letter Type:</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="letterType" id="diarizeLetter"
-                                            value="diarize">
-                                        <label class="form-check-label" for="diarizeLetter">Diarize Letter</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="radio" name="letterType" id="legacyLetter"
-                                            value="legacy">
-                                        <label class="form-check-label" for="legacyLetter">Legacy Letter</label>
-                                    </div>
-                                </div>
 
                                 <div id="dateWiseOptions" class="mt-3" style="display: none;">
                                     <label class="form-label fw-bold text-primary">Select Date Range:</label>
@@ -771,7 +831,6 @@
             document.getElementById('exportPdf')?.addEventListener('click', function() {
                 alert('Export to PDF demo triggered!');
             });
-            s
             document.getElementById('resetView').addEventListener('click', function() {
                 window.location.href = "{{ route('dashboard') }}";
             });

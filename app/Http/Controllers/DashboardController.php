@@ -21,7 +21,6 @@ class DashboardController extends Controller
 
         $departmentId = session('role_dept');
 
-
         $weeklyReceiptDataQuery = DB::table('letters')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
             ->selectRaw("
@@ -34,7 +33,8 @@ class DashboardController extends Controller
             ->where('letters.department_id', $departmentId);
 
         if (!$isOverall) {
-            $weeklyReceiptDataQuery->whereRaw('EXTRACT(YEAR FROM received_date) = ?', [$selectedYearInt])
+            $weeklyReceiptDataQuery
+                ->whereRaw('EXTRACT(YEAR FROM received_date) = ?', [$selectedYearInt])
                 ->whereRaw('EXTRACT(MONTH FROM received_date) = ?', [$selectedMonth]);
         }
 
@@ -52,6 +52,7 @@ class DashboardController extends Controller
             ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
             ->get();
 
+
         $receiptQuery = DB::table('letters')
             ->where('department_id', '=', $departmentId)
             ->where('receipt', '=', true);
@@ -60,12 +61,13 @@ class DashboardController extends Controller
             ->where('department_id', '=', $departmentId)
             ->where('receipt', '=', false);
 
-
         if (!$isOverall) {
-            $receiptQuery->whereRaw('EXTRACT(YEAR FROM received_date) = ?', [$selectedYearInt])
+            $receiptQuery
+                ->whereRaw('EXTRACT(YEAR FROM received_date) = ?', [$selectedYearInt])
                 ->whereRaw('EXTRACT(MONTH FROM received_date) = ?', [$selectedMonth]);
 
-            $issueQuery->whereRaw('EXTRACT(YEAR FROM issue_date) = ?', [$selectedYearInt])
+            $issueQuery
+                ->whereRaw('EXTRACT(YEAR FROM issue_date) = ?', [$selectedYearInt])
                 ->whereRaw('EXTRACT(MONTH FROM issue_date) = ?', [$selectedMonth]);
         }
 
@@ -81,7 +83,6 @@ class DashboardController extends Controller
             ->where('stage_status', '=', 5)
             ->count();
 
-        // Other stats
         $diarized_count = HomeModel::get_diarized_count();
         $sent_count = HomeModel::get_sent_count();
         $diarized_details = HomeModel::get_diarized_details();
@@ -123,7 +124,6 @@ class DashboardController extends Controller
             'sessionMonth'
         ));
     }
-
     public function receipt_box()
     {
         $categories = HomeModel::get_receipt_count_by_category();
@@ -141,7 +141,6 @@ class DashboardController extends Controller
         $categories = HomeModel::get_issue_count_by_category();
         return view('dashboard.issue', compact('categories'));
     }
-
     public function fetchReceiptByCategory($category_id)
     {
         $letters = HomeModel::get_receipt_by_category($category_id);
@@ -158,5 +157,37 @@ class DashboardController extends Controller
     {
         $letters = HomeModel::get_action_by_category($category_id);
         return response()->json($letters);
+    }
+
+    public function filterByYear($year)
+    {
+        $letters = Letter::with('category')
+            ->whereYear('letter_date', $year)
+            ->get();
+
+        return view('letter.filtered_list', [
+            'letters' => $letters,
+            'year' => $year,
+            'month' => null,
+        ]);
+    }
+
+    public function filterByMonth($year, $month)
+    {
+        $letters = Letter::with('category')
+            ->whereYear('letter_date', $year)
+            ->whereMonth('letter_date', $month)
+            ->get();
+
+        session([
+            'month' => $month,
+            'year' => $year,
+        ]);
+
+        return view('letter.filtered_list', [
+            'letters' => $letters,
+            'year' => $year,
+            'month' => $month,
+        ]);
     }
 }
