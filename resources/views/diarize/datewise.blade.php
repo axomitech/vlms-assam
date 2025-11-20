@@ -279,7 +279,6 @@
     <script>
         $(document).on('click', '.assign-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
-            $('#assign-div').show();
             $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
         });
     </script>

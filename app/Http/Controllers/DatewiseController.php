@@ -19,6 +19,21 @@ class DatewiseController extends Controller
         return view('diarize.datewise', compact('categories', 'subcategory'));
     }
 
+    public function viewPdf($id)
+    {
+        $letter = Letter::findOrFail($id);
+
+        $path = storage_path('app/' . $letter->letter_path);
+
+        if (!file_exists($path)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->file($path, [
+            'Content-Disposition' => 'inline; filename="' . $letter->letter_no . '.pdf"'
+        ]);
+    }
+
     public function datewise(Request $request)
     {
         $inputData = $request->all();
@@ -102,7 +117,7 @@ class DatewiseController extends Controller
                                                                             data-toggle="modal"
                                                                             data-target=".bd-example-modal-lg"
                                                                             data-letter="' . $result->letter_no . '"
-                                                                            data-letter_path="' . storageUrl($result->letter_path) . '"><b>' . $result->crn . '</b></a><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: ' . $diarizerName[$result->crn] . '</small></td>';
+                                                                            data-letter_path="' . route('pdf_view', $result->letter_id) . '"><b>' . $result->crn . '</b></a><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: ' . $diarizerName[$result->crn] . '</small></td>';
                 $table .= '<td><small><i>Subject</i>: ' . $result->subject . '<br><i>Letter No.</i>: ' . $result->letter_no . '<br><i>Letter Date</i>: ' . date_format(date_create($result->letter_date), "d/m/Y") . '</small></td>';
                 $table .= '<td><small><i>' . $from_to . '</i>: ' . $name_designation . '</small></td>';
                 $table .= '<td><small>' . $result->category_name . '</small></td>';
