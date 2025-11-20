@@ -25,6 +25,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/letters/{legacy}/{tab?}', [App\Http\Controllers\LetterController::class, 'showLetters'])->name('letters');
     Route::get('/letter/download/{id}', [App\Http\Controllers\LetterController::class, 'download'])
         ->name('letter.download');
+    Route::get('/download/{id}', [App\Http\Controllers\LetterController::class, 'download'])
+        ->name('download');
+
 
 
     //Route::get('/legacy_letters', [App\Http\Controllers\LetterController::class, 'showLegacyLetters'])->name('legacy_letters');

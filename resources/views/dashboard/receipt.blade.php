@@ -388,12 +388,22 @@
 
                             tableBody += `<tr>
                         <td><small>${serialNumber++}</small></td>
-                        <td><small><a href="" class="assign-link"
-                                                                            data-id="${letter.letter_id}"
-                                                                            data-toggle="modal"
-                                                                            data-target=".bd-example-modal-lg"
-                                                                            data-letter="${letter.letter_no}"
-                                                                            data-letter_path="{{ storageUrl('${letterPath}') }}">${letter.crn}</a></small><br>Diarized By:${letter.name}</td>
+                        <td>
+                            <small>
+                                <a href="#" class="assign-link"
+                                data-id="${letter.letter_id}"
+                                data-toggle="modal"
+                                data-target=".bd-example-modal-lg"
+                                data-letter="${letter.letter_no}"
+                                data-letter_path="${url}">
+                                ${letter.crn}
+                                </a>
+                            </small>
+                            <br>Diarized By: ${letter.name}
+                        </td>
+                            </small>
+                            <br>Diarized By: ${letter.name}
+                        </td>
                         <td style="width: 30%;">${truncatedSubject}</td>
                         <td>
                             <small>
@@ -448,19 +458,29 @@
     </script>
     <script>
         $(document).on('click', '.assign-link', function() {
-            $('#letter-view').attr('src', $(this).data('letter_path'));
+
+
+            let id = $(this).data('id');
+            $('#letter-view').attr('src', '/download/' + id);
+
             $('#assign-div').show();
             $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
+
             $.get("{{ route('reference') }}", {
-                letter: $(this).data('id')
+                letter: id
             }, function(j) {
+
                 if (j.length > 1) {
+
                     var div = "";
                     for (var i = 1; i < j.length; i++) {
-                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='" +
-                            j[i].letter_id + "' data-refer_letter_path='" + j[i].letter_path + "'><b>" + j[
-                                i].letter_no + "</b></a></div>";
+
+                        div += "<div class='col-md-2'>" +
+                            "<a href='' class='refer-letter-link' " +
+                            "data-id='" + j[i].letter_id + "'>" +
+                            "<b>" + j[i].letter_no + "</b></a></div>";
                     }
+
                     $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
                 } else {
                     $('#refer-letter-div').hide();
@@ -470,10 +490,12 @@
 
         $(document).on('click', '.refer-letter-link', function(e) {
             e.preventDefault();
-            $('#refer-letter-div').removeAttr("hidden");
-            $('#refer-letter-div').show();
-            $('#refer-letter-view').attr('src', $(this).data('refer_letter_path'));
 
+            let id = $(this).data('id');
+
+
+            $('#refer-letter-div').removeAttr("hidden").show();
+            $('#refer-letter-view').attr('src', '/download/' + id);
         });
     </script>
 @endsection

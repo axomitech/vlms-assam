@@ -8,6 +8,8 @@ use App\Models\Reference;
 use App\Models\Common;
 use Illuminate\Http\Request;
 use DB;
+use App\Http\Controllers\Letter;
+
 class ReferenceController extends Controller
 {
     /**
@@ -32,51 +34,50 @@ class ReferenceController extends Controller
     public function store(StoreReferenceRequest $request)
     {
         $jData = [];
-        if($request->ajax()){
-            
-        
-            DB::beginTransaction();
-    
-                try {
+        if ($request->ajax()) {
 
-                    $refers = $request->refer_letters;
-                    $letter = $request->assign_letter;
-                    $references = [];
-                    for($i = 0; $i < count($refers); $i++){
-                        
-                        
-                        $letterId =  Common::getSingleColumnValue('letters',[
-                            'letter_no'=>$refers[$i]
-                        ],'id');
-                        $referenceCount = Reference::checkReferenceExist([
+
+            DB::beginTransaction();
+
+            try {
+
+                $refers = $request->refer_letters;
+                $letter = $request->assign_letter;
+                $references = [];
+                for ($i = 0; $i < count($refers); $i++) {
+
+
+                    $letterId =  Common::getSingleColumnValue('letters', [
+                        'letter_no' => $refers[$i]
+                    ], 'id');
+                    $referenceCount = Reference::checkReferenceExist([
+                        $letter,
+                        $letterId
+                    ]);
+                    // echo $referenceCount;
+                    // die();
+                    if ($referenceCount <= 0) {
+
+                        $references[$i] = Reference::storeReferences([
                             $letter,
                             $letterId
                         ]);
-                        // echo $referenceCount;
-                        // die();
-                        if($referenceCount <= 0){
-
-                            $references[$i] = Reference::storeReferences([
-                                $letter,
-                                $letterId
-                            ]);
-                        }
                     }
-                    DB::commit();
-                    $jData[1] = [
-                        'message'=>'Letter is refered successfully.',
-                        'status'=>'success'
-                    ];
-                    
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    $jData[1] = [
-                        'message'=>'Something went wrong! Please try again.'.$e->getMessage(),
-                        'status'=>'error'
-                    ];
                 }
+                DB::commit();
+                $jData[1] = [
+                    'message' => 'Letter is refered successfully.',
+                    'status' => 'success'
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                $jData[1] = [
+                    'message' => 'Something went wrong! Please try again.' . $e->getMessage(),
+                    'status' => 'error'
+                ];
+            }
 
-                return response()->json($jData,200);
+            return response()->json($jData, 200);
         }
     }
 
@@ -111,25 +112,44 @@ class ReferenceController extends Controller
     {
         //
     }
+    public function download($id)
+    {
+        $letter = Letter::findOrFail($id);
 
-    public function getReferenceLetter(Request $request){
+        $path = storage_path('app/' . $letter->letter_path);
+
+        if (!file_exists($path)) {
+            return "FILE NOT FOUND: " . $path;
+        }
+
+        $filename = basename($letter->letter_path);
+
+        return response()->file($path, [
+            'Content-Disposition' => 'inline; filename="' . $filename . '"'
+        ]);
+    }
+
+
+
+    public function getReferenceLetter(Request $request)
+    {
         $jData[0] = [
-            'letter_id'=>'',
-            'letter_no'=>'',
-            'letter_path'=>''
+            'letter_id' => '',
+            'letter_no' => '',
+            'letter_path' => ''
         ];
-        if($request->ajax()){
+        if ($request->ajax()) {
             $referenceLetters = Reference::getReference($request->letter);
             $i = 1;
-            foreach($referenceLetters AS $value){
+            foreach ($referenceLetters as $value) {
                 $jData[$i] = [
-                    'letter_id'=>$value['reference_letter_id'],
-                    'letter_no'=>$value['letter_no'],
-                    'letter_path'=>storageUrl($value['letter_path'])
+                    'letter_id' => $value['reference_letter_id'],
+                    'letter_no' => $value['letter_no'],
+                    'letter_path' => storageUrl($value['letter_path'])
                 ];
                 $i++;
             }
         }
-        return response()->json($jData,200);
+        return response()->json($jData, 200);
     }
 }
