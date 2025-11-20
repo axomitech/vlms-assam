@@ -23,6 +23,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/edit_diarize/{letter}', [App\Http\Controllers\LetterController::class, 'editDiarized'])->name('edit_diarize');
     Route::post('/edit_letter/{letter}', [App\Http\Controllers\LetterController::class, 'update'])->name('edit_letter');
     Route::get('/letters/{legacy}/{tab?}', [App\Http\Controllers\LetterController::class, 'showLetters'])->name('letters');
+    Route::get('/letter/download/{id}', [App\Http\Controllers\LetterController::class, 'download'])
+        ->name('letter.download');
+
+
     //Route::get('/legacy_letters', [App\Http\Controllers\LetterController::class, 'showLegacyLetters'])->name('legacy_letters');
     Route::post('/store_letter', [App\Http\Controllers\LetterController::class, 'store'])->name('store_letter');
     Route::post('/change_stage', [App\Http\Controllers\LetterController::class, 'changeLetterStage'])->name('change_stage');
@@ -68,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/pdf_genarator/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF'])->name('pdf_genarator');
     Route::get('/pdf_downloadAll/{id}', [App\Http\Controllers\PDFController::class, 'downloadAll'])->name('pdf_downloadAll');
+    Route::get('/view-pdf/{id}', [App\Http\Controllers\SearchController::class, 'viewPdf'])->name('pdf_view');
     Route::get('/acknowledge_email/{id}', [App\Http\Controllers\AcknowledgeController::class, 'index'])->name('acknowledge_email');
     Route::get('/acknowledge_letter/{id}', [App\Http\Controllers\AcknowledgeController::class, 'ack_letter_generation'])->name('acknowledge_letter');
     Route::post('/acknowledge_letter', [App\Http\Controllers\AcknowledgeController::class, 'ack_letter_save'])->name('submit.ackLetter');

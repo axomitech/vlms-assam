@@ -389,6 +389,23 @@ class LetterController extends Controller
     //     return view('letter.filtered_list', compact('letters', 'year', 'month'));
     // }
 
+    public function download($id)
+    {
+        $letter = Letter::findOrFail($id);
+
+
+        $path = storage_path('app/' . $letter->letter_path);
+
+        if (!file_exists($path)) {
+            return "FILE NOT FOUND: " . $path;
+        }
+
+        return response()->file($path, [
+            'Content-Disposition' => 'inline; filename="' . $letter->letter_no . '.pdf"'
+        ]);
+    }
+
+
     public function update(UpdateLetterRequest $request, Letter $letter)
     {
         if ($request->ajax()) {
