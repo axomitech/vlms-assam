@@ -1,0 +1,101 @@
+.folder,
+.year-folder,
+.month-folder {
+    cursor: pointer;
+    padding: 10px 16px;
+    margin: 6px 0;
+    background: #f1f1f1;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.folder:hover,
+.year-folder:hover,
+.month-folder:hover {
+    background: #e0e0ff;
+}
+
+.nested-folder {
+    margin-left: 20px;
+    display: none;
+}
+
+.nested-folder.active {
+    display: block;
+}
+
+.pdf-list {
+    margin-left: 40px;
+    padding: 10px;
+    border-radius: 4px;
+    background: #f9f9f9;
+    display: none;
+    margin-bottom: 10px;
+}
+
+.pdf-list.active {
+    display: block;
+}
+
+.pdf-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #eef;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.letter-row {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.letter-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.letter-date {
+    min-width: 120px;
+}
+
+.letter-no {
+    min-width: 160px;
+}
+
+.letter-crn {
+    width: 180px;
+}
+
+.search-input {
+    width: 200px;
+    margin-left: 10px;
+}
+
+.pagination-buttons {
+    margin-top: 10px;
+}
+
+.pagination-buttons button {
+    margin-right: 5px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .letter-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+}

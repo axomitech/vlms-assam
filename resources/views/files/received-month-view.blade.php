@@ -1,109 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        .folder,
-        .year-folder,
-        .month-folder {
-            cursor: pointer;
-            padding: 10px 16px;
-            margin: 6px 0;
-            background-color: #f1f1f1;
-            border-radius: 6px;
-            font-weight: 500;
-        }
-
-        .nested-folder {
-            margin-left: 20px;
-            display: none;
-        }
-
-        .nested-folder.active {
-            display: block;
-        }
-
-        .pdf-list {
-            margin-left: 40px;
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            display: none;
-        }
-
-        .pdf-list.active {
-            display: block;
-        }
-
-        .pdf-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #eef;
-            padding: 8px;
-            border-radius: 4px;
-            margin-bottom: 6px;
-        }
-
-        .letter-row {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-
-        .letter-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .letter-date {
-            min-width: 120px;
-        }
-
-        .letter-no {
-            min-width: 160px;
-        }
-
-        .letter-crn {
-            width: 180px;
-        }
-
-        .folder:hover,
-        .year-folder:hover,
-        .month-folder:hover {
-            background-color: #e0e0ff;
-        }
-
-        .pagination-buttons {
-            margin-top: 10px;
-        }
-
-        .pagination-buttons button {
-            margin-right: 5px;
-            padding: 4px 10px;
-            font-size: 13px;
-        }
-
-        .search-input {
-            width: 200px;
-            margin-left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .letter-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-        }
-    </style>
-
+    <link rel="stylesheet" href="{{ asset('css/month-view.css') }}">
 
     <div class="col-md-12 text-center mb-3">
         <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
@@ -115,98 +13,103 @@
             🔙 Back to Categories
         </button>
 
-        <h4><strong>📁 Letter Download (Receipt - By Month)</strong></h4>
+        <h4><strong>📁 Letter Download (Issue - By Month)</strong></h4>
     </div>
 
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
+
                     @foreach ($groupedLetters as $categoryId => $subCats)
                         @php
-                            $categoryName = $categories[$categoryId] ?? 'Unknown Category';
-                            $serial = $loop->iteration;
-                            $safeCatId = preg_replace('/[^a-zA-Z0-9_-]/', '', $categoryId);
+                            $categoryName = $categories[$categoryId] ?? 'Others/Miscellaneous';
+                            $safeCategoryId = preg_replace('/[^a-zA-Z0-9_-]/', '', $categoryId);
                         @endphp
 
-                        <div class="folder category-folder" onclick="showCategory('{{ $safeCatId }}')">
-                            📁 {{ $serial }}. {{ $categoryName }}
+                        <div class="folder category-folder" onclick="showCategory('{{ $safeCategoryId }}')">
+                            📁 {{ $loop->iteration }}. {{ $categoryName }}
                         </div>
 
-                        <div id="cat-{{ $safeCatId }}" class="nested-folder category-content">
+                        <div id="cat-{{ $safeCategoryId }}" class="nested-folder category-content">
+
                             @foreach ($subCats as $subCategoryId => $years)
                                 @php
                                     $subCategoryName =
                                         $subCategories[$subCategoryId] ?? 'Others/Miscellaneous Departments';
-                                    $safeSubcatId = preg_replace('/[^a-zA-Z0-9_-]/', '', $subCategoryId);
+                                    $safeSubCategoryId = preg_replace('/[^a-zA-Z0-9_-]/', '', $subCategoryId);
                                 @endphp
 
                                 <div class="folder"
-                                    onclick="toggleFolder('subcat-{{ $safeCatId }}-{{ $safeSubcatId }}')">
+                                    onclick="toggleFolder('subcat-{{ $safeCategoryId }}-{{ $safeSubCategoryId }}')">
                                     📂 {{ $subCategoryName }}
                                 </div>
 
-                                <div id="subcat-{{ $safeCatId }}-{{ $safeSubcatId }}" class="nested-folder">
+                                <div id="subcat-{{ $safeCategoryId }}-{{ $safeSubCategoryId }}" class="nested-folder">
                                     @foreach ($years as $year => $months)
                                         <div class="year-folder"
-                                            onclick="toggleFolder('year-{{ $safeSubcatId }}-{{ $year }}')">
+                                            onclick="toggleFolder('year-{{ $safeSubCategoryId }}-{{ $year }}')">
                                             📅 {{ $year }} — Months: <strong>{{ count($months) }}</strong>
                                         </div>
 
-                                        <div id="year-{{ $safeSubcatId }}-{{ $year }}" class="nested-folder">
+                                        <div id="year-{{ $safeSubCategoryId }}-{{ $year }}" class="nested-folder">
                                             @foreach ($months as $month => $lettersGroup)
                                                 <div class="month-folder"
-                                                    onclick="toggleFolder('month-{{ $safeSubcatId }}-{{ $year }}-{{ $month }}')">
+                                                    onclick="toggleFolder('month-{{ $safeSubCategoryId }}-{{ $year }}-{{ $month }}')">
                                                     🗓️ {{ $month }} — Letters:
                                                     <strong>{{ count($lettersGroup) }}</strong>
                                                 </div>
 
-                                                <div id="month-{{ $safeSubcatId }}-{{ $year }}-{{ $month }}"
+                                                <div id="month-{{ $safeSubCategoryId }}-{{ $year }}-{{ $month }}"
                                                     class="pdf-list">
+
                                                     <div class="pdf-link">
-                                                        <span><strong>🗂️ {{ $month }}
-                                                                {{ $year }}</strong></span>
+                                                        <strong>📅 {{ $month }} {{ $year }}</strong>
 
                                                         <input type="text"
                                                             class="form-control form-control-sm search-input"
-                                                            placeholder="🔍 Search Date, No, CRN, Dept..."
-                                                            onkeyup="filterLetters(this, 'letter-container-{{ $safeSubcatId }}-{{ $year }}-{{ $month }}')">
+                                                            placeholder="🔍 Search Date, Letter No, CRN..."
+                                                            onkeyup="filterLetters(this, 'letter-container-{{ $safeSubCategoryId }}-{{ $year }}-{{ $month }}')">
 
-                                                        <a href="{{ route('pdf.merge.month', [$categoryId, $subCategoryId, $year, $month]) }}"
-                                                            class="btn btn-sm btn-outline-primary" target="_blank">
-                                                            📎 Download Merged PDF
-                                                        </a>
+                                                        <a href="{{ route('pdf.merge.month.Issue', [$categoryId, $subCategoryId, $year, $month]) }}"
+                                                            class="btn btn-sm btn-outline-primary" target="_blank">📎
+                                                            Download Merged PDF</a>
                                                     </div>
 
                                                     <div
-                                                        id="letter-container-{{ $safeSubcatId }}-{{ $year }}-{{ $month }}">
+                                                        id="letter-container-{{ $safeSubCategoryId }}-{{ $year }}-{{ $month }}">
                                                         @foreach ($lettersGroup as $index => $letter)
                                                             <div class="letter-row"
-                                                                data-group="letters-{{ $safeSubcatId }}-{{ $year }}-{{ $month }}"
+                                                                data-group="letters-{{ $safeSubCategoryId }}-{{ $year }}-{{ $month }}"
                                                                 data-index="{{ $index }}">
+
                                                                 <div class="letter-info">
-                                                                    <span class="letter-date">📅
-                                                                        {{ \Carbon\Carbon::parse($letter->received_date)->format('d-m-Y') }}</span>
+                                                                    <span class="letter-date">
+                                                                        📅
+                                                                        {{ \Carbon\Carbon::parse($letter->received_date)->format('d-m-Y') }}
+                                                                    </span>
                                                                     <span class="letter-no">📨
                                                                         {{ $letter->letter_no ?? 'No Letter No' }}</span>
                                                                     <span class="letter-crn">🔖
                                                                         {{ $letter->crn ?? 'No CRN' }}</span>
                                                                     <span class="letter-subcategory">
                                                                         <i class="fa fa-tags text-info"></i>
-                                                                        {{ optional($letter->subCategory)->sub_category_name ?? ($letter->letter_other_sub_categories ?? 'Others/Miscellaneous Department') }}
+                                                                        {{ optional($letter->subCategory)->sub_category_name ??
+                                                                            ($letter->letter_other_sub_categories ?? 'Others/Miscellaneous Department') }}
                                                                     </span>
                                                                 </div>
+
                                                                 <a href="{{ asset(str_replace('public/', 'storage/', $letter->letter_path)) }}"
-                                                                    class="btn btn-sm btn-outline-primary" target="_blank">
-                                                                    ⬇️ Download
-                                                                </a>
+                                                                    class="btn btn-sm btn-outline-primary"
+                                                                    target="_blank">⬇️ Download</a>
                                                             </div>
                                                         @endforeach
                                                     </div>
 
                                                     <div class="pagination-buttons"
-                                                        id="pagination-{{ $safeSubcatId }}-{{ $year }}-{{ $month }}">
+                                                        id="pagination-{{ $safeSubCategoryId }}-{{ $year }}-{{ $month }}">
                                                     </div>
+
                                                 </div>
                                             @endforeach
                                         </div>
@@ -215,86 +118,12 @@
                             @endforeach
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        document.getElementById('resetView').addEventListener('click', function() {
-            window.location.href = "{{ route('dashboard') }}";
-        });
-
-        function showCategory(categoryId) {
-            document.querySelectorAll('.category-folder').forEach(folder => folder.style.display = 'none');
-            document.querySelectorAll('.category-content').forEach(content => content.style.display = 'none');
-            document.getElementById('cat-' + categoryId).style.display = 'block';
-            document.getElementById('backToCategories').style.display = 'inline-block';
-        }
-
-        function backToCategories() {
-            document.querySelectorAll('.category-folder').forEach(folder => folder.style.display = 'block');
-            document.querySelectorAll('.category-content').forEach(content => content.style.display = 'none');
-            document.getElementById('backToCategories').style.display = 'none';
-        }
-
-        function toggleFolder(id) {
-            const el = document.getElementById(id);
-            if (!el) return;
-
-            // Toggle "active" class instead of inline display
-            el.classList.toggle('active');
-
-            if (id.startsWith('month-') && el.classList.contains('active')) {
-                const parts = id.split("-");
-                const groupKey = `letters-${parts[1]}-${parts[2]}-${parts[3]}`;
-                paginateLetters(groupKey, 0);
-            }
-        }
-
-        function paginateLetters(group, page) {
-            const rows = document.querySelectorAll(`[data-group="${group}"]`);
-            const containerId = "pagination-" + group.split("letters-")[1];
-            const perPage = 25;
-            const total = rows.length;
-            const totalPages = Math.ceil(total / perPage);
-
-            rows.forEach(row => row.style.display = 'none');
-
-            for (let i = page * perPage; i < (page + 1) * perPage && i < total; i++) {
-                rows[i].style.display = 'flex';
-            }
-
-            const paginationContainer = document.getElementById(containerId);
-            paginationContainer.innerHTML = '';
-
-            for (let i = 0; i < totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-sm btn-outline-dark';
-                btn.innerText = `${i * perPage + 1} - ${Math.min((i + 1) * perPage, total)}`;
-                btn.onclick = () => paginateLetters(group, i);
-                paginationContainer.appendChild(btn);
-            }
-        }
-
-        function filterLetters(inputElement, containerId) {
-            const filterText = inputElement.value.toLowerCase();
-            const container = document.getElementById(containerId);
-            const letterRows = container.querySelectorAll('.letter-row');
-
-            letterRows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(filterText) ? 'flex' : 'none';
-            });
-
-            const paginationId = 'pagination-' + containerId.split("letter-container-")[1];
-            const pagination = document.getElementById(paginationId);
-            pagination.style.display = filterText.trim() ? 'none' : 'block';
-
-            if (!filterText.trim()) {
-                const groupKey = 'letters-' + containerId.split("letter-container-")[1];
-                paginateLetters(groupKey, 0);
-            }
-        }
-    </script>
+    {{-- Include external JS --}}
+    <script src="{{ asset('js/month-view.js') }}"></script>
 @endsection
