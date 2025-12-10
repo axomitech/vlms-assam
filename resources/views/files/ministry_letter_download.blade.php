@@ -5,9 +5,9 @@
 
     <div class="col-md-12 mb-3">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <button class="btn btn-dark btn-sm" id="resetView">
+            {{-- <button class="btn btn-dark btn-sm" id="resetView">
                 <i class="fa fa-arrow-left"></i> Back
-            </button>
+            </button> --}}
             <h4 class="m-0 flex-grow-1 text-center">
                 <strong>📁 Letter Download (Issue - By Ministry)</strong>
             </h4>

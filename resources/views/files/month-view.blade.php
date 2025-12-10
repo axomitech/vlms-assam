@@ -4,9 +4,9 @@
     <link rel="stylesheet" href="{{ asset('css/month-view.css') }}">
 
     <div class="col-md-12 text-center mb-3">
-        <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
+        {{-- <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
             <i class="fa fa-arrow-left"></i> Back
-        </button>
+        </button> --}}
 
         <button class="btn btn-warning btn-sm" id="backToCategories" style="float: right; display: none;"
             onclick="backToCategories()">

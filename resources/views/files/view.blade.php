@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="{{ asset('css/view.css') }}">
 
     <div class="col-md-12 text-center">
-        <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
+        {{-- <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
             <i class="fa fa-arrow-left"></i> Back
-        </button>
+        </button> --}}
         <h4><strong>📁 Letter Download (Issue - By Year)</strong></h4>
     </div>
 
