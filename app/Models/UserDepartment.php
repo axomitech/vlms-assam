@@ -17,54 +17,59 @@ class UserDepartment extends Model
         'first_receiver'
     ];
 
-    public static function roleUser($userId){
-        return UserDepartment::join('departments','user_departments.department_id','=','departments.id')
-        ->join('roles','user_departments.role_id','=','roles.id')
-        ->where([
-            'user_id'=>$userId
-        ])->select('department_name','role_name','user_departments.id as session_user','department_id','role_id')
-        ->get();
+    public static function roleUser($userId)
+    {
+        return UserDepartment::join('departments', 'user_departments.department_id', '=', 'departments.id')
+            ->join('roles', 'user_departments.role_id', '=', 'roles.id')
+            ->where([
+                'user_id' => $userId
+            ])->select('department_name', 'role_name', 'user_departments.id as session_user', 'department_id', 'role_id')
+            ->get();
     }
 
-    public static function getDepartmentUser($department,$role){
+    public static function getDepartmentUser($department, $role)
+    {
 
         return UserDepartment::where([
-            'department_id'=>$department,
-            'role_id'=>$role
+            'department_id' => $department,
+            'role_id' => $role
         ])->value('id');
-        
     }
 
-    public static function getUser($userId){
+    public static function getUser($userId)
+    {
 
         return UserDepartment::where([
-            'user_id'=>$userId
+            'user_id' => $userId
         ])->value('id');
-        
     }
 
-    public static function getDefaultAccess($userId){
+    public static function getDefaultAccess($userId)
+    {
         return UserDepartment::where([
-            'user_id'=>$userId,
-            'default_access'=>true
-        ])->select('id','department_id','role_id')->get();
+            'user_id' => $userId,
+            'default_access' => true
+        ])->select('id', 'department_id', 'role_id')->get();
     }
 
-    public static function getFirstReceiverDepartment($department){
+    public static function getFirstReceiverDepartment($department)
+    {
         return UserDepartment::where('department_id', $department)
-        ->join('users','user_departments.user_id','=','users.id')
-        ->select('user_departments.id AS user_id','name')
-        ->where('first_receiver', true)
-        ->where('default_access',true)
-        ->where('role_id','>', 1)
-        ->get();
+            ->join('users', 'user_departments.user_id', '=', 'users.id')
+            ->select('user_departments.id AS user_id', 'name')
+            ->where('first_receiver', true)
+            ->where('default_access', true)
+            ->where('role_id', '>', 1)
+            ->get();
     }
-    public static function getAllUserDepartment($department,$role){
+
+    public static function getAllUserDepartment($department, $role)
+    {
         return UserDepartment::where([
-            'department_id'=>$department,
-            'role_id'=>$role
-        ])->join('users','user_departments.user_id','=','users.id')
-        ->select('user_departments.id AS user_id','name')
-        ->get();
+            'department_id' => $department,
+            'role_id' => $role
+        ])->join('users', 'user_departments.user_id', '=', 'users.id')
+            ->select('user_departments.id AS user_id', 'name')
+            ->get();
     }
 }

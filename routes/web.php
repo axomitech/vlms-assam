@@ -146,4 +146,18 @@ Route::middleware(['auth'])->group(function () {
     // Letter Reports-Received Letter
     Route::get('/files/organize', [App\Http\Controllers\ReceivedLetterReportController::class, 'organizeLettersIntoFolders'])->name('files.organize');
     Route::get('/received-letter-report', [App\Http\Controllers\ReceivedLetterReportController::class, 'viewLettersFolderWise'])->name('files.received-letter-report');
+
+    // Action Taken Reports
+
+    Route::get('/letter/details/{id}', [App\Http\Controllers\SearchController::class, 'letterDetails'])
+        ->name('letter.details');
+
+    // New Diarized Letters For HOD Account
+
+    Route::get('/letter/download/{id}', [App\Http\Controllers\NewLetterController::class, 'download'])->name('letter.download');
+    Route::get('/new/letters/diarized', [App\Http\Controllers\NewLetterController::class, 'diarized'])->name('new.letters.diarized');
+    Route::get('/new/letter/download/{id}', [App\Http\Controllers\NewLetterController::class, 'download'])->name('new.letter.download');
+    Route::post('/new/assign-letter', [App\Http\Controllers\NewLetterController::class, 'assignLetter'])->name('new.assign_letter');
+    Route::post('/new/letter/refer', [App\Http\Controllers\NewLetterController::class, 'refer'])->name('new.refer');
+    Route::get('/new/letter/reference', [App\Http\Controllers\NewLetterController::class, 'reference'])->name('new.reference');
 });

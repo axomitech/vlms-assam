@@ -437,11 +437,11 @@
                                                                     @endif
                                                                 @endif
 
-                                                                <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
+                                                                {{-- <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                                     class="dropdown-item d-flex justify-content-between">
                                                                     Acknowledge <i
                                                                         class="fas fa-envelope-open-text ml-1"></i>
-                                                                </a>
+                                                                </a> --}}
 
                                                                 <a href="{{ route('inbox', [encrypt($value['letter_id'])]) }}"
                                                                     class="dropdown-item d-flex justify-content-between">
@@ -581,7 +581,7 @@
                                                                 @endif
                                                             </div>
 
-                                                            <div class="mb-1">
+                                                            {{-- <div class="mb-1">
                                                                 <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                                     class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
                                                                     data-toggle="tooltip" data-placement="top"
@@ -590,7 +590,7 @@
                                                                     <i class="fas fa-envelope-open-text mr-1"></i>
                                                                     Acknowledge
                                                                 </a>
-                                                            </div>
+                                                            </div> --}}
 
                                                             <div class="mb-1">
                                                                 <a href="{{ route('correspondences', [$value['letter_id']]) }}"
@@ -599,6 +599,15 @@
                                                                     title="Correspondences"
                                                                     style="min-height: 30px; font-size: 12px;">
                                                                     <i class="fas fa-file mr-1"></i> Correspondences
+                                                                </a>
+                                                            </div>
+                                                            <div class="mb-1">
+                                                                <a href="#"
+                                                                    class="action-link btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    title="Archive Letter"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    <i class="fas fa-archive mr-1"></i> Archived
                                                                 </a>
                                                             </div>
                                                         @endif
@@ -824,7 +833,7 @@
                                                                 </a>
                                                             </div>
 
-                                                            <div class="mb-1">
+                                                            {{-- <div class="mb-1">
                                                                 <a href="{{ route('acknowledge_letter', [$value['letter_id']]) }}"
                                                                     class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
                                                                     data-toggle="tooltip" data-placement="top"
@@ -833,7 +842,7 @@
                                                                     <i class="fas fa-envelope-open-text mr-1"></i>
                                                                     Acknowledge
                                                                 </a>
-                                                            </div>
+                                                            </div> --}}
 
                                                             <div class="mb-1">
                                                                 <a href="{{ route('correspondences', [$value['letter_id']]) }}"
@@ -842,6 +851,16 @@
                                                                     title="Correspondences"
                                                                     style="min-height: 30px; font-size: 12px;">
                                                                     <i class="fas fa-file mr-1"></i> Correspondences
+                                                                </a>
+                                                            </div>
+
+                                                            <div class="mb-1">
+                                                                <a href="#"
+                                                                    class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    title="Restore Letter"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    <i class="fas fa-undo mr-1"></i> Restore
                                                                 </a>
                                                             </div>
                                                         @endif

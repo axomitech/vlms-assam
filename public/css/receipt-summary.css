@@ -1,0 +1,215 @@
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+.report-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #243447;
+    text-align: center;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 30px;
+
+}
+
+
+.card-button {
+    flex: 0 0 calc(25% - 16px);
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-height: 100px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    cursor: pointer;
+    position: relative;
+
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card-button:hover {
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+}
+
+.card-button:focus {
+    outline: none;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.12);
+}
+
+.card-button::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    width: calc(100% - 24px);
+    height: 3px;
+    background: linear-gradient(90deg, #ff416c, #007bff);
+    border-radius: 8px;
+}
+
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #111;
+}
+
+.card-desc {
+    font-size: 0.85rem;
+    color: #444;
+}
+
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.4rem;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #222;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+}
+
+
+.month-card {
+    flex: 0 0 calc(25% - 16px);
+    background: linear-gradient(135deg, #edf1f7, #fff);
+    border: 1px solid #dce4ec;
+    border-radius: 12px;
+    padding: 18px 12px;
+    text-align: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+
+}
+
+.month-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+
+}
+
+.month-card:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.08);
+}
+
+.month-count {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+
+.letter-table {
+    width: 100%;
+    background: #fff;
+    font-size: 0.95rem;
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    border-collapse: separate;
+    overflow: hidden;
+
+    margin-bottom: 30px;
+
+}
+
+.letter-table th,
+.letter-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.letter-table th {
+    background: #e8f0fe;
+    font-weight: 600;
+    color: #111;
+}
+
+.letter-table tr:nth-child(even) {
+    background: #f9fcff;
+}
+
+.letter-table tr:hover {
+    background: #f0f7ff;
+}
+
+
+.btn {
+    cursor: pointer;
+}
+
+@media (max-width: 992px) {
+
+    .card-button,
+    .month-card {
+        flex: 0 0 calc(50% - 12px);
+    }
+}
+
+@media (max-width: 600px) {
+
+    .card-button,
+    .month-card {
+        flex: 0 0 100%;
+    }
+
+    .report-heading {
+        font-size: 1.1rem;
+    }
+}

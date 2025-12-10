@@ -16,6 +16,34 @@ class SearchController extends Controller
         // return Letter::all();
         return view('search', compact('categories', 'subcategory'));
     }
+
+    public function letterDetails($id)
+    {
+        $letter = Letter::findOrFail($id);
+
+        $category = \DB::table('letter_categories')
+            ->where('id', $letter->category_id)
+            ->first();
+
+        $subcategory = \DB::table('letter_sub_categories')
+            ->where('id', $letter->sub_category_id)
+            ->first();
+
+        $letterUserId = Common::getSingleColumnValue('letters', [
+            'id' => $letter->id
+        ], 'user_id');
+
+        $userId = Common::getSingleColumnValue('user_departments', [
+            'id' => $letterUserId
+        ], 'user_id');
+
+        $diarizedBy = Common::getSingleColumnValue('users', [
+            'id' => $userId
+        ], 'name');
+
+        return view('letter-details', compact('letter', 'category', 'subcategory', 'diarizedBy'));
+    }
+
     public function viewPdf($id)
     {
         $letter = Letter::findOrFail($id);
@@ -48,6 +76,7 @@ class SearchController extends Controller
                 <th>Category</th>
                 <th>Sub Category</th>
                 <th>Download</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody>';
@@ -79,7 +108,7 @@ class SearchController extends Controller
                 $table .= '<tr>';
                 $table .= '<td>' . $i++ . '.</td>';
                 $table .= '<td><small><a href="" class="assign-link"
-                                                                            data-toggle="modal"
+                                                                       data-toggle="modal"
                                                                             data-target=".bd-example-modal-lg"
                                                                             data-letter="' . $result->letter_no . '"
                                                                             data-letter_path="' . route('pdf_view', $result->letter_id) . '"><b>' . $result->crn . '</b></a><br><i>Diarized</i>: ' . date_format(date_create($result->diary_date), "d/m/Y") . '<br><i>' . $status . '</i>: ' . date_format(date_create($result->received_date), "d/m/Y") . '<br>Diarized By: ' . $diarizerName[$result->crn] . '</small></td>';
@@ -89,6 +118,15 @@ class SearchController extends Controller
                 // $table .= '<td><small>' . $result->sub_category_name . '</small></td>';
                 $table .= '<td><small>' . (!empty($result->sub_category_name) ? $result->sub_category_name : $result->letter_other_sub_categories) . '</small></td>';
                 $table .= '<td><a href="' . route('pdf_downloadAll', ['id' => $result->letter_id]) . '"><i class="fas fa-download" style="color: #174060"></i></a></td>';
+                $table .= '<td>
+                <a href="' . route('letter.details', ['id' => $result->letter_id]) . '"
+                   class="btn btn-sm btn-outline-primary">
+                    Action
+                </a>
+           </td>';
+
+
+
                 $table .= '</tr>';
             }
         }
