@@ -1,257 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background-color: #f4f7fb;
-            margin: 0;
-        }
-
-        .summary-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 24px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #0d6efd;
-            background-color: #eaf4ff;
-            border-radius: 12px;
-            font-size: 1rem;
-        }
-
-        .letter-header,
-        .letter-card {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 0.75rem;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            background-color: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-            transition: background 0.2s ease-in-out;
-        }
-
-        .letter-card:hover {
-            background-color: #f9fbff;
-        }
-
-        .letter-header {
-            background-color: #f1f5f9;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.78rem;
-        }
-
-        .letter-col {
-            flex: 1 0 120px;
-            min-width: 120px;
-            padding: 0 4px;
-            font-size: 0.78rem;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .letter-col:not(:last-child) {
-            border-right: 1px solid #dee2e6;
-        }
-
-        .letter-col.sl-no {
-            flex: 0 0 60px;
-            max-width: 60px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .letter-col.text-end {
-            text-align: left !important;
-        }
-
-        .letter-col.text-center {
-            text-align: center;
-        }
-
-        .badge-status {
-            padding: 3px 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border-radius: 10px;
-            background-color: #d1f4e2;
-            color: #0f5132;
-        }
-
-        /* Search Bar */
-        .search-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        .search-bar input[type="text"] {
-            flex: 1;
-            min-width: 240px;
-            padding: 8px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-        }
-
-        .search-bar .btn {
-            padding: 8px 14px;
-            font-size: 0.9rem;
-            border-radius: 8px;
-        }
-
-        .dropdown-menu {
-            width: 250px;
-            padding: 10px 14px !important;
-            font-size: 0.85rem;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-        }
-
-        .dropdown-menu h6 {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-        }
-
-        .dropdown-menu .form-check {
-            margin-bottom: 6px;
-        }
-
-        .dropdown-menu .form-label,
-        .dropdown-menu .form-check-label {
-            font-size: 0.85rem;
-        }
-
-        .dropdown-menu .form-select,
-        .dropdown-menu input[type="date"] {
-            padding: 6px 8px;
-            font-size: 0.85rem;
-            border-radius: 6px;
-        }
-
-        .dropdown-menu .btn-sm {
-            padding: 4px 8px;
-            font-size: 0.75rem;
-        }
-
-        .dropdown-menu .d-flex.gap-2 {
-            gap: 6px !important;
-        }
-
-        .dropdown-menu small {
-            font-size: 0.75rem;
-        }
-
-        .category-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .category-list ul {
-            margin-top: 4px;
-            padding-left: 0.8rem;
-            font-size: 0.75rem;
-            font-weight: normal;
-        }
-
-        .scrollable-table {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 1rem;
-        }
-
-        #customPagination {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            margin-top: 20px;
-            border-top: 1px solid #e3e3e3;
-            gap: 10px;
-        }
-
-        #paginationContainer {
-            display: flex;
-            gap: 4px;
-            padding-left: 0;
-            list-style: none;
-            margin: 0;
-        }
-
-        #paginationContainer .page-item .page-link {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            background-color: #fff;
-            color: #333;
-            border: 1px solid #d4d4d4;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.2s ease-in-out;
-        }
-
-        #paginationContainer .page-item .page-link:hover {
-            background-color: #f1f3ff;
-            color: #0d6efd;
-            border-color: #0d6efd;
-        }
-
-        #paginationContainer .page-item.active .page-link {
-            background-color: #0d6efd;
-            color: #fff;
-            font-weight: 600;
-            border-color: #0d6efd;
-        }
-
-        #paginationContainer .page-item.disabled .page-link {
-            background-color: #f8f9fa;
-            color: #999;
-            pointer-events: none;
-        }
-
-        #pageSizeDropdown {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            border: 1px solid #d4d4d4;
-            appearance: none;
-            background: #fff url('data:image/svg+xml;utf8,<svg fill="%23000" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
-            background-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-
-            .letter-header,
-            .letter-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .letter-col,
-            .letter-col.sl-no {
-                width: 100% !important;
-                padding: 4px 0;
-                text-align: left;
-                border-right: none !important;
-            }
-
-            .summary-box {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-
-            .dropdown-menu {
-                width: 100% !important;
-            }
-        }
-    </style>
-
+    <link rel="stylesheet" href="{{ asset('css/filtered_list.css') }}">
 
 
     <div class="col-md-12 text-center">
@@ -483,7 +233,7 @@
                         <div class="summary-card">
                         </div>
                     </div>
-                    <div class="search-bar">
+                    {{-- <div class="search-bar">
 
                         <div class="dropdown">
                             <button class="btn btn-outline-dark dropdown-toggle" type="button" id="filterDropdown"
@@ -497,16 +247,16 @@
                                 </div>
 
                                 @foreach ([
-            'dateWise' => 'Date Wise',
-            'monthWise' => 'Month Wise',
-            'category' => 'Category',
-            'subCategory' => 'Sub Category',
-            'receiptLetter' => 'Receipt Letter',
-            'issueLetter' => 'Issue Letter',
-            'letterNo' => 'Letter No',
-            'crnNo' => 'CRN No',
-            'ecrNo' => 'ECR No',
-        ] as $id => $label)
+        'dateWise' => 'Date Wise',
+        'monthWise' => 'Month Wise',
+        'category' => 'Category',
+        'subCategory' => 'Sub Category',
+        'receiptLetter' => 'Receipt Letter',
+        'issueLetter' => 'Issue Letter',
+        'letterNo' => 'Letter No',
+        'crnNo' => 'CRN No',
+        'ecrNo' => 'ECR No',
+    ] as $id => $label)
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="{{ $id }}">
                                         <label class="form-check-label fw-medium"
@@ -564,7 +314,27 @@
                         <button class="btn btn-outline-danger" title="Clear"><i class="fas fa-times"></i></button>
                         <button class="btn btn-outline-success" title="Export to Excel"><i
                                 class="fas fa-file-excel"></i></button>
+                    </div> --}}
+
+
+                    <div class="search-bar">
+
+                        <input type="text" class="form-control search-input" placeholder="🔍 Search letters...">
+
+                        <button class="btn btn-primary btn-sm search-btn">
+                            <i class="fas fa-search me-1"></i> Search
+                        </button>
+
+                        <button class="btn btn-outline-danger btn-sm clear-btn" title="Clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <button class="btn btn-outline-success btn-sm export-btn" title="Export to Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </button>
+
                     </div>
+
 
                     <div class="scrollable-table">
                         <div class="letter-header">
