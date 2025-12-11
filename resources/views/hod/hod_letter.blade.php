@@ -64,7 +64,7 @@
                                                 {{ \Carbon\Carbon::parse($value->diary_date)->format('d/m/Y') }}
                                                 <br>Received Date:
                                                 {{ \Carbon\Carbon::parse($value->received_date)->format('d/m/Y') }}
-                                                <br>Diarized By: {{ $letter->diarizer->name ?? 'N/A' }}
+
                                             </td>
 
                                             <td style="width: 30%;">

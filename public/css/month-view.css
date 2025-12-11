@@ -1,23 +1,31 @@
+
 .folder,
 .year-folder,
 .month-folder {
     cursor: pointer;
-    padding: 10px 16px;
+    padding: 12px 18px;
     margin: 6px 0;
-    background: #f1f1f1;
-    border-radius: 6px;
-    font-weight: 500;
-    transition: 0.2s;
+    background: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid #e2e6eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: 0.22s ease;
+    color: #1f2937;
 }
 
 .folder:hover,
 .year-folder:hover,
 .month-folder:hover {
-    background: #e0e0ff;
+    background: #f0f6ff;
+    border-color: #b9d4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+
 .nested-folder {
-    margin-left: 20px;
+    margin-left: 22px;
     display: none;
 }
 
@@ -25,77 +33,135 @@
     display: block;
 }
 
+
 .pdf-list {
     margin-left: 40px;
-    padding: 10px;
-    border-radius: 4px;
-    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
     display: none;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .pdf-list.active {
     display: block;
 }
 
+
 .pdf-link {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #eef;
-    padding: 8px;
-    border-radius: 4px;
-    margin-bottom: 6px;
+    background: #eef4ff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #d6e2ff;
+    font-size: 14px;
+    transition: 0.2s;
 }
+
+.pdf-link:hover {
+    background: #e0ebff;
+    border-color: #a9c9ff;
+    transform: translateY(-2px);
+}
+
 
 .letter-row {
     display: none;
     justify-content: space-between;
     align-items: center;
-    padding: 6px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 5px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e6eb;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    transition: 0.2s ease;
 }
+
+.letter-row:hover {
+    background: #f8fbff;
+    border-color: #c8d7ff;
+}
+
 
 .letter-info {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    font-size: 14px;
+    color: #374151;
 }
 
 .letter-date {
     min-width: 120px;
+    color: #6b7280;
 }
 
 .letter-no {
     min-width: 160px;
+    font-weight: 600;
+    color: #1e3a8a;
 }
 
 .letter-crn {
     width: 180px;
+    font-weight: 600;
+    color: #1e3a8a;
 }
+
 
 .search-input {
-    width: 200px;
+    width: 220px;
     margin-left: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition: 0.2s ease;
 }
 
+.search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+
 .pagination-buttons {
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .pagination-buttons button {
-    margin-right: 5px;
-    padding: 4px 10px;
+    margin-right: 6px;
+    padding: 6px 12px;
     font-size: 13px;
+    background: #f1f5f9;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    transition: 0.2s;
 }
+
+.pagination-buttons button:hover {
+    background: #e2e8f0;
+    border-color: #a7b4c2;
+}
+
 
 @media (max-width: 768px) {
     .letter-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 6px;
+        gap: 8px;
+    }
+
+    .search-input {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 8px;
     }
 }

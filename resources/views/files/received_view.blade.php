@@ -8,7 +8,7 @@
         {{-- <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
             <i class="fa fa-arrow-left"></i> Back
         </button> --}}
-        <h4><strong>📁 Letter Download (Issue - By Year)</strong></h4>
+        <h4><strong>📁 Letter Download (Receipt - By Year)</strong></h4>
     </div>
 
     <div class="row">

@@ -1,3 +1,41 @@
+
+:root {
+
+    --primary: #0d6efd;
+    --accent: #ff416c;
+
+
+    --white: #ffffff;
+    --light: #f4f7fb;
+    --soft: #eef2f7;
+    --border: #d6dde6;
+    --text-dark: #222;
+    --text-muted: #666;
+
+    --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.10);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.16);
+
+
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+
+
+    --t-fast: .15s ease;
+    --t-mid: .25s ease;
+}
+
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--light);
+    color: var(--text-dark);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+}
+
 .visually-hidden {
     position: absolute !important;
     width: 1px;
@@ -11,24 +49,15 @@
 }
 
 
-body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f7fb;
-    color: #222;
-    line-height: 1.45;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-
 .report-heading {
-    font-size: 1.3rem;
+    font-size: 1.45rem;
     font-weight: 700;
     color: #243447;
     text-align: center;
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #eee;
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e4e7eb;
+    letter-spacing: .3px;
 }
 
 
@@ -36,18 +65,16 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    margin-bottom: 30px;
-
+    margin-bottom: 25px;
 }
-
 
 .card-button {
     flex: 0 0 calc(25% - 16px);
-    background: #fff;
-    border: 1px solid #dee2e6;
-    border-radius: 12px;
-    padding: 12px 16px;
-    min-height: 100px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 14px 18px;
+    min-height: 105px;
 
     display: flex;
     flex-direction: column;
@@ -56,55 +83,63 @@ body {
     cursor: pointer;
     position: relative;
 
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: var(--shadow-xs);
+    transition: transform var(--t-mid), box-shadow var(--t-mid), border var(--t-fast);
 }
 
 .card-button:hover {
-
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
 }
 
 .card-button:focus {
     outline: none;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.12);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
 }
+
 
 .card-button::after {
     content: "";
     position: absolute;
-    left: 12px;
+    left: 14px;
     bottom: 10px;
-    width: calc(100% - 24px);
+    width: calc(100% - 28px);
     height: 3px;
-    background: linear-gradient(90deg, #ff416c, #007bff);
-    border-radius: 8px;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+    border-radius: var(--r-sm);
+    opacity: .55;
 }
 
 
 .card-title {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    margin-bottom: 6px;
     color: #111;
+    margin-bottom: 4px;
 }
 
 .card-desc {
-    font-size: 0.85rem;
-    color: #444;
+    font-size: .88rem;
+    color: var(--text-muted);
 }
 
 
 .search-input {
     width: 100%;
-    padding: 0.5rem 1rem 0.5rem 2.4rem;
+    padding: .55rem 1rem .55rem 2.3rem;
     border: 1px solid #ced4da;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    color: #222;
+    border-radius: var(--r-lg);
+    font-size: .95rem;
+    transition: var(--t-fast);
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 .16rem rgba(13, 110, 253, 0.25);
+    outline: none;
 }
 
 .search-icon {
@@ -113,85 +148,82 @@ body {
     left: 14px;
     transform: translateY(-50%);
     pointer-events: none;
-    color: #666;
+    color: var(--text-muted);
 }
 
 
 .month-card {
     flex: 0 0 calc(25% - 16px);
-    background: linear-gradient(135deg, #edf1f7, #fff);
-    border: 1px solid #dce4ec;
-    border-radius: 12px;
-    padding: 18px 12px;
+    background: linear-gradient(135deg, #f7f9fc, #ffffff);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 18px 10px;
     text-align: center;
 
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     cursor: pointer;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
-
+    box-shadow: var(--shadow-xs);
+    transition: transform var(--t-mid), box-shadow var(--t-mid), border var(--t-fast);
 }
 
 .month-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
-
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
 }
 
 .month-card:focus {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.08);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
 }
 
 .month-count {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    color: #0d6efd;
+    color: var(--primary);
 }
 
 
 .letter-table {
     width: 100%;
-    background: #fff;
-    font-size: 0.95rem;
-
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background: var(--white);
+    font-size: .95rem;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
     border-collapse: separate;
     overflow: hidden;
-
-    margin-bottom: 30px;
-
+    box-shadow: var(--shadow-sm);
 }
 
 .letter-table th,
 .letter-table td {
-    padding: 10px 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eef2f7;
     text-align: left;
-    border-bottom: 1px solid #f1f1f1;
 }
 
 .letter-table th {
     background: #e8f0fe;
-    font-weight: 600;
+    font-weight: 700;
     color: #111;
 }
 
 .letter-table tr:nth-child(even) {
-    background: #f9fcff;
+    background: #f9fbff;
 }
 
 .letter-table tr:hover {
-    background: #f0f7ff;
+    background: #f0f6ff;
 }
 
 
 .btn {
     cursor: pointer;
+    border-radius: var(--r-md) !important;
 }
 
 @media (max-width: 992px) {
@@ -210,6 +242,6 @@ body {
     }
 
     .report-heading {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 }
