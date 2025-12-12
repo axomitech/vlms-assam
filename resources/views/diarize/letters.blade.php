@@ -601,7 +601,7 @@
                                                                     <i class="fas fa-file mr-1"></i> Correspondences
                                                                 </a>
                                                             </div>
-                                                            <div class="mb-1">
+                                                            {{-- <div class="mb-1">
                                                                 <a href="#"
                                                                     class="action-link btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
                                                                     data-toggle="tooltip" data-placement="top"
@@ -609,7 +609,7 @@
                                                                     style="min-height: 30px; font-size: 12px;">
                                                                     <i class="fas fa-archive mr-1"></i> Archived
                                                                 </a>
-                                                            </div>
+                                                            </div> --}}
                                                         @endif
 
                                                     </td>
@@ -854,7 +854,7 @@
                                                                 </a>
                                                             </div>
 
-                                                            <div class="mb-1">
+                                                            {{-- <div class="mb-1">
                                                                 <a href="#"
                                                                     class="action-link btn btn-sm btn-success w-100 d-flex align-items-center justify-content-center"
                                                                     data-toggle="tooltip" data-placement="top"
@@ -862,7 +862,7 @@
                                                                     style="min-height: 30px; font-size: 12px;">
                                                                     <i class="fas fa-undo mr-1"></i> Restore
                                                                 </a>
-                                                            </div>
+                                                            </div> --}}
                                                         @endif
                                                     </td>
 
