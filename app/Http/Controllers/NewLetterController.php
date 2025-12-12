@@ -18,7 +18,10 @@ class NewLetterController extends Controller
             'subcategory',
             'recipient',
             'sender'
-        ])->get();
+        ])
+            ->where('legacy', 0)
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $departmentUsers = User::all();
         $letterNos = Letter::select('letter_no')->get();
@@ -26,38 +29,11 @@ class NewLetterController extends Controller
         return view('hod.hod_letter', compact('letters', 'departmentUsers', 'letterNos'));
     }
 
+
+
     public function download($id)
     {
         $letter = Letter::findOrFail($id);
         return response()->file(storage_path('app/' . $letter->letter_path));
     }
-
-
-    // public function assignLetter(Request $request)
-    // {
-    //     Letter::where('letter_id', $request->assign_letter)
-    //         ->update([
-    //             'assigned_to' => $request->assignee,
-    //             'assign_remarks' => $request->assign_remarks
-    //         ]);
-
-    //     return response()->json(['status' => true]);
-    // }
-
-    // public function refer(Request $request)
-    // {
-    //     foreach ($request->refer_letters as $letterNo) {
-    //         ReferenceLetter::create([
-    //             'main_letter_id' => $request->assign_letter,
-    //             'letter_no'      => $letterNo
-    //         ]);
-    //     }
-
-    //     return response()->json(['status' => true]);
-    // }
-
-    // public function reference(Request $request)
-    // {
-    //     return ReferenceLetter::where('main_letter_id', $request->letter)->get();
-    // }
 }
