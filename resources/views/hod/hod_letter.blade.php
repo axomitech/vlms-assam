@@ -33,11 +33,11 @@
                                     </tr>
                                     <tr class="text text-sm text-justify">
                                         <th>Sl no.</th>
-                                        <th>Diarized Details</th>
+                                        <th style="width:20%;">Diarized Details</th>
                                         <th>Subject</th>
-                                        <th>Name</th>
+                                        <th style="width:20%;">Name</th>
                                         <th>Category</th>
-                                        <th>Sub Category</th>
+                                        <th style="width:20%;">Sub Category</th>
                                         <th>Letter</th>
 
                                     </tr>
