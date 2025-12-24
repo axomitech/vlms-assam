@@ -71,7 +71,7 @@
                                                         placeholder="🔍 Search by Date, Letter No, CRN or Subcategory"
                                                         onkeyup="filterLetters(this, 'letter-container-{{ $categoryId }}-{{ $subCategoryId }}-{{ $year }}')">
 
-                                                    <a href="{{ route('pdf.merge.Issue', [$categoryId, $subCategoryId, $year]) }}"
+                                                    <a href="{{ route('pdf.merge', [$categoryId, $subCategoryId, $year]) }}"
                                                         class="btn btn-sm btn-outline-primary" target="_blank">
                                                         ⬇️ Download Merged PDF
                                                     </a>

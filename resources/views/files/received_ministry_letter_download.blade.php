@@ -48,7 +48,7 @@
                                         class="nested-folder">
                                         <div class="pdf-link">
                                             <span><strong>📅 Year: {{ $year }}</strong></span>
-                                            <a href="{{ route('pdf.merge.Issue', [$categoryId, $subCategoryId, $year]) }}"
+                                            <a href="{{ route('pdf.merge', [$categoryId, $subCategoryId, $year]) }}"
                                                 class="btn btn-sm btn-outline-success" target="_blank">
                                                 📌 Download Year-wise PDF
                                             </a>
@@ -61,7 +61,7 @@
                                                 <div class="pdf-link mb-2">
                                                     🗓️ {{ $month }} —
                                                     Letters:<strong>{{ count($lettersGroup) }}</strong>
-                                                    <a href="{{ route('pdf.merge.month.Issue', [$categoryId, $subCategoryId, $year, $month]) }}"
+                                                    <a href="{{ route('pdf.merge.month', [$categoryId, $subCategoryId, $year, $month]) }}"
                                                         class="btn btn-sm btn-outline-primary" target="_blank"
                                                         style="margin-left: 10px;">
                                                         📌 Download Month-wise PDF
