@@ -72,6 +72,10 @@
     background-color: var(--color-issued);
 }
 
+.bg-total-letter {
+    background-color: #9C0000;
+}
+
 .bg-action {
     background-color: var(--color-action);
 }

@@ -48,6 +48,20 @@
                                     </div>
                                 </a>
                             </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="dashboard-box bg-total-letter">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <h3>{{ $diarized_count }}</h3>
+                                            <h3>Overall Total Letters</h3>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <span style="font-size:45px;">📩</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
 
                             <div class="col-md-3 col-sm-6 mb-3">
                                 <a href="{{ route('action_box') }}">
@@ -58,7 +72,8 @@
                                                 <h3>Overall Action Taken</h3>
                                             </div>
                                             <div class="col-4 p-0">
-                                                <img src="{{ asset('banoshree/images/actiontaken.png') }}" alt="Dak Action">
+                                                <img src="{{ asset('banoshree/images/actiontaken.png') }}"
+                                                    alt="Dak Action">
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +224,8 @@
                                     <option value="all" {{ $currentYear == 'all' ? 'selected' : '' }}>📊 OverAll
                                     </option>
                                     @for ($year = date('Y'); $year >= 2020; $year--)
-                                        <option value="{{ $year }}" {{ $year == $currentYear ? 'selected' : '' }}>
+                                        <option value="{{ $year }}"
+                                            {{ $year == $currentYear ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>
                                     @endfor
