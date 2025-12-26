@@ -117,7 +117,7 @@
                                                 class="submenu-link"> <i class="fas fa-calendar-alt"></i>
                                                 <p>Letter Download by Date</p>
                                             </a> </div>
-                                        <div class="menu-item"> <input type="checkbox" id="menu-download-month"
+                                        {{-- <div class="menu-item"> <input type="checkbox" id="menu-download-month"
                                                 class="menu-toggle" /> <label for="menu-download-month"
                                                 class="submenu-link"> <i class="fas fa-calendar"></i>
                                                 <p>Letter Download by Month</p> <i
@@ -132,7 +132,7 @@
                                                     class="submenu-link"> <i class="fas fa-paper-plane"></i>
                                                     <p>Issue</p>
                                                 </a> </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="menu-item"> <input type="checkbox" id="menu-download-year"
                                                 class="menu-toggle" /> <label for="menu-download-year"
                                                 class="submenu-link"> <i class="fas fa-calendar-week"></i>
@@ -265,7 +265,7 @@
                                                         class="submenu-link"> <i class="fas fa-calendar-alt"></i>
                                                         <p>Letter Download by Date</p>
                                                     </a> </div>
-                                                <div class="menu-item"> <input type="checkbox"
+                                                {{-- <div class="menu-item"> <input type="checkbox"
                                                         id="menu-download-month" class="menu-toggle" /> <label
                                                         for="menu-download-month" class="submenu-link"> <i
                                                             class="fas fa-calendar"></i>
@@ -281,7 +281,7 @@
                                                             class="submenu-link"> <i class="fas fa-paper-plane"></i>
                                                             <p>Issue</p>
                                                         </a> </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="menu-item"> <input type="checkbox"
                                                         id="menu-download-year" class="menu-toggle" /> <label
                                                         for="menu-download-year" class="submenu-link"> <i
