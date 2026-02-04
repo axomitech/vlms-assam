@@ -139,71 +139,68 @@
                                                                 <i class="fas fa-paper-plane ml-1"></i>
                                                             </span>
                                                         </a>
-                                                        @if ($value['stage_status'] == 1)
-                                                            @if ($value['receipt'] == true)
-                                                                <div class="mb-1">
 
-                                                                    <a href="" class="assign-link "
+
+                                                        @if ($value['stage_status'] == 1 && $value['receipt'] == true)
+                                                            <div class="mb-1">
+                                                                <a href="" class="assign-link" data-toggle="modal"
+                                                                    data-target=".bd-example-modal-lg"
+                                                                    data-letter="{{ $value['letter_id'] }}"
+                                                                    data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                    <span
+                                                                        class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
+                                                                        title="Assign Letter"
+                                                                        style="min-height: 30px; font-size: 12px;">
+
+                                                                        @if (Auth::user()->id == $value['diarizer_id'])
+                                                                            Pull Up
+                                                                            <i class="fas fa-arrow-up ml-1"></i>
+                                                                        @else
+                                                                            Pull Back
+                                                                            <i class="fas fa-arrow-left ml-1"></i>
+                                                                        @endif
+
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        @endif
+
+
+                                                        @if (!$assignedLetters[$i - 1])
+                                                            @if (Auth::user()->id == $value['diarizer_id'])
+                                                                @if ($legacy == 0 && $value['receipt'] == true)
+                                                                    <a href="" class="assign-link"
                                                                         data-toggle="modal"
                                                                         data-target=".bd-example-modal-lg"
                                                                         data-letter="{{ $value['letter_id'] }}"
                                                                         data-letter_path="{{ storageUrl($value['letter_path']) }}">
                                                                         <span
-                                                                            class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center"
+                                                                            class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
                                                                             title="Assign Letter"
                                                                             style="min-height: 30px; font-size: 12px;">
-                                                                            @if (Auth::user()->id == $value['diarizer_id'])
-                                                                                Pull Up
-                                                                                <i class="fas fa-arrow-up ml-1"></i>
-                                                                            @else
-                                                                                Pull Back
-                                                                                <i class="fas fa-arrow-left ml-1"></i>
-                                                                            @endif
-
-                                                                        </span>
-                                                                    </a>
-
-                                                                </div>
-                                                            @endif
-                                                        @endif
-
-                                                        @if (!$assignedLetters[$i - 1])
-                                                            <div class="mb-1">
-                                                                @if (Auth::user()->id == $value['diarizer_id'])
-                                                                    @if ($legacy == 0)
-                                                                        @if ($value['receipt'] == true)
-                                                                            <a href="" class="assign-link"
-                                                                                data-toggle="modal"
-                                                                                data-target=".bd-example-modal-lg"
-                                                                                data-letter="{{ $value['letter_id'] }}"
-                                                                                data-letter_path="{{ storageUrl($value['letter_path']) }}">
-                                                                                <span
-                                                                                    class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center"
-                                                                                    title="Assign Letter"
-                                                                                    style="min-height: 30px; font-size: 12px;">
-                                                                                    Assign
-                                                                                    <i class="fas fa-paper-plane ml-1"></i>
-                                                                                </span>
-                                                                            </a>
-                                                                        @endif
-                                                                    @endif
-
-
-                                                                    <a
-                                                                        href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
-                                                                        <span
-                                                                            class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
-                                                                            title="Edit Letter"
-                                                                            style="min-height: 30px; font-size: 12px;">
-                                                                            Edit
-                                                                            <i class="fas fa-edit ml-1"></i>
+                                                                            Assign
+                                                                            <i class="fas fa-paper-plane ml-1"></i>
                                                                         </span>
                                                                     </a>
                                                                 @endif
+                                                            @endif
+                                                        @endif
 
-                                                            </div>
+
+                                                        @if (Auth::user()->id == $value['diarizer_id'])
+                                                            <a
+                                                                href="{{ route('edit_diarize', [encrypt($value['letter_id'])]) }}">
+                                                                <span
+                                                                    class="btn btn-sm btn-warning w-100 d-flex align-items-center mt-2 justify-content-center"
+                                                                    title="Edit Letter"
+                                                                    style="min-height: 30px; font-size: 12px;">
+                                                                    Edit
+                                                                    <i class="fas fa-edit ml-1"></i>
+                                                                </span>
+                                                            </a>
                                                         @endif
                                                     @endif
+
 
 
 
