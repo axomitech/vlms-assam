@@ -204,7 +204,7 @@
 
                             <div class="col-md-3 col-sm-6 mt-3">
 
-                                <a href="#" class="category-card" data-category-id="{{ $category->id }}"
+                                <a class="category-card" data-category-id="{{ $category->id }}"
                                     data-category-name="{{ $category->category_name }}">
 
                                     <div class="small-box mx-2">
@@ -334,36 +334,7 @@ transform:translate(-50%,-50%);text-align:center">
 
         </div>
 
-        {{-- <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
-            <div class="box-body">
-                <section class="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-hover" id="lettersList">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col"><small><b>Sl No.</b></small></th>
-                                            <th scope="col"><small><b>Diarize No.</b></small></th>
-                                            <th scope="col"><small><b>Subject</b></small></th>
-                                            <th scope="col"><small><b>Letter No.</b></small></th>
-                                            <th scope="col"><small><b>Recipient Name</b></small></th>
-                                            <th scope="col"><small><b>Issue Date</b></small></th>
-                                            <th scope="col"><small><b>Download</b></small></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- AJAX response will populate here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
 
-                </section>
-
-            </div>
-        </div> --}}
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl">
@@ -551,163 +522,69 @@ transform:translate(-50%,-50%);text-align:center">
             }
         </script>
 
-
         <script>
-            $(document).ready(function() {
+            function downloadPDF() {
 
-                const dataTable = $('#lettersList').DataTable({
-                    responsive: true,
-                    lengthChange: false,
-                    autoWidth: false,
-                    buttons: ["excel", "pdf", "print"]
-                });
+                const {
+                    jsPDF
+                } = window.jspdf;
+                const card = document.getElementById("issueSummaryCard");
 
+                html2canvas(card, {
+                    scale: 2
+                }).then(canvas => {
 
-                $('.category-card').on('click', function(e) {
-                    e.preventDefault();
+                    const imgData = canvas.toDataURL("image/png");
+                    const pdf = new jsPDF("p", "mm", "a4");
 
+                    const imgWidth = 190;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
 
-                    let categoryId = $(this).data('category-id');
-                    let categoryName = $(this).data('category-name');
+                    const monthText = document.getElementById("issueMonthSelect")
+                        .options[document.getElementById("issueMonthSelect").selectedIndex].text;
 
-                    let url = '{{ route('issue_by_category', ['category_id' => ':category_id']) }}'.replace(
-                        ':category_id', categoryId);
-
-                    showLoading();
-
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        success: function(response) {
-                            console.log(response);
+                    const year = document.getElementById("issueYearSelect").value;
 
 
-                            $('#selectedCategoryName').html('<strong>Issued from ' +
-                                categoryName + '</strong>');
-
-
-                            let tableBody = '';
-                            let serialNumber = 1;
-
-                            response.forEach(function(letter) {
-                                let ecr_no = letter.ecr_no;
-                                if (ecr_no == null) {
-                                    ecr_no = "";
-                                }
-                                let letterPath = letter.letter_path.replace("public/", "");
-                                let truncatedSubject = letter.subject.length > 100 ?
-                                    `<div class="text-block" id="textBlock${letter.id}">
-                                    <p class="shortText text-justify text-sm">
-                                        ${letter.subject.substring(0, 100)}...
-                                        <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
-                                    </p>
-                                    <div class="longText" style="display: none;">
-                                        <p class="text-sm text-justify">
-                                            ${letter.subject}
-                                            <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
-                                        </p>
-                                    </div>
-                                </div>` :
-                                    `<p>${letter.subject}</p>`;
-
-                                tableBody += `<tr>
-                                    <td><small>${serialNumber++}</small></td>
-
-
-                                    <td>
-                                            <small>
-                                                <a href="#" class="assign-link"
-                                                data-id="${letter.letter_id}"
-                                                data-toggle="modal"
-                                                data-target=".bd-example-modal-lg"
-                                                data-letter="${letter.letter_no}"
-                                                data-letter_path="${url}">
-                                                ${letter.crn}
-                                                </a>
-                                            </small>
-                                            <br>Diarized By: ${letter.name}
-                                    </td>
-
-                                    <td style="width: 30%;">${truncatedSubject}</td>
-                                    <td><small><b>${letter.letter_no}</b>
-                                <br>
-                                <b>${ecr_no}</b></small></td>
-                                    <td><small><b>${letter.recipient_name}</b></small></td>
-                                    <td><small>${letter.issue_date}</small></td>
-                                    <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
-                                </tr>`;
-                            });
-
-
-                            dataTable.clear();
-                            dataTable.rows.add($(tableBody));
-                            dataTable.draw();
-
-
-                            $('#cardsContainer').hide();
-                            $('#lettersTable').show();
-                            $('#resetView').show();
-                            hideLoading();
-                        }
+                    pdf.setFont("helvetica", "bold");
+                    pdf.setFontSize(16);
+                    pdf.text("Monthly Issue Summary", 105, 15, {
+                        align: "center"
                     });
-                });
 
-                const dashboardUrl = "{{ route('dashboard') }}";
-
-
-                $('#resetView').on('click', function() {
-
-                    if ($('#lettersTable').is(':visible')) {
-                        $('#lettersTable').hide();
-                        $('#cardsContainer').show();
-                        $('#selectedCategoryName').html('<strong>Issue</strong>');
-
-                    } else {
-                        window.location.href = dashboardUrl;
-                    }
-                });
-            });
-        </script>
-        <script>
-            $(document).on('click', '.assign-link', function() {
+                    pdf.setFontSize(11);
+                    pdf.setFont("helvetica", "normal");
+                    pdf.text("Department: {{ session('department') }}", 14, 22);
+                    pdf.text(`Month: ${monthText} ${year}`, 150, 22);
 
 
-                let id = $(this).data('id');
-                $('#letter-view').attr('src', '/download/' + id);
+                    pdf.setDrawColor(230);
+                    pdf.setLineWidth(0.4);
+                    pdf.rect(10, 28, 190, imgHeight + 4);
 
-                $('#assign-div').show();
-                $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
 
-                $.get("{{ route('reference') }}", {
-                    letter: id
-                }, function(j) {
+                    pdf.addImage(imgData, "PNG", 12, 30, imgWidth - 4, imgHeight - 4);
 
-                    if (j.length > 1) {
 
-                        var div = "";
-                        for (var i = 1; i < j.length; i++) {
+                    const pageHeight = pdf.internal.pageSize.height;
+                    pdf.line(10, pageHeight - 15, 200, pageHeight - 15);
 
-                            div += "<div class='col-md-2'>" +
-                                "<a href='' class='refer-letter-link' " +
-                                "data-id='" + j[i].letter_id + "'>" +
-                                "<b>" + j[i].letter_no + "</b></a></div>";
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(120);
+
+                    const now = new Date();
+                    const formattedDateTime = now.toLocaleString();
+
+                    pdf.text(
+                        `Generated from eDak by : {{ Auth::user()->name }} | ${formattedDateTime}`,
+                        105,
+                        pageHeight - 8, {
+                            align: "center"
                         }
+                    );
 
-                        $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
-                    } else {
-                        $('#refer-letter-div').hide();
-                    }
+                    pdf.save(`Issue_Summary_${monthText}_${year}.pdf`);
                 });
-            });
-
-            $(document).on('click', '.refer-letter-link', function(e) {
-                e.preventDefault();
-
-                let id = $(this).data('id');
-
-
-                $('#refer-letter-div').removeAttr("hidden").show();
-                $('#refer-letter-view').attr('src', '/download/' + id);
-            });
+            }
         </script>
     @endsection

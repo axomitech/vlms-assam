@@ -202,7 +202,7 @@
 
                         <div class="col-md-3 col-sm-6 mt-3">
 
-                            <a href="#" class="category-card" data-category-id="{{ $category->id }}"
+                            <a class="category-card" data-category-id="{{ $category->id }}"
                                 data-category-name="{{ $category->category_name }}">
 
                                 <div class="small-box mx-2">
@@ -254,19 +254,18 @@
             <div class="row">
                 <div id="receiptSummaryCard" class="col-md-12 p-4 bg-white"
                     style="border-radius:14px;border:1px solid #e9ecef;
-box-shadow:0 6px 18px rgba(0,0,0,.04);">
-
+                box-shadow:0 6px 18px rgba(0,0,0,.04);">
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
 
-                        <h5 class="fw-semibold mb-0">Receipts Summary</h5>
+                        <h5 class="fw-semibold mb-0">Receipt Summary</h5>
 
                         <div class="d-flex align-items-center gap-4">
 
                             <div class="d-flex align-items-center gap-2">
                                 <label class="fw-semibold mb-0 text-secondary">
                                     <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
-                                </label></br>
+                                </label>
                                 <select id="yearSelect" class="form-select form-select-sm" style="width:120px"></select>
                             </div>
 
@@ -301,17 +300,15 @@ box-shadow:0 6px 18px rgba(0,0,0,.04);">
 
                     <div class="d-flex align-items-start mt-4">
 
-
                         <div style="width:280px;height:280px;position:relative">
                             <canvas id="myDonutChart"></canvas>
                             <div
                                 style="position:absolute;top:50%;left:50%;
-transform:translate(-50%,-50%);text-align:center">
+                            transform:translate(-50%,-50%);text-align:center">
                                 <p class="mb-1 text-muted fw-semibold">Total Receipts</p>
                                 <h4 id="totalCount" class="fw-bold"></h4>
                             </div>
                         </div>
-
 
                         <div class="d-flex flex-grow-1 justify-content-between ms-5">
 
@@ -333,34 +330,7 @@ transform:translate(-50%,-50%);text-align:center">
     </div>
     </div>
 
-    {{-- <div class="box shadow-lg p-3 mb-5 mt-3 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
-        <div class="box-body">
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-hover" id="lettersList">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"><small><b>Sl No.</b></small></th>
-                                        <th scope="col"><small><b>Diarize No.</b></small></th>
-                                        <th scope="col"><small><b>Subject</b></small></th>
-                                        <th scope="col"><small><b>Letter No.</b></small></th>
-                                        <th scope="col"><small><b>Sender Name</b></small></th>
-                                        <th scope="col"><small><b>Received Date</b></small></th>
-                                        <th scope="col"><small><b>Download</b></small></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div> --}}
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -431,7 +401,6 @@ transform:translate(-50%,-50%);text-align:center">
 
             monthSelect.addEventListener("change", loadData);
             yearSelect.addEventListener("change", loadData);
-
             document.getElementById("downloadReceiptReport")
                 .addEventListener("click", downloadPDF);
 
@@ -440,7 +409,6 @@ transform:translate(-50%,-50%);text-align:center">
 
 
         function updateChart(categories) {
-
 
             categories.sort((a, b) => b.count - a.count);
 
@@ -479,44 +447,34 @@ transform:translate(-50%,-50%);text-align:center">
                 }
             });
 
-            labelList.innerHTML = '';
-            countList.innerHTML = '';
-            percentList.innerHTML = '';
+            const labelList = document.getElementById('labelList');
+            const countList = document.getElementById('countList');
+            const percentList = document.getElementById('percentList');
 
-
-            labelList.innerHTML = `
-        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary">Labels</li>`;
-            countList.innerHTML = `
-        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">Nos</li>`;
-            percentList.innerHTML = `
-        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">%</li>`;
+            labelList.innerHTML = '<li class="fw-bold border-bottom pb-2 mb-2 text-secondary">Labels</li>';
+            countList.innerHTML = '<li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">Nos</li>';
+            percentList.innerHTML = '<li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">%</li>';
 
             categories.forEach((c, i) => {
 
                 const percent = total ? ((c.count / total) * 100).toFixed(2) : 0;
 
                 labelList.innerHTML += `
-        <li class="py-2 border-bottom">
-            <span style="
-                display:inline-block;
-                width:10px;
-                height:10px;
-                background:${colors[i]};
-                border-radius:50%;
-                margin-right:8px">
-            </span>
-            ${c.category_name}
-        </li>`;
+            <li class="py-2 border-bottom">
+                <span style="display:inline-block;width:10px;height:10px;
+                background:${colors[i]};border-radius:50%;margin-right:8px"></span>
+                ${c.category_name}
+            </li>`;
 
                 countList.innerHTML += `
-        <li class="py-2 border-bottom text-end">${c.count}</li>`;
+            <li class="py-2 border-bottom text-end">${c.count}</li>`;
 
                 percentList.innerHTML += `
-        <li class="py-2 border-bottom text-end">${percent}%</li>`;
+            <li class="py-2 border-bottom text-end">${percent}%</li>`;
             });
         }
-
-
+    </script>
+    <script>
         function downloadPDF() {
 
             const {
@@ -534,177 +492,62 @@ transform:translate(-50%,-50%);text-align:center">
                 const imgWidth = 190;
                 const imgHeight = canvas.height * imgWidth / canvas.width;
 
-                pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-
                 const monthText = document.getElementById("monthSelect")
                     .options[document.getElementById("monthSelect").selectedIndex].text;
 
                 const year = document.getElementById("yearSelect").value;
 
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(16);
+                pdf.text("Monthly Receipt Summary", 105, 15, {
+                    align: "center"
+                });
+
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "normal");
+                pdf.text("Department: {{ session('department') }}", 14, 22);
+                pdf.text(`Month: ${monthText} ${year}`, 150, 22);
+
+                pdf.setDrawColor(230);
+                pdf.setLineWidth(0.4);
+                pdf.rect(10, 28, 190, imgHeight + 4);
+
+                pdf.addImage(imgData, "PNG", 12, 30, imgWidth - 4, imgHeight - 4);
+
+                const pageHeight = pdf.internal.pageSize.height;
+                pdf.line(10, pageHeight - 15, 200, pageHeight - 15);
+
+                pdf.setFontSize(10);
+                pdf.setTextColor(120);
+
+
+                const now = new Date();
+
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const fullYear = now.getFullYear();
+
+                let hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // 0 should be 12
+                hours = String(hours).padStart(2, '0');
+
+                const formattedDateTime = `${day}:${month}:${fullYear} ${hours}:${minutes}:${seconds} ${ampm}`;
+
+                pdf.text(
+                    `Generated from eDak by : {{ Auth::user()->name }} | ${formattedDateTime}`,
+                    105,
+                    pageHeight - 8, {
+                        align: "center"
+                    }
+                );
+
                 pdf.save(`Receipts_Summary_${monthText}_${year}.pdf`);
             });
         }
-    </script>
-
-    <script>
-        $(document).ready(function() {
-
-            const dataTable = $('#lettersList').DataTable({
-                responsive: true,
-                lengthChange: false,
-                autoWidth: false,
-                buttons: ["excel", "pdf", "print"]
-            });
-
-            $('.category-card').on('click', function(e) {
-                e.preventDefault();
-
-                let categoryId = $(this).data('category-id');
-                let categoryName = $(this).data('category-name');
-                let url = '{{ route('receipt_by_category', ['category_id' => ':category_id']) }}'.replace(
-                    ':category_id', categoryId);
-
-                showLoading();
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-
-
-                        $('#selectedCategoryName').html('<strong>Receipts from ' +
-                            categoryName + '</strong>');
-                        let tableBody = '';
-                        let serialNumber = 1;
-
-
-                        response.forEach(function(letter) {
-                            let letterPath = letter.letter_path.replace("public/", "");
-                            let truncatedSubject = letter.subject.length > 100 ?
-                                `<div class="text-block" id="textBlock${letter.id}">
-                            <p class="shortText text-justify text-sm">
-                                ${letter.subject.substring(0, 100)}...
-                                <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
-                            </p>
-                            <div class="longText" style="display: none;">
-                                <p class="text-sm text-justify">
-                                    ${letter.subject}
-                                    <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
-                                </p>
-                            </div>
-                        </div>` :
-                                `<p>${letter.subject}</p>`;
-
-                            tableBody += `<tr>
-                        <td><small>${serialNumber++}</small></td>
-                        <td>
-                            <small>
-                                <a href="#" class="assign-link"
-                                data-id="${letter.letter_id}"
-                                data-toggle="modal"
-                                data-target=".bd-example-modal-lg"
-                                data-letter="${letter.letter_no}"
-                                data-letter_path="${url}">
-                                ${letter.crn}
-                                </a>
-                            </small>
-                            <br>Diarized By: ${letter.name}
-                        </td>
-                            </small>
-                            <br>Diarized By: ${letter.name}
-                        </td>
-                        <td style="width: 30%;">${truncatedSubject}</td>
-                        <td>
-                            <small>
-                                <b>${letter.letter_no}</b>
-                                <br>
-                                <b>${letter.ecr_no}</b>
-                            </small>
-                        </td>
-                        <td><small><b>${letter.sender_name}</b></small></td>
-                        <td><small>${letter.received_date}</small></td>
-                        <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
-                    </tr>`;
-                        });
-
-
-                        dataTable.clear();
-                        dataTable.rows.add($(tableBody));
-                        dataTable.draw();
-
-
-                        $('#cardsContainer').hide();
-                        $('#lettersTable').show();
-                        $('#resetView').show();
-                        hideLoading();
-                    },
-                    error: function(xhr, status, error) {
-                        $('#lettersList tbody').html(
-                            '<tr><td colspan="7" class="text-center">Error loading data</td></tr>'
-                        );
-                        hideLoading();
-
-                    }
-                });
-            });
-
-            const dashboardUrl = "{{ route('dashboard') }}";
-
-
-            $('#resetView').on('click', function() {
-
-                if ($('#lettersTable').is(':visible')) {
-
-                    $('#lettersTable').hide();
-                    $('#cardsContainer').show();
-                    $('#selectedCategoryName').html('<strong>Receipts</strong>');
-                } else {
-
-                    window.location.href = dashboardUrl;
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).on('click', '.assign-link', function() {
-
-
-            let id = $(this).data('id');
-            $('#letter-view').attr('src', '/download/' + id);
-
-            $('#assign-div').show();
-            $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
-
-            $.get("{{ route('reference') }}", {
-                letter: id
-            }, function(j) {
-
-                if (j.length > 1) {
-
-                    var div = "";
-                    for (var i = 1; i < j.length; i++) {
-
-                        div += "<div class='col-md-2'>" +
-                            "<a href='' class='refer-letter-link' " +
-                            "data-id='" + j[i].letter_id + "'>" +
-                            "<b>" + j[i].letter_no + "</b></a></div>";
-                    }
-
-                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
-                } else {
-                    $('#refer-letter-div').hide();
-                }
-            });
-        });
-
-        $(document).on('click', '.refer-letter-link', function(e) {
-            e.preventDefault();
-
-            let id = $(this).data('id');
-
-
-            $('#refer-letter-div').removeAttr("hidden").show();
-            $('#refer-letter-view').attr('src', '/download/' + id);
-        });
     </script>
 @endsection
