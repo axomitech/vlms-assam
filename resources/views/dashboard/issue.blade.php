@@ -334,7 +334,7 @@ transform:translate(-50%,-50%);text-align:center">
 
         </div>
 
-        <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
+        {{-- <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
             <div class="box-body">
                 <section class="content">
                     <div class="container-fluid">
@@ -363,7 +363,7 @@ transform:translate(-50%,-50%);text-align:center">
                 </section>
 
             </div>
-        </div>
+        </div> --}}
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl">
