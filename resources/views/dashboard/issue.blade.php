@@ -1,499 +1,713 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 
-@section('content')
-    @include('layouts.header')
+    @section('content')
+        @include('layouts.header')
 
-    <div class="row mt-3">
-        <div class="col-md-12 text-center">
-            <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
-            </button>
 
-            <h4 id="selectedCategoryName"><strong>Issue</strong></h4>
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- PDF Libraries -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                font-family: "Poppins", sans-serif;
+                background-color: #f4f6f9;
+            }
+
+
+
+            .issue-wrapper {
+                background: #ffffff;
+                border-radius: 18px;
+                padding: 22px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            }
+
+            .issue-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 18px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #eef2f6;
+            }
+
+            .issue-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #1e293b;
+            }
+
+            .issue-subtitle {
+                font-size: 13px;
+                color: #6b7280;
+            }
+
+            .total-issue-box {
+                background: linear-gradient(135deg, #026FCC, #014a94);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 12px;
+                text-align: center;
+                min-width: 160px;
+            }
+
+            .total-issue-box h4 {
+                margin: 0;
+                font-size: 20px;
+                font-weight: 700;
+            }
+
+            .total-issue-box span {
+                font-size: 12px;
+                opacity: .9;
+            }
+
+
+
+            .category-card {
+                text-decoration: none !important;
+                color: inherit !important;
+            }
+
+            .small-box {
+                border-radius: 14px;
+                transition: all .3s ease;
+                transform: scale(0.85);
+
+            }
+
+            .small-box:hover {
+                transform: scale(0.88);
+                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+            }
+
+            .inner {
+                border-radius: 14px;
+                border: 1px solid #e5e7eb;
+                background: #ffffff;
+                padding: 8px !important;
+                position: relative;
+            }
+
+
+            .inner .d-flex {
+                min-height: 70px !important;
+            }
+
+
+            .inner img {
+                width: 36px !important;
+                height: 28px !important;
+            }
+
+            .inner span {
+                top: 6px !important;
+                left: 6px !important;
+                padding: 4px 6px !important;
+            }
+
+
+
+            .count {
+                font-size: 24px;
+                font-weight: 700;
+                color: #026FCC;
+            }
+
+            .category-name {
+                font-size: 13px;
+                font-weight: 600;
+                color: #1f2937;
+            }
+
+
+            #lettersTable {
+                border-radius: 18px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            }
+
+
+            #issueSummaryCard {
+                border-radius: 18px !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05) !important;
+            }
+        </style>
+
+
+
+
+
+
+
+
+        <div class="row mt-3">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-dark btn-sm" id="resetView" style="float:left;">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+                <h4 id="selectedCategoryName"><strong>Issued</strong></h4>
+            </div>
         </div>
-    </div>
 
 
-    <!-- Cards row -->
-    <div class="row mt-1" id="cardsContainer">
-        <div class="box-body col-md-12">
-            <section class="content">
-                <div class="container-fluid">
-                    <!-- Loading Overlay -->
-                    <div id="loading-overlay" style="display:none;">
-                        <div class="spinner"></div>
-                        <p>Loading...</p>
-                    </div>
-                    @if (session('role') > 0)
-                        <!-- Start the outer row -->
-                        <div class="row">
-                            @foreach ($categories as $category)
-                                <!-- Create a new row after every 3 cards -->
-                                @if ($loop->index % 4 == 0 && !$loop->first)
-                        </div>
-                        <div class="row">
-                    @endif
 
-                    <div class="col-md-3 col-sm-6 mt-3">
-                        <a href="#" class="category-card" data-category-id="{{ $category->id }}"
-                            data-category-name="{{ $category->category_name }}">
-                            <div class="small-box"
-                                style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
-                                <div class="inner p-3"
-                                    style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
-                                    <!-- Icon in the top-left corner -->
-                                    <span
-                                        style="position: absolute; top: 10px; left: 10px; color: black; background-color: #e9e2e2; padding: 5px; border-radius: 1rem;">
-                                        <img src="{{ asset('banoshree/images/' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $category->category_name)) . '.png') }}"
-                                            alt="Dak Received" style="width: 48px; height: 38px;">
+        <div class="row mt-3" id="cardsContainer">
+            <div class="box-body col-md-12">
+                <section class="content">
+                    <div class="container-fluid">
 
-                                    </span>
-                                    <!-- Content container for count and category name -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                        <div class="issue-wrapper">
 
-                                        <!-- Count in the center -->
-                                        <div class="count" style="color: #026FCC; font-size: 32px; font-weight: bold;">
-                                            <strong>{{ $category->count }}</strong>
-                                        </div>
 
-                                        <!-- Category name at the bottom center -->
-                                        <div class="category-name mt-auto text-center"
-                                            style="font-size: 16px; color: black;">
-                                            <strong>{{ $category->category_name }}</strong>
-                                        </div>
-
+                            <div class="issue-header">
+                                <div>
+                                    <div class="issue-title">
+                                        All Category Issue Letters
+                                    </div>
+                                    <div class="issue-subtitle">
+                                        Overview of issued letters across all categories
                                     </div>
                                 </div>
 
+                                <div class="total-issue-box">
+                                    <h4>{{ collect($categories)->sum('count') }}</h4>
+                                    <span>Total Issued Letters</span>
+                                </div>
                             </div>
-                        </a>
-                    </div>
-                    @endforeach
-                </div> <!-- End of the outer row -->
-                @endif
-        </div>
-        </section>
-    </div>
-    <div class="container-fluid p-4">
-        <div class="row">
-            <div class="col-md-12 p-5 bg-white"
-                style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
-                <!-- Full width -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <!-- Flex container for heading and month select -->
-                    <h5 class="px-5"><strong>Issue Summary</strong></h5>
-                    <div class="d-flex align-items-center gap-3">
-                        <div>
-                            <label for="yearSelect" class="form-label">
-                                <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
-                            </label>
-                            <select id="yearSelect" class="form-select" style="width: 120px;  margin-right: 20px;">
-                            </select>
+
+
+                            <div id="loading-overlay" style="display:none;text-align:center;">
+                                <p>Loading...</p>
+                            </div>
+
+                            @if (session('role') > 0)
+                                <div class="row">
+
+                                    @foreach ($categories as $category)
+                                        @if ($loop->index % 4 == 0 && !$loop->first)
+                                </div>
+                                <div class="row">
+                            @endif
+
+                            <div class="col-md-3 col-sm-6 mt-3">
+
+                                <a href="#" class="category-card" data-category-id="{{ $category->id }}"
+                                    data-category-name="{{ $category->category_name }}">
+
+                                    <div class="small-box mx-2">
+
+                                        <div class="inner p-3">
+
+
+                                            <span
+                                                style="position:absolute;top:12px;left:12px;
+                                                      background:#f1f5f9;padding:6px 8px;
+                                                      border-radius:12px;">
+                                                <img src="{{ asset('banoshree/images/' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $category->category_name)) . '.png') }}"
+                                                    style="width:42px;height:32px;">
+                                            </span>
+
+
+                                            <div class="d-flex flex-column align-items-center justify-content-center"
+                                                style="min-height:110px;">
+
+                                                <div class="count">
+                                                    {{ $category->count }}
+                                                </div>
+
+                                                <div class="category-name mt-2 text-center">
+                                                    {{ $category->category_name }}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
+
                         </div>
-                        <div>
-                            <label for="monthSelect" class="form-label">
-                                <i class="fa fa-calendar-alt text-primary me-1"></i> Month
-                            </label>
-                            <select id="monthSelect" class="form-select" style="width: 120px;">
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <hr style="border-top: 2px solid #ccc !important;">
-                <!-- Horizontal line below heading and month select -->
-                <div class="d-flex align-items-start mt-3"> <!-- Use align-items-start for vertical alignment -->
-                    <div class="donut-chart-container me-4" style="position: relative; width: 280px; height: 280px;">
-                        <canvas id="myDonutChart"></canvas>
-                        <div
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                            <p><strong>Total Issued</strong></p>
-                            <h4 id="totalCount" style="margin: 0; font-weight:bold;"></h4>
-                        </div>
-                    </div>
-                    <div class="labels-container d-flex flex-grow-1 justify-content-between" style="margin-left: 10%;">
-                        <!-- Stretch to fill space -->
-                        <div class="text-center">
-                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                Labels</p> <!-- Bottom border for header -->
-                            <ul id="labelList"
-                                style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: left;"></ul>
-                            <!-- Left align labels -->
-                        </div>
-                        <div class="text-center">
-                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                Nos</p> <!-- Bottom border for header -->
-                            <ul id="countList"
-                                style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
-                            <!-- Right align counts -->
-                        </div>
-                        <div class="text-center">
-                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                %</p> <!-- Bottom border for header -->
-                            <ul id="percentList"
-                                style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
-                            <!-- Right align percentages -->
-                        </div>
+                        @endif
+
                     </div>
 
+            </div>
+            </section>
+        </div>
+        </div>
+
+
+
+        <div class="bg-light">
+            <div class="container-fluid p-4">
+                <div class="row">
+                    <div id="issueSummaryCard" class="col-md-12 p-4 bg-white"
+                        style="border-radius:14px;border:1px solid #e9ecef;
+box-shadow:0 6px 18px rgba(0,0,0,.04);">
+
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-semibold mb-0">Issue Summary</h5>
+
+                            <div class="d-flex align-items-center gap-4">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="fw-semibold mb-0 text-secondary">
+                                        <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
+                                    </label></br>
+                                    <select id="issueYearSelect" class="form-select form-select-sm"
+                                        style="width:120px"></select>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="fw-semibold mb-0 text-secondary">
+                                        <i class="fa fa-calendar-alt text-primary me-1"></i> Month
+                                    </label>
+                                    <select id="issueMonthSelect" class="form-select form-select-sm" style="width:130px">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+
+                                <button id="downloadIssueReport" class="btn btn-primary btn-sm px-4">
+                                    <i class="fa fa-download me-1"></i> Report Download
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex align-items-start mt-4">
+
+
+                            <div style="width:280px;height:280px;position:relative">
+                                <canvas id="issueDonutChart"></canvas>
+                                <div
+                                    style="position:absolute;top:50%;left:50%;
+transform:translate(-50%,-50%);text-align:center">
+                                    <p class="mb-1 text-muted fw-semibold">Total Issued</p>
+                                    <h4 id="issueTotalCount" class="fw-bold"></h4>
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex flex-grow-1 justify-content-between ms-5">
+
+                                <ul id="issueLabelList" style="list-style:none;padding:0;width:60%;font-weight:500;"></ul>
+                                <ul id="issueCountList"
+                                    style="list-style:none;padding:0;width:20%;text-align:right;font-weight:600;"></ul>
+                                <ul id="issuePercentList"
+                                    style="list-style:none;padding:0;width:20%;text-align:right;font-weight:600;"></ul>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+        </div>
+
+        <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
+            <div class="box-body">
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-hover" id="lettersList">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><small><b>Sl No.</b></small></th>
+                                            <th scope="col"><small><b>Diarize No.</b></small></th>
+                                            <th scope="col"><small><b>Subject</b></small></th>
+                                            <th scope="col"><small><b>Letter No.</b></small></th>
+                                            <th scope="col"><small><b>Recipient Name</b></small></th>
+                                            <th scope="col"><small><b>Issue Date</b></small></th>
+                                            <th scope="col"><small><b>Download</b></small></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- AJAX response will populate here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+        </div>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="card card-primary card-outline card-outline-tabs plate">
+                                    <div class="card-body">
+                                        <iframe src="" style="width: 100%; height: 400px;"
+                                            id="letter-view"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5" id="refer-letter-div" hidden>
+                                <div class="card card-primary card-outline card-outline-tabs">
+                                    <div class="card-body">
+                                        <iframe src="" style="width: 100%; height: 400px;"
+                                            id="refer-letter-view"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="refers" class="row">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    @endsection
+
+    @section('scripts')
+        @include('layouts.scripts')
+
         <script>
+            let issueChart;
+
             document.addEventListener("DOMContentLoaded", function() {
-                const monthSelect = document.getElementById("monthSelect");
-                const yearSelect = document.getElementById("yearSelect");
+
+                const monthSelect = document.getElementById("issueMonthSelect");
+                const yearSelect = document.getElementById("issueYearSelect");
 
                 const now = new Date();
-                const currentMonth = now.getMonth() + 1;
-                const currentYear = now.getFullYear();
+                monthSelect.value = now.getMonth() + 1;
 
-
-                monthSelect.value = currentMonth;
-
-
-                for (let y = currentYear - 5; y <= currentYear + 5; y++) {
-                    let option = document.createElement("option");
-                    option.value = y;
-                    option.text = y;
-                    if (y === currentYear) option.selected = true;
-                    yearSelect.appendChild(option);
+                for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 5; y++) {
+                    const opt = document.createElement("option");
+                    opt.value = y;
+                    opt.text = y;
+                    if (y === now.getFullYear()) opt.selected = true;
+                    yearSelect.appendChild(opt);
                 }
+
+                function loadIssueData() {
+                    fetch(`/dashboard/issue-summary?month=${monthSelect.value}&year=${yearSelect.value}`)
+                        .then(res => res.json())
+                        .then(updateIssueChart);
+                }
+
+                monthSelect.addEventListener("change", loadIssueData);
+                yearSelect.addEventListener("change", loadIssueData);
+
+                document.getElementById("downloadIssueReport")
+                    .addEventListener("click", downloadPDF);
+
+                loadIssueData();
             });
-        </script>
-        <script>
-            // Get data from Laravel
-            const categories = @json($categories);
 
-            // Prepare data for the donut chart
-            const labels = categories.map(item => item.category_name);
-            const dataValues = categories.map(item => item.count);
 
-            // Calculate the total count of receipts
-            const totalCount = dataValues.reduce((acc, val) => acc + val, 0);
+            function updateIssueChart(categories) {
 
-            // Display the total count
-            document.getElementById('totalCount').innerText = totalCount;
 
-            // Create the donut chart
-            const ctx = document.getElementById('myDonutChart').getContext('2d');
-            const backgroundColors = [
-                'rgba(255, 0, 0, 0.8)', // Bright Red
-                'rgba(0, 255, 0, 0.8)', // Bright Green
-                'rgba(0, 0, 255, 0.8)', // Bright Blue
-                'rgba(255, 165, 0, 0.8)', // Bright Orange
-                'rgba(255, 255, 0, 0.8)', // Bright Yellow
-                'rgba(75, 0, 130, 0.8)', // Indigo
-                'rgba(238, 130, 238, 0.8)', // Violet
-                'rgba(0, 255, 255, 0.8)', // Aqua
-                'rgba(255, 105, 180, 0.8)', // Hot Pink
-                'rgba(0, 128, 128, 0.8)', // Teal
-                'rgba(255, 69, 0, 0.8)' // Orange Red
-            ];
+                categories.sort((a, b) => b.count - a.count);
 
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Receipt Percentage by Category',
-                        data: dataValues,
-                        backgroundColor: backgroundColors,
-                        borderColor: backgroundColors.map(color => color.replace(/0.2/,
-                            '1')), // Darken the border color
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false // Disable the legend
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    let value = context.raw;
-                                    let percentage = ((value / totalCount) * 100).toFixed(2);
-                                    label += `: ${percentage}%`;
-                                    return label;
-                                }
+                const labels = categories.map(c => c.category_name);
+                const data = categories.map(c => c.count);
+                const total = data.reduce((a, b) => a + b, 0);
+
+                document.getElementById('issueTotalCount').innerText = total;
+
+                const ctx = document.getElementById('issueDonutChart').getContext('2d');
+
+                if (issueChart) issueChart.destroy();
+
+                const colors = [
+                    '#dc3545', '#198754', '#0d6efd',
+                    '#fd7e14', '#ffc107', '#6f42c1',
+                    '#20c997', '#6610f2', '#0dcaf0', '#d63384'
+                ];
+
+                issueChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels,
+                        datasets: [{
+                            data,
+                            backgroundColor: colors
+                        }]
+                    },
+                    options: {
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                display: false
                             }
                         }
                     }
-                }
-            });
+                });
 
-            // Populate labels, counts, and percentages
-            categories.forEach((item, index) => {
-                const labelItem = document.createElement('li');
-                labelItem.innerHTML =
-                    `<span style="display:inline-block; width: 12px; height: 12px; background-color: ${backgroundColors[index % backgroundColors.length]}; border-radius: 50%; margin-right: 5px;"></span>${item.category_name}`;
-                labelItem.style.fontWeight = 'bold'; // Make bold
-                labelItem.style.marginBottom = '5px'; // Add space between labels
-                document.getElementById('labelList').appendChild(labelItem);
+                issueLabelList.innerHTML = '';
+                issueCountList.innerHTML = '';
+                issuePercentList.innerHTML = '';
 
-                const countItem = document.createElement('li');
-                countItem.textContent = item.count;
-                countItem.style.fontWeight = 'bold'; // Make bold
-                countItem.style.marginBottom = '5px'; // Add space between counts
-                document.getElementById('countList').appendChild(countItem);
 
-                const percentItem = document.createElement('li');
-                const percentage = ((item.count / totalCount) * 100).toFixed(2);
-                percentItem.textContent = percentage + '%';
-                percentItem.style.fontWeight = 'bold'; // Make bold
-                percentItem.style.marginBottom = '5px'; // Add space between percentages
-                document.getElementById('percentList').appendChild(percentItem);
+                issueLabelList.innerHTML = `
+        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary">Labels</li>`;
+                issueCountList.innerHTML = `
+        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">Nos</li>`;
+                issuePercentList.innerHTML = `
+        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">%</li>`;
+
+                categories.forEach((c, i) => {
+
+                    const percent = total ? ((c.count / total) * 100).toFixed(2) : 0;
+
+                    issueLabelList.innerHTML += `
+        <li class="py-2 border-bottom">
+            <span style="
+                display:inline-block;
+                width:10px;
+                height:10px;
+                background:${colors[i]};
+                border-radius:50%;
+                margin-right:8px">
+            </span>
+            ${c.category_name}
+        </li>`;
+
+                    issueCountList.innerHTML += `
+        <li class="py-2 border-bottom text-end">${c.count}</li>`;
+
+                    issuePercentList.innerHTML += `
+        <li class="py-2 border-bottom text-end">${percent}%</li>`;
+                });
+            }
+
+
+            function downloadPDF() {
+
+                const {
+                    jsPDF
+                } = window.jspdf;
+                const card = document.getElementById("issueSummaryCard");
+
+                html2canvas(card, {
+                    scale: 2
+                }).then(canvas => {
+
+                    const imgData = canvas.toDataURL("image/png");
+                    const pdf = new jsPDF("p", "mm", "a4");
+
+                    const imgWidth = 190;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+
+                    const monthText = document.getElementById("issueMonthSelect")
+                        .options[document.getElementById("issueMonthSelect").selectedIndex].text;
+
+                    const year = document.getElementById("issueYearSelect").value;
+
+                    pdf.save(`Issue_Summary_${monthText}_${year}.pdf`);
+                });
+            }
+        </script>
+
+
+        <script>
+            $(document).ready(function() {
+
+                const dataTable = $('#lettersList').DataTable({
+                    responsive: true,
+                    lengthChange: false,
+                    autoWidth: false,
+                    buttons: ["excel", "pdf", "print"]
+                });
+
+
+                $('.category-card').on('click', function(e) {
+                    e.preventDefault();
+
+
+                    let categoryId = $(this).data('category-id');
+                    let categoryName = $(this).data('category-name');
+
+                    let url = '{{ route('issue_by_category', ['category_id' => ':category_id']) }}'.replace(
+                        ':category_id', categoryId);
+
+                    showLoading();
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            console.log(response);
+
+
+                            $('#selectedCategoryName').html('<strong>Issued from ' +
+                                categoryName + '</strong>');
+
+
+                            let tableBody = '';
+                            let serialNumber = 1;
+
+                            response.forEach(function(letter) {
+                                let ecr_no = letter.ecr_no;
+                                if (ecr_no == null) {
+                                    ecr_no = "";
+                                }
+                                let letterPath = letter.letter_path.replace("public/", "");
+                                let truncatedSubject = letter.subject.length > 100 ?
+                                    `<div class="text-block" id="textBlock${letter.id}">
+                                    <p class="shortText text-justify text-sm">
+                                        ${letter.subject.substring(0, 100)}...
+                                        <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
+                                    </p>
+                                    <div class="longText" style="display: none;">
+                                        <p class="text-sm text-justify">
+                                            ${letter.subject}
+                                            <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
+                                        </p>
+                                    </div>
+                                </div>` :
+                                    `<p>${letter.subject}</p>`;
+
+                                tableBody += `<tr>
+                                    <td><small>${serialNumber++}</small></td>
+
+
+                                    <td>
+                                            <small>
+                                                <a href="#" class="assign-link"
+                                                data-id="${letter.letter_id}"
+                                                data-toggle="modal"
+                                                data-target=".bd-example-modal-lg"
+                                                data-letter="${letter.letter_no}"
+                                                data-letter_path="${url}">
+                                                ${letter.crn}
+                                                </a>
+                                            </small>
+                                            <br>Diarized By: ${letter.name}
+                                    </td>
+
+                                    <td style="width: 30%;">${truncatedSubject}</td>
+                                    <td><small><b>${letter.letter_no}</b>
+                                <br>
+                                <b>${ecr_no}</b></small></td>
+                                    <td><small><b>${letter.recipient_name}</b></small></td>
+                                    <td><small>${letter.issue_date}</small></td>
+                                    <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
+                                </tr>`;
+                            });
+
+
+                            dataTable.clear();
+                            dataTable.rows.add($(tableBody));
+                            dataTable.draw();
+
+
+                            $('#cardsContainer').hide();
+                            $('#lettersTable').show();
+                            $('#resetView').show();
+                            hideLoading();
+                        }
+                    });
+                });
+
+                const dashboardUrl = "{{ route('dashboard') }}";
+
+
+                $('#resetView').on('click', function() {
+
+                    if ($('#lettersTable').is(':visible')) {
+                        $('#lettersTable').hide();
+                        $('#cardsContainer').show();
+                        $('#selectedCategoryName').html('<strong>Issue</strong>');
+
+                    } else {
+                        window.location.href = dashboardUrl;
+                    }
+                });
             });
         </script>
-    </div>
-    </div>
-
-    <div class="box shadow-lg p-3 mb-5 bg-white rounded min-vh-40" id="lettersTable" style="display: none;">
-        <div class="box-body">
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-hover" id="lettersList">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"><small><b>Sl No.</b></small></th>
-                                        <th scope="col"><small><b>Diarize No.</b></small></th>
-                                        <th scope="col"><small><b>Subject</b></small></th>
-                                        <th scope="col"><small><b>Letter No.</b></small></th>
-                                        <th scope="col"><small><b>Recipient Name</b></small></th>
-                                        <th scope="col"><small><b>Issue Date</b></small></th>
-                                        <th scope="col"><small><b>Download</b></small></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- AJAX response will populate here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-        </div>
-    </div>
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div class="card card-primary card-outline card-outline-tabs plate">
-                                <div class="card-body">
-                                    <iframe src="" style="width: 100%; height: 400px;" id="letter-view"></iframe>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5" id="refer-letter-div" hidden>
-                            <div class="card card-primary card-outline card-outline-tabs">
-                                <div class="card-body">
-                                    <iframe src="" style="width: 100%; height: 400px;"
-                                        id="refer-letter-view"></iframe>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="refers" class="row">
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-@endsection
-
-@section('scripts')
-    @include('layouts.scripts')
-
-    <script>
-        $(document).ready(function() {
-            // Initialize DataTable
-            const dataTable = $('#lettersList').DataTable({
-                responsive: true,
-                lengthChange: false,
-                autoWidth: false,
-                buttons: ["excel", "pdf", "print"]
-            });
-
-            // Handle card click
-            $('.category-card').on('click', function(e) {
-                e.preventDefault();
-
-                // Get category info
-                let categoryId = $(this).data('category-id');
-                let categoryName = $(this).data('category-name');
-
-                let url = '{{ route('issue_by_category', ['category_id' => ':category_id']) }}'.replace(
-                    ':category_id', categoryId);
-
-                showLoading();
-                // Fetch letters using AJAX
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        console.log(response);
-
-                        // Show selected category name
-                        $('#selectedCategoryName').html('<strong>Issued from ' +
-                            categoryName + '</strong>');
-
-                        // Populate table with letters
-                        let tableBody = '';
-                        let serialNumber = 1; // Initialize serial number
-
-                        response.forEach(function(letter) {
-                            let ecr_no = letter.ecr_no;
-                            if (ecr_no == null) {
-                                ecr_no = "";
-                            }
-                            let letterPath = letter.letter_path.replace("public/", "");
-                            let truncatedSubject = letter.subject.length > 100 ?
-                                `<div class="text-block" id="textBlock${letter.id}">
-                                  <p class="shortText text-justify text-sm">
-                                      ${letter.subject.substring(0, 100)}...
-                                      <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
-                                  </p>
-                                  <div class="longText" style="display: none;">
-                                      <p class="text-sm text-justify">
-                                          ${letter.subject}
-                                          <a href="#" class="readLess" data-id="${letter.id}">Read less</a>
-                                      </p>
-                                  </div>
-                              </div>` :
-                                `<p>${letter.subject}</p>`;
-
-                            tableBody += `<tr>
-                                <td><small>${serialNumber++}</small></td>
+        <script>
+            $(document).on('click', '.assign-link', function() {
 
 
-                                 <td>
-                                        <small>
-                                            <a href="#" class="assign-link"
-                                            data-id="${letter.letter_id}"
-                                            data-toggle="modal"
-                                            data-target=".bd-example-modal-lg"
-                                            data-letter="${letter.letter_no}"
-                                            data-letter_path="${url}">
-                                            ${letter.crn}
-                                            </a>
-                                        </small>
-                                        <br>Diarized By: ${letter.name}
-                                </td>
+                let id = $(this).data('id');
+                $('#letter-view').attr('src', '/download/' + id);
 
-                                <td style="width: 30%;">${truncatedSubject}</td>
-                                <td><small><b>${letter.letter_no}</b>
-                            <br>
-                            <b>${ecr_no}</b></small></td>
-                                <td><small><b>${letter.recipient_name}</b></small></td>
-                                <td><small>${letter.issue_date}</small></td>
-                                <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
-                            </tr>`;
-                        });
+                $('#assign-div').show();
+                $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
 
-                        // Clear and add new data to the DataTable
-                        dataTable.clear(); // Clear existing data
-                        dataTable.rows.add($(tableBody)); // Add the new data
-                        dataTable.draw(); // Redraw the table
+                $.get("{{ route('reference') }}", {
+                    letter: id
+                }, function(j) {
 
-                        // Show the table and back button, hide cards
-                        $('#cardsContainer').hide();
-                        $('#lettersTable').show();
-                        $('#resetView').show();
-                        hideLoading();
+                    if (j.length > 1) {
+
+                        var div = "";
+                        for (var i = 1; i < j.length; i++) {
+
+                            div += "<div class='col-md-2'>" +
+                                "<a href='' class='refer-letter-link' " +
+                                "data-id='" + j[i].letter_id + "'>" +
+                                "<b>" + j[i].letter_no + "</b></a></div>";
+                        }
+
+                        $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
+                    } else {
+                        $('#refer-letter-div').hide();
                     }
                 });
             });
 
-            const dashboardUrl = "{{ route('dashboard') }}";
+            $(document).on('click', '.refer-letter-link', function(e) {
+                e.preventDefault();
 
-            // Handle back button click to reset view
-            $('#resetView').on('click', function() {
-                // Check if the letters table is visible
-                if ($('#lettersTable').is(':visible')) {
-                    // If on the category page, reset to the main view
-                    $('#lettersTable').hide();
-                    $('#cardsContainer').show();
-                    $('#selectedCategoryName').html('<strong>Issue</strong>');
+                let id = $(this).data('id');
 
-                } else {
-                    // Redirect to the dashboard if on the initial view
-                    window.location.href = dashboardUrl;
-                }
+
+                $('#refer-letter-div').removeAttr("hidden").show();
+                $('#refer-letter-view').attr('src', '/download/' + id);
             });
-        });
-    </script>
-    <script>
-        $(document).on('click', '.assign-link', function() {
-
-
-            let id = $(this).data('id');
-            $('#letter-view').attr('src', '/download/' + id);
-
-            $('#assign-div').show();
-            $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
-
-            $.get("{{ route('reference') }}", {
-                letter: id
-            }, function(j) {
-
-                if (j.length > 1) {
-
-                    var div = "";
-                    for (var i = 1; i < j.length; i++) {
-
-                        div += "<div class='col-md-2'>" +
-                            "<a href='' class='refer-letter-link' " +
-                            "data-id='" + j[i].letter_id + "'>" +
-                            "<b>" + j[i].letter_no + "</b></a></div>";
-                    }
-
-                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
-                } else {
-                    $('#refer-letter-div').hide();
-                }
-            });
-        });
-
-        $(document).on('click', '.refer-letter-link', function(e) {
-            e.preventDefault();
-
-            let id = $(this).data('id');
-
-
-            $('#refer-letter-div').removeAttr("hidden").show();
-            $('#refer-letter-view').attr('src', '/download/' + id);
-        });
-    </script>
-@endsection
+        </script>
+    @endsection

@@ -3,95 +3,278 @@
 @section('content')
     @include('layouts.header')
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f4f6f9;
+        }
+
+
+
+        .issue-wrapper {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .issue-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .issue-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .total-issue-box {
+            background: linear-gradient(135deg, #026FCC, #014a94);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .total-issue-box h4 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .total-issue-box span {
+            font-size: 12px;
+            opacity: .9;
+        }
+
+
+
+        .category-card {
+            text-decoration: none !important;
+            color: inherit !important;
+        }
+
+        .small-box {
+            border-radius: 14px;
+            transition: all .3s ease;
+            transform: scale(0.85);
+
+        }
+
+        .small-box:hover {
+            transform: scale(0.88);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .inner {
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            padding: 8px !important;
+            position: relative;
+        }
+
+
+        .inner .d-flex {
+            min-height: 70px !important;
+        }
+
+
+        .inner img {
+            width: 36px !important;
+            height: 28px !important;
+        }
+
+        .inner span {
+            top: 6px !important;
+            left: 6px !important;
+            padding: 4px 6px !important;
+        }
+
+
+
+        .count {
+            font-size: 24px;
+            font-weight: 700;
+            color: #026FCC;
+        }
+
+        .category-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+
+        #lettersTable {
+            border-radius: 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
+
+
+        #issueSummaryCard {
+            border-radius: 18px !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05) !important;
+        }
+    </style>
+
+
+
+
+
+
+
 
     <div class="row mt-3">
         <div class="col-md-12 text-center">
-            <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
+            <button class="btn btn-dark btn-sm" id="resetView" style="float:left;">
+                <i class="fa fa-arrow-left"></i> Back
             </button>
-            <h4 id="selectedCategoryName"><strong>Receipts</strong></h4>
+            <h4 id="selectedCategoryName"><strong>Received</strong></h4>
         </div>
     </div>
 
-    <!-- Cards row -->
-    <div class="row mt-1" id="cardsContainer">
+
+
+    <div class="row mt-3" id="cardsContainer">
         <div class="box-body col-md-12">
             <section class="content">
                 <div class="container-fluid">
-                    <!-- Loading Overlay -->
-                    <div id="loading-overlay" style="display:none;">
-                        <div class="spinner"></div>
-                        <p>Loading...</p>
-                    </div>
-                    @if (session('role') > 0)
-                        <!-- Start the outer row -->
-                        <div class="row">
-                            @foreach ($categories as $category)
-                                <!-- Create a new row after every 3 cards -->
-                                @if ($loop->index % 4 == 0 && !$loop->first)
+
+                    <div class="issue-wrapper">
+
+
+                        <div class="issue-header">
+                            <div>
+                                <div class="issue-title">
+                                    All Category Received Letters
+                                </div>
+                                <div class="issue-subtitle">
+                                    Overview of Received letters across all categories
+                                </div>
+                            </div>
+
+                            <div class="total-issue-box">
+                                <h4>{{ collect($categories)->sum('count') }}</h4>
+                                <span>Total Received Letters</span>
+                            </div>
                         </div>
-                        <div class="row">
-                    @endif
 
-                    <div class="col-md-3 col-sm-6 mt-3">
-                        <a href="#" class="category-card" data-category-id="{{ $category->id }}"
-                            data-category-name="{{ $category->category_name }}">
-                            <div class="small-box"
-                                style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
-                                <div class="inner p-3"
-                                    style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
-                                    <!-- Icon in the top-left corner -->
-                                    <span
-                                        style="position: absolute; top: 10px; left: 10px; color: black; background-color: #e9e2e2; padding: 5px; border-radius: 1rem;">
-                                        <img src="{{ asset('banoshree/images/' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $category->category_name)) . '.png') }}"
-                                            alt="Dak Received" style="width: 48px; height: 38px;">
 
-                                    </span>
-                                    <!-- Content container for count and category name -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                        <div id="loading-overlay" style="display:none;text-align:center;">
+                            <p>Loading...</p>
+                        </div>
 
-                                        <!-- Count in the center -->
-                                        <div class="count" style="color: #026FCC; font-size: 32px; font-weight: bold;">
-                                            <strong>{{ $category->count }}</strong>
-                                        </div>
+                        @if (session('role') > 0)
+                            <div class="row">
 
-                                        <!-- Category name at the bottom center -->
-                                        <div class="category-name mt-auto text-center"
-                                            style="font-size: 16px; color: black;">
-                                            <strong>{{ $category->category_name }}</strong>
+                                @foreach ($categories as $category)
+                                    @if ($loop->index % 4 == 0 && !$loop->first)
+                            </div>
+                            <div class="row">
+                        @endif
+
+                        <div class="col-md-3 col-sm-6 mt-3">
+
+                            <a href="#" class="category-card" data-category-id="{{ $category->id }}"
+                                data-category-name="{{ $category->category_name }}">
+
+                                <div class="small-box mx-2">
+
+                                    <div class="inner p-3">
+
+
+                                        <span
+                                            style="position:absolute;top:12px;left:12px;
+                                                      background:#f1f5f9;padding:6px 8px;
+                                                      border-radius:12px;">
+                                            <img src="{{ asset('banoshree/images/' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $category->category_name)) . '.png') }}"
+                                                style="width:42px;height:32px;">
+                                        </span>
+
+
+                                        <div class="d-flex flex-column align-items-center justify-content-center"
+                                            style="min-height:110px;">
+
+                                            <div class="count">
+                                                {{ $category->count }}
+                                            </div>
+
+                                            <div class="category-name mt-2 text-center">
+                                                {{ $category->category_name }}
+                                            </div>
+
                                         </div>
 
                                     </div>
                                 </div>
+                            </a>
+                        </div>
+                        @endforeach
 
-                            </div>
-                        </a>
                     </div>
-                    @endforeach
-                </div> <!-- End of the outer row -->
-                @endif
+                    @endif
+
+                </div>
+
         </div>
+        </section>
+    </div>
+    </div>
+
+
+    <div class="bg-light mt-3">
         <div class="container-fluid p-4">
             <div class="row">
-                <div class="col-md-12 p-5 bg-white"
-                    style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
-                    <!-- Full width -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <!-- Flex container for heading and month select -->
-                        <h5 class="px-5"><strong>Receipts Summary</strong></h5>
-                        <div class="d-flex align-items-center gap-3">
-                            <div>
-                                <label for="yearSelect" class="form-label">
+                <div id="receiptSummaryCard" class="col-md-12 p-4 bg-white"
+                    style="border-radius:14px;border:1px solid #e9ecef;
+box-shadow:0 6px 18px rgba(0,0,0,.04);">
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <h5 class="fw-semibold mb-0">Receipts Summary</h5>
+
+                        <div class="d-flex align-items-center gap-4">
+
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="fw-semibold mb-0 text-secondary">
                                     <i class="fa fa-calendar text-primary me-1"></i> Calendar Year
-                                </label>
-                                <select id="yearSelect" class="form-select" style="width: 120px;  margin-right: 20px;">
-                                </select>
+                                </label></br>
+                                <select id="yearSelect" class="form-select form-select-sm" style="width:120px"></select>
                             </div>
-                            <div>
-                                <label for="monthSelect" class="form-label">
+
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="fw-semibold mb-0 text-secondary">
                                     <i class="fa fa-calendar-alt text-primary me-1"></i> Month
                                 </label>
-                                <select id="monthSelect" class="form-select" style="width: 120px;">
+                                <select id="monthSelect" class="form-select form-select-sm" style="width:130px">
                                     <option value="1">January</option>
                                     <option value="2">February</option>
                                     <option value="3">March</option>
@@ -106,163 +289,47 @@
                                     <option value="12">December</option>
                                 </select>
                             </div>
+
+                            <button id="downloadReceiptReport" class="btn btn-primary btn-sm px-4">
+                                <i class="fa fa-download me-1"></i> Report Download
+                            </button>
+
                         </div>
                     </div>
-                    <hr style="border-top: 2px solid #ccc !important;">
-                    <!-- Horizontal line below heading and month select -->
-                    <div class="d-flex align-items-start mt-3"> <!-- Use align-items-start for vertical alignment -->
-                        <div class="donut-chart-container me-4" style="position: relative; width: 280px; height: 280px;">
+
+                    <hr>
+
+                    <div class="d-flex align-items-start mt-4">
+
+
+                        <div style="width:280px;height:280px;position:relative">
                             <canvas id="myDonutChart"></canvas>
                             <div
-                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                                <p><strong>Total Receipts</strong></p>
-                                <h4 id="totalCount" style="margin: 0; font-weight:bold;"></h4>
-                            </div>
-                        </div>
-                        <div class="labels-container d-flex flex-grow-1 justify-content-between" style="margin-left: 10%;">
-                            <!-- Stretch to fill space -->
-                            <div class="text-center">
-                                <p
-                                    style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                    Labels</p> <!-- Bottom border for header -->
-                                <ul id="labelList"
-                                    style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: left;"></ul>
-                                <!-- Left align labels -->
-                            </div>
-                            <div class="text-center">
-                                <p
-                                    style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                    Nos</p> <!-- Bottom border for header -->
-                                <ul id="countList"
-                                    style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
-                                <!-- Right align counts -->
-                            </div>
-                            <div class="text-center">
-                                <p
-                                    style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                    %</p> <!-- Bottom border for header -->
-                                <ul id="percentList"
-                                    style="list-style-type: none; padding: 15px; margin-top: 10px; text-align: right;"></ul>
-                                <!-- Right align percentages -->
+                                style="position:absolute;top:50%;left:50%;
+transform:translate(-50%,-50%);text-align:center">
+                                <p class="mb-1 text-muted fw-semibold">Total Receipts</p>
+                                <h4 id="totalCount" class="fw-bold"></h4>
                             </div>
                         </div>
 
+
+                        <div class="d-flex flex-grow-1 justify-content-between ms-5">
+
+                            <ul id="labelList" style="list-style:none;padding:0;width:60%;font-weight:500;"></ul>
+                            <ul id="countList"
+                                style="list-style:none;padding:0;width:20%;text-align:right;font-weight:600;"></ul>
+                            <ul id="percentList"
+                                style="list-style:none;padding:0;width:20%;text-align:right;font-weight:600;"></ul>
+
+                        </div>
                     </div>
                 </div>
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const monthSelect = document.getElementById("monthSelect");
-                    const yearSelect = document.getElementById("yearSelect");
-
-                    const now = new Date();
-                    const currentMonth = now.getMonth() + 1;
-                    const currentYear = now.getFullYear();
-
-
-                    monthSelect.value = currentMonth;
-
-
-                    for (let y = currentYear - 5; y <= currentYear + 5; y++) {
-                        let option = document.createElement("option");
-                        option.value = y;
-                        option.text = y;
-                        if (y === currentYear) option.selected = true;
-                        yearSelect.appendChild(option);
-                    }
-                });
-            </script>
-            <script>
-                // Get data from Laravel
-                const categories = @json($categories);
-
-                // Prepare data for the donut chart
-                const labels = categories.map(item => item.category_name);
-                const dataValues = categories.map(item => item.count);
-
-                // Calculate the total count of receipts
-                const totalCount = dataValues.reduce((acc, val) => acc + val, 0);
-
-                // Display the total count
-                document.getElementById('totalCount').innerText = totalCount;
-
-                // Create the donut chart
-                const ctx = document.getElementById('myDonutChart').getContext('2d');
-                const backgroundColors = [
-                    'rgba(255, 0, 0, 0.8)', // Bright Red
-                    'rgba(0, 255, 0, 0.8)', // Bright Green
-                    'rgba(0, 0, 255, 0.8)', // Bright Blue
-                    'rgba(255, 165, 0, 0.8)', // Bright Orange
-                    'rgba(255, 255, 0, 0.8)', // Bright Yellow
-                    'rgba(75, 0, 130, 0.8)', // Indigo
-                    'rgba(238, 130, 238, 0.8)', // Violet
-                    'rgba(0, 255, 255, 0.8)', // Aqua
-                    'rgba(255, 105, 180, 0.8)', // Hot Pink
-                    'rgba(0, 128, 128, 0.8)', // Teal
-                    'rgba(255, 69, 0, 0.8)' // Orange Red
-                ];
-
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Receipt Percentage by Category',
-                            data: dataValues,
-                            backgroundColor: backgroundColors,
-                            borderColor: backgroundColors.map(color => color.replace(/0.2/,
-                                '1')), // Darken the border color
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false // Disable the legend
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        let value = context.raw;
-                                        let percentage = ((value / totalCount) * 100).toFixed(2);
-                                        label += `: ${percentage}%`;
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                // Populate labels, counts, and percentages
-                categories.forEach((item, index) => {
-                    const labelItem = document.createElement('li');
-                    labelItem.innerHTML =
-                        `<span style="display:inline-block; width: 12px; height: 12px; background-color: ${backgroundColors[index % backgroundColors.length]}; border-radius: 50%; margin-right: 5px;"></span>${item.category_name}`;
-                    labelItem.style.fontWeight = 'bold'; // Make bold
-                    labelItem.style.marginBottom = '5px'; // Add space between labels
-                    document.getElementById('labelList').appendChild(labelItem);
-
-                    const countItem = document.createElement('li');
-                    countItem.textContent = item.count;
-                    countItem.style.fontWeight = 'bold'; // Make bold
-                    countItem.style.marginBottom = '5px'; // Add space between counts
-                    document.getElementById('countList').appendChild(countItem);
-
-                    const percentItem = document.createElement('li');
-                    const percentage = ((item.count / totalCount) * 100).toFixed(2);
-                    percentItem.textContent = percentage + '%';
-                    percentItem.style.fontWeight = 'bold'; // Make bold
-                    percentItem.style.marginBottom = '5px'; // Add space between percentages
-                    document.getElementById('percentList').appendChild(percentItem);
-                });
-            </script>
         </div>
+    </div>
 
 
-        </section>
+    </section>
     </div>
     </div>
 
@@ -285,7 +352,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- AJAX response will populate here -->
+
                                 </tbody>
                             </table>
                         </div>
@@ -338,8 +405,150 @@
     @include('layouts.scripts')
 
     <script>
+        let donutChart;
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const monthSelect = document.getElementById("monthSelect");
+            const yearSelect = document.getElementById("yearSelect");
+
+            const now = new Date();
+            monthSelect.value = now.getMonth() + 1;
+
+            for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 5; y++) {
+                let opt = document.createElement("option");
+                opt.value = y;
+                opt.text = y;
+                if (y === now.getFullYear()) opt.selected = true;
+                yearSelect.appendChild(opt);
+            }
+
+            function loadData() {
+                fetch(`/dashboard/receipt-summary?month=${monthSelect.value}&year=${yearSelect.value}`)
+                    .then(res => res.json())
+                    .then(updateChart);
+            }
+
+            monthSelect.addEventListener("change", loadData);
+            yearSelect.addEventListener("change", loadData);
+
+            document.getElementById("downloadReceiptReport")
+                .addEventListener("click", downloadPDF);
+
+            loadData();
+        });
+
+
+        function updateChart(categories) {
+
+
+            categories.sort((a, b) => b.count - a.count);
+
+            const labels = categories.map(c => c.category_name);
+            const data = categories.map(c => c.count);
+            const total = data.reduce((a, b) => a + b, 0);
+
+            document.getElementById('totalCount').innerText = total;
+
+            const ctx = document.getElementById('myDonutChart').getContext('2d');
+
+            if (donutChart) donutChart.destroy();
+
+            const colors = [
+                '#dc3545', '#198754', '#0d6efd',
+                '#fd7e14', '#ffc107', '#6f42c1',
+                '#20c997', '#6610f2', '#0dcaf0', '#d63384'
+            ];
+
+            donutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels,
+                    datasets: [{
+                        data,
+                        backgroundColor: colors
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            labelList.innerHTML = '';
+            countList.innerHTML = '';
+            percentList.innerHTML = '';
+
+
+            labelList.innerHTML = `
+        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary">Labels</li>`;
+            countList.innerHTML = `
+        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">Nos</li>`;
+            percentList.innerHTML = `
+        <li class="fw-bold border-bottom pb-2 mb-2 text-secondary text-end">%</li>`;
+
+            categories.forEach((c, i) => {
+
+                const percent = total ? ((c.count / total) * 100).toFixed(2) : 0;
+
+                labelList.innerHTML += `
+        <li class="py-2 border-bottom">
+            <span style="
+                display:inline-block;
+                width:10px;
+                height:10px;
+                background:${colors[i]};
+                border-radius:50%;
+                margin-right:8px">
+            </span>
+            ${c.category_name}
+        </li>`;
+
+                countList.innerHTML += `
+        <li class="py-2 border-bottom text-end">${c.count}</li>`;
+
+                percentList.innerHTML += `
+        <li class="py-2 border-bottom text-end">${percent}%</li>`;
+            });
+        }
+
+
+        function downloadPDF() {
+
+            const {
+                jsPDF
+            } = window.jspdf;
+            const card = document.getElementById("receiptSummaryCard");
+
+            html2canvas(card, {
+                scale: 2
+            }).then(canvas => {
+
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF("p", "mm", "a4");
+
+                const imgWidth = 190;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+
+                const monthText = document.getElementById("monthSelect")
+                    .options[document.getElementById("monthSelect").selectedIndex].text;
+
+                const year = document.getElementById("yearSelect").value;
+
+                pdf.save(`Receipts_Summary_${monthText}_${year}.pdf`);
+            });
+        }
+    </script>
+
+    <script>
         $(document).ready(function() {
-            // Initialize DataTable
+
             const dataTable = $('#lettersList').DataTable({
                 responsive: true,
                 lengthChange: false,
@@ -356,7 +565,7 @@
                     ':category_id', categoryId);
 
                 showLoading();
-                // Fetch letters using AJAX
+
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -368,7 +577,7 @@
                         let tableBody = '';
                         let serialNumber = 1;
 
-                        // Build table rows
+
                         response.forEach(function(letter) {
                             let letterPath = letter.letter_path.replace("public/", "");
                             let truncatedSubject = letter.subject.length > 100 ?
@@ -418,12 +627,12 @@
                     </tr>`;
                         });
 
-                        // Update the DataTable
-                        dataTable.clear(); // Clear the existing data
-                        dataTable.rows.add($(tableBody)); // Add the new data
-                        dataTable.draw(); // Redraw the table
 
-                        // Show the table and hide the cards
+                        dataTable.clear();
+                        dataTable.rows.add($(tableBody));
+                        dataTable.draw();
+
+
                         $('#cardsContainer').hide();
                         $('#lettersTable').show();
                         $('#resetView').show();
@@ -441,16 +650,16 @@
 
             const dashboardUrl = "{{ route('dashboard') }}";
 
-            // Handle back button click to reset view
+
             $('#resetView').on('click', function() {
-                // Check if the letters table is visible
+
                 if ($('#lettersTable').is(':visible')) {
-                    // If on the category page, reset to the main view
+
                     $('#lettersTable').hide();
                     $('#cardsContainer').show();
                     $('#selectedCategoryName').html('<strong>Receipts</strong>');
                 } else {
-                    // Redirect to the dashboard if on the initial view
+
                     window.location.href = dashboardUrl;
                 }
             });

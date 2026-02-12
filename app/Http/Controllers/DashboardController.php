@@ -21,6 +21,8 @@ class DashboardController extends Controller
 
         $departmentId = session('role_dept');
 
+
+
         $weeklyReceiptDataQuery = DB::table('letters')
             ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
             ->selectRaw("
@@ -45,21 +47,32 @@ class DashboardController extends Controller
         $receivedLetters = $weeklyReceiptData;
 
 
-        $letters = Letter::showLetterAndSender(['user_departments.department_id' => $departmentId], []);
+
+        $letters = Letter::showLetterAndSender(
+            ['user_departments.department_id' => $departmentId],
+            []
+        );
+
+
 
         $letter_category = Letter::join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
-            ->select('letter_categories.id', 'letter_categories.category_name', DB::raw('COUNT(*) as count'))
+            ->select(
+                'letter_categories.id',
+                'letter_categories.category_name',
+                DB::raw('COUNT(*) as count')
+            )
             ->groupBy('letters.letter_category_id', 'letter_categories.id', 'letter_categories.category_name')
             ->get();
 
 
+
         $receiptQuery = DB::table('letters')
-            ->where('department_id', '=', $departmentId)
-            ->where('receipt', '=', true);
+            ->where('department_id', $departmentId)
+            ->where('receipt', true);
 
         $issueQuery = DB::table('letters')
-            ->where('department_id', '=', $departmentId)
-            ->where('receipt', '=', false);
+            ->where('department_id', $departmentId)
+            ->where('receipt', false);
 
         if (!$isOverall) {
             $receiptQuery
@@ -74,16 +87,22 @@ class DashboardController extends Controller
         $receipt_count = $receiptQuery->count();
         $issue_count = $issueQuery->count();
 
+
+        $diarized_count = $receipt_count + $issue_count;
+
+
+
         $archive_count = DB::table('letters')
-            ->where('department_id', '=', $departmentId)
+            ->where('department_id', $departmentId)
             ->when(!$isOverall, function ($query) use ($selectedYearInt, $selectedMonth) {
                 return $query->whereRaw('EXTRACT(YEAR FROM letter_date) = ?', [$selectedYearInt])
                     ->whereRaw('EXTRACT(MONTH FROM letter_date) = ?', [$selectedMonth]);
             })
-            ->where('stage_status', '=', 5)
+            ->where('stage_status', 5)
             ->count();
 
-        $diarized_count = HomeModel::get_diarized_count();
+
+
         $sent_count = HomeModel::get_sent_count();
         $diarized_details = HomeModel::get_diarized_details();
         $inbox_count = HomeModel::get_inbox_count();
@@ -97,6 +116,7 @@ class DashboardController extends Controller
 
         $sessionMonth = 0;
         $sessionYear = 0;
+
         if (session('year') && session('month')) {
             $sessionMonth = session('month');
             $sessionYear = session('year');
@@ -124,6 +144,71 @@ class DashboardController extends Controller
             'sessionMonth'
         ));
     }
+
+
+
+    public function getReceiptSummary(Request $request)
+    {
+        $month = $request->month;
+        $year  = $request->year;
+        $departmentId = session('role_dept');
+
+        $query = DB::table('letters')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->select(
+                'letter_categories.id',
+                'letter_categories.category_name',
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('letters.receipt', true)
+            ->where('letters.department_id', $departmentId);
+
+        if ($year && $year !== 'all') {
+            $query->whereYear('letters.received_date', $year);
+
+            if ($month) {
+                $query->whereMonth('letters.received_date', $month);
+            }
+        }
+
+        return response()->json(
+            $query->groupBy('letter_categories.id', 'letter_categories.category_name')->get()
+        );
+    }
+
+
+
+    public function getIssueSummary(Request $request)
+    {
+        $month = $request->month;
+        $year  = $request->year;
+        $departmentId = session('role_dept');
+
+        $query = DB::table('letters')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->select(
+                'letter_categories.id',
+                'letter_categories.category_name',
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('letters.receipt', false)
+            ->where('letters.department_id', $departmentId);
+
+        if ($year && $year !== 'all') {
+            $query->whereYear('letters.issue_date', $year);
+
+            if ($month) {
+                $query->whereMonth('letters.issue_date', $month);
+            }
+        }
+
+        return response()->json(
+            $query->groupBy('letter_categories.id', 'letter_categories.category_name')->get()
+        );
+    }
+
+
+
     public function receipt_box()
     {
         $categories = HomeModel::get_receipt_count_by_category();
@@ -141,6 +226,7 @@ class DashboardController extends Controller
         $categories = HomeModel::get_issue_count_by_category();
         return view('dashboard.issue', compact('categories'));
     }
+
     public function fetchReceiptByCategory($category_id)
     {
         $letters = HomeModel::get_receipt_by_category($category_id);
@@ -158,6 +244,8 @@ class DashboardController extends Controller
         $letters = HomeModel::get_action_by_category($category_id);
         return response()->json($letters);
     }
+
+
 
     public function filterByYear($year)
     {
@@ -181,7 +269,7 @@ class DashboardController extends Controller
 
         session([
             'month' => $month,
-            'year' => $year,
+            'year'  => $year,
         ]);
 
         return view('letter.filtered_list', [
