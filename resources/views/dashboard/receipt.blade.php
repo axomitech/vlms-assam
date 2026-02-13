@@ -550,4 +550,9 @@
             });
         }
     </script>
+    <script>
+        document.getElementById("resetView").addEventListener("click", function() {
+            window.location.href = "{{ route('dashboard') }}";
+        });
+    </script>
 @endsection

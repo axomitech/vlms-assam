@@ -521,6 +521,11 @@ transform:translate(-50%,-50%);text-align:center">
                 });
             }
         </script>
+        <script>
+            document.getElementById("resetView").addEventListener("click", function() {
+                window.location.href = "{{ route('dashboard') }}";
+            });
+        </script>
 
         <script>
             function downloadPDF() {
