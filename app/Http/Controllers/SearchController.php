@@ -22,11 +22,11 @@ class SearchController extends Controller
         $letter = Letter::findOrFail($id);
 
         $category = \DB::table('letter_categories')
-            ->where('id', $letter->category_id)
+            ->where('id', $letter->letter_category_id)
             ->first();
 
         $subcategory = \DB::table('letter_sub_categories')
-            ->where('id', $letter->sub_category_id)
+            ->where('id', $letter->letter_sub_category_id)
             ->first();
 
         $letterUserId = Common::getSingleColumnValue('letters', [
@@ -41,8 +41,18 @@ class SearchController extends Controller
             'id' => $userId
         ], 'name');
 
-        return view('letter-details', compact('letter', 'category', 'subcategory', 'diarizedBy'));
+        $movements = SearchModel::get_letter_full_movements($id);
+
+        return view('letter-details', compact(
+            'letter',
+            'category',
+            'subcategory',
+            'diarizedBy',
+            'movements'
+        ));
     }
+
+
 
     public function viewPdf($id)
     {
@@ -58,6 +68,8 @@ class SearchController extends Controller
             'Content-Disposition' => 'inline; filename="' . $letter->letter_no . '.pdf"'
         ]);
     }
+
+
 
 
     public function search(Request $request)

@@ -105,130 +105,106 @@
                                         class="menu-icon bx bxs-inbox" style="font-size: 13px;"></i>
                                     <p>Inbox</p>
                                 </a> </div>
+                            <div class="menu-item"> <a href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}"
+                                    class="menu-link"> <i class="menu-icon bx bxs-send" style="font-size: 13px;"></i>
+                                    <p>Sent Items</p>
+                                </a> </div>
+
                             @if (session('role_dept') == 1)
-                                <div class="menu-item"> <input type="checkbox" id="menu-download"
-                                        class="menu-toggle" /> <label for="menu-download" class="menu-link"> <i
-                                            class="menu-icon fas fa-download"></i>
-                                        <p>Letter Download</p> <i class="fas fa-angle-left arrow-icon"></i>
-                                    </label>
-                                    <div class="submenu">
-                                        <div class="menu-item"> <a
-                                                href="{{ route('datewise', [encrypt(0), encrypt(1)]) }}"
-                                                class="submenu-link"> <i class="fas fa-calendar-alt"></i>
-                                                <p>Letter Download by Date</p>
-                                            </a> </div>
-                                        {{-- <div class="menu-item"> <input type="checkbox" id="menu-download-month"
-                                                class="menu-toggle" /> <label for="menu-download-month"
-                                                class="submenu-link"> <i class="fas fa-calendar"></i>
-                                                <p>Letter Download by Month</p> <i
-                                                    class="fas fa-angle-left arrow-icon"></i>
-                                            </label>
-                                            <div class="submenu"> <a
-                                                    href="{{ route('files.received-month-view', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-inbox"></i>
-                                                    <p>Receipt</p>
-                                                </a> <a
-                                                    href="{{ route('files.month-view', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-paper-plane"></i>
-                                                    <p>Issue</p>
-                                                </a> </div>
-                                        </div> --}}
-                                        <div class="menu-item"> <input type="checkbox" id="menu-download-year"
-                                                class="menu-toggle" /> <label for="menu-download-year"
-                                                class="submenu-link"> <i class="fas fa-calendar-week"></i>
-                                                <p>Letter Download by Year</p> <i
-                                                    class="fas fa-angle-left arrow-icon"></i>
-                                            </label>
-                                            <div class="submenu"> <a
-                                                    href="{{ route('files.received_view', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-inbox"></i>
-                                                    <p>Receipt</p>
-                                                </a> <a href="{{ route('files.view', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-paper-plane"></i>
-                                                    <p>Issue</p>
-                                                </a> </div>
-                                        </div>
-                                        <div class="menu-item"> <input type="checkbox" id="menu-download-ministry"
-                                                class="menu-toggle" /> <label for="menu-download-ministry"
-                                                class="submenu-link"> <i class="fas fa-building"></i>
-                                                <p>Letter Download by Ministry</p> <i
-                                                    class="fas fa-angle-left arrow-icon"></i>
-                                            </label>
-                                            <div class="submenu"> <a
-                                                    href="{{ route('files.received_ministry_letter_download', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-inbox"></i>
-                                                    <p>Receipt</p>
-                                                </a> <a
-                                                    href="{{ route('files.ministry_letter_download', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-paper-plane"></i>
-                                                    <p>Issue</p>
-                                                </a> </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="menu-item"> <a
-                                        href="{{ route('letters', [encrypt(0), 'tab' => 'sent']) }}"
-                                        class="menu-link"> <i class="menu-icon bx bxs-send"
-                                            style="font-size: 13px;"></i>
-                                        <p>Sent Items</p>
-                                    </a> </div>
-                                <div class="menu-item"> <a href="{{ route('issue_box') }}" class="menu-link"> <i
-                                            class="menu-icon bx bxs-edit" style="font-size: 13px;"></i>
-                                        <p>Issued Items</p>
-                                    </a> </div>
-                                <div class="menu-item"> <a href="{{ route('receipt_box') }}" class="menu-link"> <i
-                                            class="fas fa-envelope-open-text" style="font-size: 12px;"></i>
-                                        <p>Receipt Items</p>
-                                    </a> </div>
-                                <div class="menu-item"> <a href="{{ route('action_box') }}" class="menu-link"> <i
-                                            class="menu-icon bx bxs-message-alt-check" style="font-size: 13px;"></i>
-                                        <p>Action Taken</p>
-                                    </a> </div>
-                                <div class="menu-item"> <a
-                                        href="{{ route('letters', [encrypt(0), 'tab' => 'archive']) }}"
-                                        class="menu-link"> <i class="menu-icon bx bxs-archive-in"
-                                            style="font-size: 13px;"></i>
-                                        <p>Archived</p>
-                                    </a> </div>
-                                <div class="menu-item"> <input type="checkbox" id="menu-dak-status"
-                                        class="menu-toggle" /> <label for="menu-dak-status" class="menu-link"> <i
-                                            class="fas fa-chart-bar menu-icon"></i>
-                                        <p>Reports</p> <i class="fas fa-angle-left arrow-icon"></i>
-                                    </label>
-                                    <div class="submenu">
-                                        <div class="menu-item"> <a href="{{ route('reports') }}"
-                                                class="submenu-link"> <i class="fas fa-list-alt"></i>
-                                                <p>Overall Report</p>
-                                            </a> </div>
-                                        <div class="menu-item"> <input type="checkbox" id="menu-letter-report"
-                                                class="menu-toggle" /> <label for="menu-letter-report"
-                                                class="submenu-link"> <i class="fas fa-file-alt"></i>
-                                                <p>Letters – Dept. Report</p> <i
-                                                    class="fas fa-angle-left arrow-icon"></i>
-                                            </label>
-                                            <div class="submenu"> <a
-                                                    href="{{ route('files.received-letter-report', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-inbox"></i>
-                                                    <p>Receipt</p>
-                                                </a> <a
-                                                    href="{{ route('files.letter-report', [encrypt(0), encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-paper-plane"></i>
-                                                    <p>Issue</p>
-                                                </a> </div>
-                                        </div>
-                                    </div>
-                                </div> {{-- <div class="menu-item"> <a href="{{ route('letters', [encrypt(1)]) }}" class="menu-link"> <i class="menu-icon bx bx-history" style="font-size: 20px;"></i> <p>Legacy Letters</p> </a> </div> --}} <div class="menu-item"> <input type="checkbox"
-                                        id="menu-letters-new" class="menu-toggle" /> <label for="menu-letters-new"
-                                        class="menu-link"> <i class="menu-icon fas fa-envelope"></i>
+                                <div class="menu-item"> <input type="checkbox" id="menu-letters-new"
+                                        class="menu-toggle" /> <label for="menu-letters-new" class="menu-link">
+                                        <i class="menu-icon fas fa-envelope"></i>
                                         <p>Letters</p> <i class="fas fa-angle-left arrow-icon"></i>
                                     </label>
                                     <div class="submenu"> <a href="{{ route('new.letters.diarized') }}"
                                             class="submenu-link"> <i class="fas fa-inbox"></i>
                                             <p>Diarized</p>
-                                        </a> <a href="{{ route('letters', [encrypt(1)]) }}" class="submenu-link"> <i
-                                                class="fas fa-history"></i>
+                                        </a> <a href="{{ route('letters', [encrypt(1)]) }}" class="submenu-link">
+                                            <i class="fas fa-history"></i>
                                             <p>Legacy Letters</p>
                                         </a> </div>
+                                    <div class="menu-item"> <input type="checkbox" id="menu-download"
+                                            class="menu-toggle" /> <label for="menu-download" class="menu-link">
+                                            <i class="menu-icon fas fa-download"></i>
+                                            <p>Letter Download</p> <i class="fas fa-angle-left arrow-icon"></i>
+                                        </label>
+                                        <div class="submenu">
+                                            <div class="menu-item"> <a
+                                                    href="{{ route('datewise', [encrypt(0), encrypt(1)]) }}"
+                                                    class="submenu-link"> <i class="fas fa-calendar-alt"></i>
+                                                    <p>Letter Download by Date</p>
+                                                </a> </div>
+                                            <div class="menu-item"> <input type="checkbox" id="menu-download-year"
+                                                    class="menu-toggle" /> <label for="menu-download-year"
+                                                    class="submenu-link"> <i class="fas fa-calendar-week"></i>
+                                                    <p>Letter Download by Year</p> <i
+                                                        class="fas fa-angle-left arrow-icon"></i>
+                                                </label>
+                                                <div class="submenu"> <a
+                                                        href="{{ route('files.received_view', [encrypt(0), encrypt(1)]) }}"
+                                                        class="submenu-link"> <i class="fas fa-inbox"></i>
+                                                        <p>Receipt</p>
+                                                    </a> <a href="{{ route('files.view', [encrypt(0), encrypt(1)]) }}"
+                                                        class="submenu-link"> <i class="fas fa-paper-plane"></i>
+                                                        <p>Issue</p>
+                                                    </a> </div>
+                                            </div>
+                                            <div class="menu-item"> <input type="checkbox"
+                                                    id="menu-download-ministry" class="menu-toggle" /> <label
+                                                    for="menu-download-ministry" class="submenu-link"> <i
+                                                        class="fas fa-building"></i>
+                                                    <p>Letter Download by Ministry</p> <i
+                                                        class="fas fa-angle-left arrow-icon"></i>
+                                                </label>
+                                                <div class="submenu"> <a
+                                                        href="{{ route('files.received_ministry_letter_download', [encrypt(0), encrypt(1)]) }}"
+                                                        class="submenu-link"> <i class="fas fa-inbox"></i>
+                                                        <p>Receipt</p>
+                                                    </a> <a
+                                                        href="{{ route('files.ministry_letter_download', [encrypt(0), encrypt(1)]) }}"
+                                                        class="submenu-link"> <i class="fas fa-paper-plane"></i>
+                                                        <p>Issue</p>
+                                                    </a> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="menu-item"> <input type="checkbox" id="menu-dak-status"
+                                            class="menu-toggle" />
+                                        <label for="menu-dak-status" class="menu-link"> <i
+                                                class="fas fa-chart-bar menu-icon"></i>
+                                            <p>Reports</p> <i class="fas fa-angle-left arrow-icon"></i>
+                                        </label>
+                                        <div class="submenu" id="actionBox">
+                                            <div class="menu-item"> <a href="{{ route('receipt_box') }}"
+                                                    class="submenu-link"> <i class="fas fa-envelope-open-text"></i>
+                                                    <p>Total Dak Received</p>
+                                                </a> </div>
+                                            <div class="menu-item"> <a href="{{ route('issue_box') }}"
+                                                    class="submenu-link"> <i class="fas fa-paper-plane"></i>
+                                                    <p>Total Dak Issued</p>
+                                                </a> </div>
+                                            <div class="menu-item"> <a href="{{ route('action_box') }}"
+                                                    class="submenu-link"> <i class="fas fa-tasks"></i>
+                                                    <p>Total Actions Taken</p>
+                                                </a> </div>
+
+                                            <div class="menu-item"> <a href="{{ route('reports') }}"
+                                                    class="submenu-link"> <i class="fas fa-list-alt"></i>
+                                                    <p>Overall Report</p>
+                                                </a> </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="menu-item"> <a
+                                            href="{{ route('letters', [encrypt(0), 'tab' => 'archive']) }}"
+                                            class="menu-link"> <i class="menu-icon bx bxs-archive-in"
+                                                style="font-size: 13px;"></i>
+                                            <p>Archived</p>
+                                        </a> </div>
+
                                 </div>
                                 @endif @if (session('role_dept') > 1)
                                     <div class="menu-item"> <a
@@ -265,23 +241,6 @@
                                                         class="submenu-link"> <i class="fas fa-calendar-alt"></i>
                                                         <p>Letter Download by Date</p>
                                                     </a> </div>
-                                                {{-- <div class="menu-item"> <input type="checkbox"
-                                                        id="menu-download-month" class="menu-toggle" /> <label
-                                                        for="menu-download-month" class="submenu-link"> <i
-                                                            class="fas fa-calendar"></i>
-                                                        <p>Letter Download by Month</p> <i
-                                                            class="fas fa-angle-left arrow-icon"></i>
-                                                    </label>
-                                                    <div class="submenu"> <a
-                                                            href="{{ route('files.received-month-view', [encrypt(0), encrypt(1)]) }}"
-                                                            class="submenu-link"> <i class="fas fa-inbox"></i>
-                                                            <p>Receipt</p>
-                                                        </a> <a
-                                                            href="{{ route('files.month-view', [encrypt(0), encrypt(1)]) }}"
-                                                            class="submenu-link"> <i class="fas fa-paper-plane"></i>
-                                                            <p>Issue</p>
-                                                        </a> </div>
-                                                </div> --}}
                                                 <div class="menu-item"> <input type="checkbox"
                                                         id="menu-download-year" class="menu-toggle" /> <label
                                                         for="menu-download-year" class="submenu-link"> <i
@@ -301,8 +260,8 @@
                                                 </div>
                                                 <div class="menu-item"> <input type="checkbox"
                                                         id="menu-download-ministry" class="menu-toggle" /> <label
-                                                        for="menu-download-ministry" class="submenu-link"> <i
-                                                            class="fas fa-building"></i>
+                                                        for="menu-download-ministry" class="submenu-link">
+                                                        <i class="fas fa-building"></i>
                                                         <p>Letter Download by Ministry</p> <i
                                                             class="fas fa-angle-left arrow-icon"></i>
                                                     </label>
@@ -319,8 +278,9 @@
                                             </div>
                                         </div>
                                         <div class="menu-item"> <input type="checkbox" id="menu-dak-status"
-                                                class="menu-toggle" /> <label for="menu-dak-status"
-                                                class="menu-link"> <i class="fas fa-chart-bar menu-icon"></i>
+                                                class="menu-toggle" />
+                                            <label for="menu-dak-status" class="menu-link"> <i
+                                                    class="fas fa-chart-bar menu-icon"></i>
                                                 <p>Reports</p> <i class="fas fa-angle-left arrow-icon"></i>
                                             </label>
                                             <div class="submenu" id="actionBox">
@@ -345,10 +305,12 @@
                                                 <p>Letters</p> <i class="fas fa-angle-left arrow-icon"></i>
                                             </label>
                                             <div class="submenu"> <a href="{{ route('home1') }}"
-                                                    class="submenu-link"> <i class="fas fa-inbox"></i>
+                                                    class="submenu-link">
+                                                    <i class="fas fa-inbox"></i>
                                                     <p>Diarized</p>
                                                 </a> <a href="{{ route('letters', [encrypt(1)]) }}"
-                                                    class="submenu-link"> <i class="fas fa-history"></i>
+                                                    class="submenu-link">
+                                                    <i class="fas fa-history"></i>
                                                     <p>Legacy Letters</p>
                                                 </a> </div>
                                         </div>
@@ -416,8 +378,8 @@
                         data-accordion="false">
                         <li class="nav-item p-3"> <a href="#" class="nav-link"
                                 style="background-color: #B58C18; width:90%; border-radius:0.75rem"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
-                                    class="nav-icon fas fa-sign-out-alt"></i>
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p> Logout </p>
                             </a> </li>
                     </ul>

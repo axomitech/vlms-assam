@@ -38,8 +38,6 @@ class SearchModel extends Model
                 'letter_sub_categories.*'
             );
 
-
-
         if (!empty($inputData['text_search'])) {
 
             $searchTerm = strtolower(trim($inputData['text_search']));
@@ -50,31 +48,13 @@ class SearchModel extends Model
                     ->orWhere(DB::raw('lower(letters.subject)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(letters.ecr_no)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(letters.letter_other_sub_categories)'), 'like', "%{$searchTerm}%")
-
-
                     ->orWhere(DB::raw('lower(senders.sender_name)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(senders.sender_designation)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(senders.sender_phone)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(senders.sender_email)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(senders.organization)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(senders.address)'), 'like', "%{$searchTerm}%")
-
-
                     ->orWhere(DB::raw('lower(recipients.recipient_name)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(recipients.recipient_designation)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(recipients.recipient_phone)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(recipients.recipient_email)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(recipients.organization)'), 'like', "%{$searchTerm}%")
-                    ->orWhere(DB::raw('lower(recipients.address)'), 'like', "%{$searchTerm}%")
-
-
                     ->orWhere(DB::raw('lower(letter_categories.category_name)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(letter_sub_categories.sub_category_name)'), 'like', "%{$searchTerm}%");
             });
         }
 
-
-        // Other filters (e.g., category, subcategory)
         if (!empty($inputData['category'])) {
             $query->where('letters.letter_category_id', '=', $inputData['category']);
         }
@@ -86,6 +66,7 @@ class SearchModel extends Model
         if (!empty($inputData['received_from']) && !empty($inputData['received_to'])) {
             $query->whereBetween('letter_date', [$inputData['received_from'], $inputData['received_to']]);
         }
+
         $query = $query->whereIn('legacy', [true, false]);
         $query->orderBy('letters.id', 'desc');
 
@@ -94,13 +75,102 @@ class SearchModel extends Model
 
     public static function get_all_letter_categories()
     {
-        return DB::table('letter_categories')
-            ->get();
+        return DB::table('letter_categories')->get();
     }
 
     public static function get_all_letter_subcategories()
     {
-        return DB::table('letter_sub_categories')
+        return DB::table('letter_sub_categories')->get();
+    }
+
+
+    public static function get_letter_full_movements($letterId)
+    {
+        $movements = [];
+
+        $letter = DB::table('letters')
+            ->join('user_departments', 'letters.user_id', '=', 'user_departments.id')
+            ->join('users', 'user_departments.user_id', '=', 'users.id')
+            ->leftJoin('senders', 'letters.id', '=', 'senders.letter_id')
+            ->leftJoin('recipients', 'letters.id', '=', 'recipients.letter_id')
+            ->where('letters.id', $letterId)
+            ->select(
+                'users.name as dept_user_name',
+                'letters.diary_date',
+                'letters.receipt',
+                'letters.letter_path',
+                'senders.sender_name',
+                'recipients.recipient_name'
+            )
+            ->first();
+
+        if ($letter) {
+
+            $initialSender   = $letter->dept_user_name;
+            $initialReceiver = $letter->sender_name ?? $letter->recipient_name ?? 'N/A';
+
+            $movements[] = (object)[
+                'sender_name'        => $initialSender ?? 'N/A',
+                'receiver_name'      => $initialReceiver ?? 'N/A',
+                'sent_on'            => $letter->diary_date,
+                'action_description' => 'Letter Diarized',
+                'action_remarks'     => 'Initial Entry',
+                'status_name'        => 'Pending',
+                'attachments'        => !empty($letter->letter_path)
+                    ? [(object)['response_attachment' => $letter->letter_path]]
+                    : []
+            ];
+        }
+
+
+        $forwards = DB::table('action_sents')
+
+            ->join('user_departments as sender_ud', 'action_sents.sender_id', '=', 'sender_ud.id')
+            ->join('users as sender', 'sender_ud.user_id', '=', 'sender.id')
+
+            ->join('user_departments as receiver_ud', 'action_sents.receiver_id', '=', 'receiver_ud.id')
+            ->join('users as receiver', 'receiver_ud.user_id', '=', 'receiver.id')
+
+            ->leftJoin('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
+            ->leftJoin('letter_actions', 'action_department_maps.letter_action_id', '=', 'letter_actions.id')
+
+            ->leftJoin('letter_action_responses', 'letter_action_responses.act_dept_map_id', '=', 'action_sents.act_dept_id')
+            ->leftJoin('action_statuses', 'letter_action_responses.action_status_id', '=', 'action_statuses.id')
+
+            ->where('action_sents.letter_id', $letterId)
+            ->orderBy('action_sents.id', 'ASC')
+
+            ->select(
+                'sender.name as sender_name',
+                'receiver.name as receiver_name',
+                'action_sents.created_at as sent_on',
+                'letter_actions.action_description',
+                'letter_action_responses.action_remarks',
+                'action_statuses.status_name',
+                'letter_action_responses.id as response_id'
+            )
             ->get();
+
+
+        foreach ($forwards as $move) {
+
+
+            $attachments = DB::table('letter_response_attachments')
+                ->where('response_id', $move->response_id)
+                ->where('is_forwarding', 0)
+                ->get();
+
+            $movements[] = (object)[
+                'sender_name'        => $move->sender_name ?? 'N/A',
+                'receiver_name'      => $move->receiver_name ?? 'N/A',
+                'sent_on'            => $move->sent_on,
+                'action_description' => $move->action_description ?? 'Forwarded',
+                'action_remarks'     => $move->action_remarks ?? '',
+                'status_name'        => $move->status_name ?? 'Pending',
+                'attachments'        => $attachments
+            ];
+        }
+
+        return collect($movements);
     }
 }
