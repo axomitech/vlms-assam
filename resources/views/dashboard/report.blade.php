@@ -1,18 +1,74 @@
 @extends('layouts.app')
 @section('content')
-@include('layouts.header')
+    @include('layouts.header')
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f4f6f9;
+            font-size: 13px;
+        }
+
+        .category-card {
+            text-decoration: none !important;
+            color: inherit !important;
+        }
+
+        .small-box {
+            border-radius: 14px;
+            transition: all .3s ease;
+            transform: scale(0.85);
+
+        }
+
+        .small-box:hover {
+            transform: scale(0.88);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .inner {
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            padding: 8px !important;
+            position: relative;
+        }
+
+
+        .inner .d-flex {
+            min-height: 70px !important;
+        }
+
+
+        .inner img {
+            width: 36px !important;
+            height: 28px !important;
+        }
+
+        .inner span {
+            top: 6px !important;
+            left: 6px !important;
+            padding: 4px 6px !important;
+        }
+
+        .category-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+    </style>
 
     <div class="row mt-3">
         <div class="col-md-12 text-center">
             <button class="btn btn-dark btn-sm" id="resetView" style="float: left;">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
             </button>
-            <h4 id="selectedCategoryName"><strong>Report</strong></h4>
+            <h4 id="selectedCategoryName"><strong>Overall Report</strong></h4>
         </div>
     </div>
-
+    <hr>
     <div class="row mt-1" id="cardsContainer">
-        <div class="box-body col-md-12">
+        <div class="box-body col-md-12" class="col-md-12 p-5 bg-white">
             <section class="content">
                 <div class="container-fluid">
                     <!-- Loading Overlay -->
@@ -91,7 +147,7 @@
                             </a>
                         </div>
                         <div class="col-md-4 col-sm-6 mt-3">
-                            <a href="#"  data-category="forwarded">
+                            <a href="#" data-category="forwarded">
                                 <div class="small-box"
                                     style="background-color: white; border-radius: 1rem;margin-left:15px; margin:right:15px;">
                                     <div class="inner p-3"
@@ -173,112 +229,113 @@
         </div>
     </div>
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="card card-primary card-outline card-outline-tabs plate">
-                            <div class="card-body">
-                                <iframe src="" style="width: 100%; height: 400px;" id="letter-view"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5" id="refer-letter-div" hidden>
-                        <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-body">
-                                <iframe src="" style="width: 100%; height: 400px;" id="refer-letter-view"></iframe>
-                            </div>
-                        </div>
-                    </div>
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><strong>Assign Letter Within CMO</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div id="refers" class="row">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="card card-primary card-outline card-outline-tabs plate">
+                                <div class="card-body">
+                                    <iframe src="" style="width: 100%; height: 400px;" id="letter-view"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5" id="refer-letter-div" hidden>
+                            <div class="card card-primary card-outline card-outline-tabs">
+                                <div class="card-body">
+                                    <iframe src="" style="width: 100%; height: 400px;"
+                                        id="refer-letter-view"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="refers" class="row">
 
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')
     @include('layouts.scripts')
 
     <script>
-       $(document).ready(function() {
-    // Initialize DataTable
-    const dataTable = $('#lettersList').DataTable({
-        responsive: true,
-        lengthChange: false,
-        autoWidth: false,
-        lengthMenu: [
-        [10, 25, 50, -1], // values
-        [10, 25, 50, 'All'] // labels
-    ],
-    pageLength: 5, 
-       buttons: [
-        {
-            extend: 'excelHtml5',
-            text: 'Export Excel',
-            className: 'btn btn-primary btn-sm me-2'
-        },
-        {
-            extend: 'pdfHtml5',
-            text: 'Export PDF',
-            className: 'btn btn-info btn-sm me-2 ml-1'
-        },
-        {
-            extend: 'print',
-            text: 'Print',
-            className: 'btn btn-success btn-sm ml-1'
-        }
-    ]
-    });
+        $(document).ready(function() {
+            // Initialize DataTable
+            const dataTable = $('#lettersList').DataTable({
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1], // values
+                    [10, 25, 50, 'All'] // labels
+                ],
+                pageLength: 5,
+                buttons: [{
+                        extend: 'excelHtml5',
+                        text: 'Export Excel',
+                        className: 'btn btn-primary btn-sm me-2'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Export PDF',
+                        className: 'btn btn-info btn-sm me-2 ml-1'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-success btn-sm ml-1'
+                    }
+                ]
+            });
 
-    // Fetch and display category data when category card is clicked
-    $(document).on('click', '.category-card', function(e) {
-        e.preventDefault();        
-        showLoading();
-        let categoryId = $(this).data('category-id');
-        let categoryName = $(this).data('category-name');
-        let category = $(this).data('category');
-        
-        let url = `{{url('getCategoryReport')}}?category_id=${categoryId}&category=${encodeURIComponent(category)}`;
-        // Fetch letters using AJAX
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(response) {
-                $('#selectedCategoryName').html('<strong>' + categoryName + '</strong>');
-                let tableBody = '';
-                let serialNumber = 1;
+            // Fetch and display category data when category card is clicked
+            $(document).on('click', '.category-card', function(e) {
+                e.preventDefault();
+                showLoading();
+                let categoryId = $(this).data('category-id');
+                let categoryName = $(this).data('category-name');
+                let category = $(this).data('category');
 
-                // Build table rows for DataTable
-                response.forEach(function(letter) {
-                    let letterIssueReceiveDate = ''
-                    if(letter.received_date != null){
-                        letterIssueReceiveDate = letter.received_date
-                    }
-                    else{
-                        letterIssueReceiveDate = letter.received_date
-                    }
-                    let ecr_no = letter.ecr_no;
-                    if(ecr_no == null){
-                        ecr_no = "";
-                    }
-                    let letterPath = letter.letter_path.replace("public/","");
-                    let truncatedSubject = letter.subject.length > 100 ?
-                        `<div class="text-block" id="textBlock${letter.id}">
+                let url =
+                    `{{ url('getCategoryReport') }}?category_id=${categoryId}&category=${encodeURIComponent(category)}`;
+                // Fetch letters using AJAX
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#selectedCategoryName').html('<strong>' + categoryName +
+                            '</strong>');
+                        let tableBody = '';
+                        let serialNumber = 1;
+
+                        // Build table rows for DataTable
+                        response.forEach(function(letter) {
+                            let letterIssueReceiveDate = ''
+                            if (letter.received_date != null) {
+                                letterIssueReceiveDate = letter.received_date
+                            } else {
+                                letterIssueReceiveDate = letter.received_date
+                            }
+                            let ecr_no = letter.ecr_no;
+                            if (ecr_no == null) {
+                                ecr_no = "";
+                            }
+                            let letterPath = letter.letter_path.replace("public/", "");
+                            let truncatedSubject = letter.subject.length > 100 ?
+                                `<div class="text-block" id="textBlock${letter.id}">
                             <p class="shortText text-justify text-sm">
                                 ${letter.subject.substring(0, 100)}...
                                 <a href="#" class="readMore" data-id="${letter.id}">Read more</a>
@@ -290,9 +347,9 @@
                                 </p>
                             </div>
                         </div>` :
-                        `<p>${letter.subject}</p>`;
+                                `<p>${letter.subject}</p>`;
 
-                    tableBody += `<tr>
+                            tableBody += `<tr>
                         <td><small>${serialNumber++}</small></td>
                         <td><small><a href="" class="assign-link"           data-id="${letter.letter_id}"
                                                                             data-toggle="modal"
@@ -317,42 +374,44 @@
                         <td><small>${letterIssueReceiveDate}</small></td>
                         <td><small><a href="/pdf_downloadAll/${letter.letter_id}"><i class="fas fa-download" style="color: #174060"></i></a></small></td>
                     </tr>`;
+                        });
+
+                        // Update the DataTable
+                        dataTable.clear(); // Clear existing data
+                        dataTable.rows.add($(tableBody)); // Add the new rows
+                        dataTable.draw(); // Redraw the table
+                        dataTable.buttons().container().appendTo(
+                            '#lettersList_wrapper .col-md-6:eq(0)');
+                        // Show/hide views
+                        $('#cardsContainer').hide();
+                        $('#categoryCardsContainer').hide();
+                        $('#lettersTable').show();
+                        $('#resetView').show();
+                        hideLoading();
+                    },
+                    error: function(xhr, status, error) {
+                        $('#lettersList tbody').html(
+                            '<tr><td colspan="7" class="text-center">Error loading data</td></tr>'
+                        );
+                        hideLoading();
+
+                    }
                 });
+            });
 
-                // Update the DataTable
-                dataTable.clear();  // Clear existing data
-                dataTable.rows.add($(tableBody));  // Add the new rows
-                dataTable.draw();  // Redraw the table
-                dataTable.buttons().container().appendTo('#lettersList_wrapper .col-md-6:eq(0)');
-                // Show/hide views
-                $('#cardsContainer').hide();
-                $('#categoryCardsContainer').hide();
-                $('#lettersTable').show();
-                $('#resetView').show();
-                hideLoading();
-            },
-            error: function(xhr, status, error) {
-                $('#lettersList tbody').html('<tr><td colspan="7" class="text-center">Error loading data</td></tr>');
-                hideLoading();
-
-            }
+            // Handle back button click to reset view
+            $('#resetView').on('click', function() {
+                if ($('#lettersTable').is(':visible')) {
+                    $('#lettersTable').hide();
+                    $('#cardsContainer').show();
+                    $('#categoryCardsContainer').show();
+                    document.getElementById("selectedCategoryName").innerHTML =
+                        `<strong>${capitalizeFirstLetter(category)} Report Category-Wise</strong>`;
+                } else {
+                    window.location.href = "{{ route('dashboard') }}";
+                }
+            });
         });
-    });
-
-    // Handle back button click to reset view
-    $('#resetView').on('click', function() {
-        if ($('#lettersTable').is(':visible')) {
-            $('#lettersTable').hide();
-            $('#cardsContainer').show();
-            $('#categoryCardsContainer').show();
-            document.getElementById("selectedCategoryName").innerHTML =
-            `<strong>${capitalizeFirstLetter(category)} Report Category-Wise</strong>`;
-        } else {
-            window.location.href = "{{ route('dashboard') }}";
-        }
-    });
-});
-
     </script>
 
     <script>
@@ -378,7 +437,7 @@
                         <a href="#" class="category-card" data-category-id="${item.id}" data-category="${category}" data-category-name="${item.category_name}">
                             <div class="small-box" style="background-color: white; border-radius: 1rem; margin-left: 15px; margin-right: 15px;">
                                 <div class="inner p-3" style="border-radius: 1rem; border: 1px solid #ddd; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); position: relative;">
-                                    
+
                                     <!-- Icon in the top-left corner -->
                                     <span style="position: absolute; top: 10px; left: 10px; color: black; background-color: #e9e2e2; padding: 5px; border-radius: 1rem;">
                                         <img src="${imageUrl}" alt="Category Icon" style="width: 48px; height: 38px;">
@@ -386,12 +445,12 @@
 
                                     <!-- Content container for count and category name -->
                                     <div class="d-flex flex-column align-items-center justify-content-center h-90">
-                                        
+
                                         <!-- Count in the center -->
                                         <div class="count" style="color: #026FCC; font-size: 32px; font-weight: bold;">
                                             <strong>${item.count}</strong>
                                         </div>
-                                        
+
                                         <!-- Category name at the bottom center -->
                                         <div class="category-name mt-auto text-center" style="font-size: 16px; color: black;">
                                             <strong>${item.category_name}</strong>
@@ -480,29 +539,30 @@
         $(document).on('click', '.assign-link', function() {
             $('#letter-view').attr('src', $(this).data('letter_path'));
             $('#assign-div').show();
-            $('#exampleModalLabel').html("<strong>Letter No.: "+$(this).data('letter')+"</strong>");
-            $.get("{{route('reference')}}",{
-                letter:$(this).data('id')
-            },function(j){
-                if(j.length > 1){
+            $('#exampleModalLabel').html("<strong>Letter No.: " + $(this).data('letter') + "</strong>");
+            $.get("{{ route('reference') }}", {
+                letter: $(this).data('id')
+            }, function(j) {
+                if (j.length > 1) {
                     var div = "";
-                    for(var i = 1; i < j.length; i++){
-                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='"+j[i].letter_id+"' data-refer_letter_path='"+j[i].letter_path+"'><b>"+j[i].letter_no+"</b></a></div>";
+                    for (var i = 1; i < j.length; i++) {
+                        div += "<div class='col-md-2'><a href='' class= 'refer-letter-link' data-letter='" +
+                            j[i].letter_id + "' data-refer_letter_path='" + j[i].letter_path + "'><b>" + j[
+                                i].letter_no + "</b></a></div>";
                     }
-                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>"+div);
-                }else{
+                    $('#refers').html("<div class='col-md-2'>Reference Letter:</div>" + div);
+                } else {
                     $('#refer-letter-div').hide();
                 }
             });
         });
 
-        $(document).on('click','.refer-letter-link',function(e){
+        $(document).on('click', '.refer-letter-link', function(e) {
             e.preventDefault();
             $('#refer-letter-div').removeAttr("hidden");
             $('#refer-letter-div').show();
             $('#refer-letter-view').attr('src', $(this).data('refer_letter_path'));
 
         });
-
     </script>
 @endsection
