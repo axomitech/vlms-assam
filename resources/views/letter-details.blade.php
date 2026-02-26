@@ -77,10 +77,23 @@
             display: none;
         }
 
+
+        .user-details {
+            color: #0d6efd;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
         @media print {
 
             @page {
                 margin: 20mm;
+            }
+
+            .user-details {
+                text-decoration: none !important;
+                color: black !important;
+                pointer-events: none !important;
             }
 
             body::after {
@@ -144,6 +157,72 @@
                 border: none !important;
             }
         }
+
+
+        .eoffice-popup {
+            position: absolute;
+            width: 480px;
+            background: #fff;
+            border: 2px solid #3b82f6;
+            border-radius: 3px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            z-index: 9999;
+            font-size: 14px;
+        }
+
+        .popup-header {
+            background: #f1f3f5;
+            padding: 6px 10px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .popup-close {
+            cursor: pointer;
+            font-size: 14px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 18px;
+        }
+
+        .popup-close:hover {
+            background: #d00000;
+            color: #fff;
+        }
+
+        .popup-body {
+            padding: 8px;
+        }
+
+        .popup-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .popup-table td {
+            border: 1px solid #dee2e6;
+            padding: 6px 8px;
+        }
+
+        .popup-table .label {
+            background: #f8f9fa;
+            font-weight: 600;
+            width: 35%;
+        }
+
+        .badge-sent {
+            background-color: #3b82f6;
+            color: #fff;
+            border-radius: 16px;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
     </style>
 
 
@@ -174,61 +253,71 @@
 
                     <div class="section-title">Letter Information</div>
 
-                    <table class="table table-bordered table-sm mb-4">
-                        <tr>
-                            <th width="15%">CRN No</th>
-                            <td width="35%">{{ $letter->crn }}</td>
-                            <th width="15%">Letter No</th>
-                            <td width="35%">{{ $letter->letter_no ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>ECR No</th>
-                            <td>{{ $letter->ecr_no ?? 'N/A' }}</td>
-                            <th>Category</th>
-                            <td>{{ optional($letter->Category)->category_name ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Diarize Date</th>
-                            <td>{{ date('d/m/Y', strtotime($letter->diary_date)) }}</td>
-                            <th>Sub Category</th>
-                            <td>{{ optional($letter->subCategory)->sub_category_name ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Issue Date</th>
-                            <td>{{ $letter->issue_date ? date('d/m/Y', strtotime($letter->issue_date)) : 'N/A' }}</td>
-                            <th>Received Date</th>
-                            <td>{{ $letter->received_date ? date('d/m/Y', strtotime($letter->received_date)) : 'N/A' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Letter</th>
-                            <td>
-                                <a href="{{ route('pdf_view', $letter->id) }}" class="btn btn-sm btn-primary shadow-sm"
-                                    target="_blank">
-                                    Download PDF
-                                </a>
-                            </td>
-                            <th>Subject</th>
-                            <td>{{ $letter->subject }}</td>
-                        </tr>
-                        <tr>
-                            <th>Diarized By</th>
-                            <td colspan="3">{{ $diarizedBy ?? 'N/A' }}</td>
-                        </tr>
+
+                    <table class="table table-bordered table-sm table-hover mb-4">
+                        <tbody>
+
+                            <tr>
+                                <th width="15%">CRN No</th>
+                                <td width="35%">{{ $letter->crn }}</td>
+                                <th width="15%">Letter No</th>
+                                <td width="35%">{{ $letter->letter_no ?? 'N/A' }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Category</th>
+                                <td>{{ optional($letter->Category)->category_name ?? 'N/A' }}</td>
+                                <th>Sub Category</th>
+                                <td>{{ optional($letter->subCategory)->sub_category_name ?? 'N/A' }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Diarize Date</th>
+                                <td>{{ date('d/m/Y', strtotime($letter->diary_date)) }}</td>
+                                <th>Diarized By</th>
+                                <td>{{ $diarizedBy ?? 'N/A' }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Received Date</th>
+                                <td>{{ $letter->received_date ? date('d/m/Y', strtotime($letter->received_date)) : 'N/A' }}
+                                </td>
+                                <th>ECR No</th>
+                                <td>{{ $letter->ecr_no ?? 'N/A' }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Issue Date</th>
+                                <td>{{ $letter->issue_date ? date('d/m/Y', strtotime($letter->issue_date)) : 'N/A' }}</td>
+                                <th>Letter Type</th>
+                                <td>
+                                    @if ($letter->issue_date)
+                                        Issue Letter
+                                    @elseif($letter->received_date)
+                                        Received Letter
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Subject</th>
+                                <td>{{ $letter->subject }}</td>
+                                <th>Letter</th>
+                                <td>
+                                    <a href="{{ route('pdf_view', $letter->id) }}"
+                                        class="btn btn-sm btn-outline-primary shadow-sm" target="_blank">
+                                        <i class="fa fa-file-pdf"></i> Download PDF
+                                    </a>
+                                </td>
+                            </tr>
+
+                        </tbody>
                     </table>
 
 
-                    <ul class="nav nav-tabs no-print" id="letterTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tab1">Letter Movement</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab4">Close</a>
-                        </li>
-                    </ul>
-
                     <div class="tab-content">
-
                         <div class="tab-pane fade show active p-3" id="tab1">
 
                             <div class="section-title">Action Summary</div>
@@ -258,7 +347,7 @@
                                                         $badgeClass = 'badge-info';
                                                         break;
                                                     case 'Sent':
-                                                        $badgeClass = 'badge-secondary';
+                                                        $badgeClass = 'badge-sent';
                                                         break;
                                                     case 'In Process':
                                                         $badgeClass = 'badge-warning';
@@ -273,15 +362,42 @@
                                                         $badgeClass = 'badge-secondary';
                                                 }
                                             @endphp
+
                                             <tr>
-                                                <td>{{ $move->sender_name ?? 'N/A' }}</td>
-                                                <td>{{ $move->sent_on ? date('d/m/Y h:i A', strtotime($move->sent_on)) : 'N/A' }}
+                                                <td>
+                                                    @if ($move->sender_id)
+                                                        <a href="javascript:void(0)" class="user-details text-primary"
+                                                            data-id="{{ $move->sender_id }}">
+                                                            {{ $move->sender_name }}
+                                                        </a>
+                                                    @else
+                                                        {{ $move->sender_name }}
+                                                    @endif
                                                 </td>
-                                                <td>{{ $move->receiver_name ?? 'N/A' }}</td>
-                                                <td><span class="badge {{ $badgeClass }}">{{ $status }}</span>
+
+                                                <td>
+                                                    {{ $move->sent_on ? date('d/m/Y h:i A', strtotime($move->sent_on)) : '' }}
                                                 </td>
-                                                <td>{{ $move->action_description ?? 'N/A' }}</td>
-                                                <td>{{ $move->action_remarks ?? 'N/A' }}</td>
+
+                                                <td>
+                                                    @if ($move->receiver_id)
+                                                        <a href="javascript:void(0)" class="user-details text-primary"
+                                                            data-id="{{ $move->receiver_id }}">
+                                                            {{ $move->receiver_name }}
+                                                        </a>
+                                                    @else
+                                                        {{ $move->receiver_name }}
+                                                    @endif
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge {{ $badgeClass }}">{{ $status }}</span>
+                                                </td>
+
+                                                <td>{{ $move->action_description }}</td>
+
+                                                <td>{{ $move->action_remarks }}</td>
+
                                                 <td>
                                                     @if (isset($move->attachments) && count($move->attachments) > 0)
                                                         @foreach ($move->attachments as $file)
@@ -292,14 +408,11 @@
                                                                     $file->response_attachment,
                                                                 );
                                                             @endphp
-
                                                             <a href="{{ asset('storage/' . $cleanPath) }}" target="_blank"
                                                                 class="btn btn-sm btn-outline-primary">
                                                                 <i class="fa fa-file-pdf"></i> View PDF
                                                             </a>
                                                         @endforeach
-                                                    @else
-                                                        N/A
                                                     @endif
                                                 </td>
 
@@ -316,39 +429,8 @@
                             </table>
 
                         </div>
-
-                        <div class="tab-pane fade p-3" id="tab4">
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h6 class="font-weight-bold text-primary" style="font-size:16px;">
-                                    Close Status
-                                </h6>
-
-                                <button class="btn btn-sm btn-primary shadow-sm" data-toggle="modal"
-                                    data-target="#closeModal">
-                                    <i class="fa fa-check-circle"></i> Close Letter
-                                </button>
-                            </div>
-
-                            <table class="table table-bordered table-sm table-hover">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Closed By</th>
-                                        <th>Closed On</th>
-                                        <th>Remarks</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted py-3">
-                                            No closing data available
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
                     </div>
+
 
                     <div class="pdf-footer">
                         <table>
@@ -370,43 +452,80 @@
         </div>
     </div>
 
+    <div id="userInfoBox" class="eoffice-popup" style="display:none;">
 
-    <div class="modal fade" id="closeModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow-lg" style="border-radius:12px;">
-
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">
-                        <i class="fa fa-lock"></i> Close This Letter
-                    </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <form action="" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="font-weight-bold">
-                                Remarks <span class="text-danger">*</span>
-                            </label>
-                            <textarea name="close_remarks" class="form-control" rows="4" placeholder="Enter closing remarks..." required></textarea>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="fa fa-check"></i> Submit Close
-                        </button>
-                    </div>
-                </form>
-
-            </div>
+        <div class="popup-header">
+            <span>User Details</span>
+            <span class="popup-close" onclick="closeUserBox()">×</span>
         </div>
+
+        <div class="popup-body">
+            <table class="popup-table">
+                <tr>
+                    <td class="label">Name</td>
+                    <td id="infoName"></td>
+                </tr>
+                <tr>
+                    <td class="label">Department</td>
+                    <td id="infoDepartment"></td>
+                </tr>
+                <tr>
+                    <td class="label">Role</td>
+                    <td id="infoRole"></td>
+                </tr>
+            </table>
+        </div>
+
     </div>
 
+
+    <script>
+        document.querySelectorAll(".user-details").forEach(function(element) {
+
+            element.addEventListener("click", function(e) {
+
+                let userId = this.getAttribute("data-id");
+                let box = document.getElementById("userInfoBox");
+
+                fetch('/user-details/' + userId)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        document.getElementById("infoName").innerText = data.user_name;
+                        document.getElementById("infoDepartment").innerText = data.department_name;
+                        document.getElementById("infoRole").innerText = data.role_name;
+
+                        box.style.display = "block";
+
+                        let rect = this.getBoundingClientRect();
+                        let boxHeight = box.offsetHeight;
+                        let windowHeight = window.innerHeight;
+
+                        let topPosition;
+
+                        if (rect.bottom + boxHeight > windowHeight) {
+                            topPosition = window.scrollY + rect.top - boxHeight - 5;
+                        } else {
+                            topPosition = window.scrollY + rect.bottom + 5;
+                        }
+
+                        box.style.top = topPosition + "px";
+                        box.style.left = (window.scrollX + rect.left) + "px";
+                    });
+            });
+
+        });
+
+        function closeUserBox() {
+            document.getElementById("userInfoBox").style.display = "none";
+        }
+
+        document.addEventListener("click", function(event) {
+            let box = document.getElementById("userInfoBox");
+            if (!event.target.closest(".user-details") &&
+                !event.target.closest("#userInfoBox")) {
+                box.style.display = "none";
+            }
+        });
+    </script>
 @endsection

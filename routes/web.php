@@ -162,4 +162,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/new/assign-letter', [App\Http\Controllers\NewLetterController::class, 'assignLetter'])->name('new.assign_letter');
     Route::post('/new/letter/refer', [App\Http\Controllers\NewLetterController::class, 'refer'])->name('new.refer');
     Route::get('/new/letter/reference', [App\Http\Controllers\NewLetterController::class, 'reference'])->name('new.reference');
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/user-details/{id}', [App\Http\Controllers\UserController::class, 'getUserDetails'])->name('user.details');
+    });
 });

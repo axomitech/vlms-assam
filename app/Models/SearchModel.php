@@ -47,6 +47,7 @@ class SearchModel extends Model
                 $q->orWhere(DB::raw("lower(REPLACE(letters.letter_no, '\\\\', ''))"), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(letters.subject)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(letters.ecr_no)'), 'like', "%{$searchTerm}%")
+                    ->orWhere(DB::raw('lower(letters.crn)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(letters.letter_other_sub_categories)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(senders.sender_name)'), 'like', "%{$searchTerm}%")
                     ->orWhere(DB::raw('lower(recipients.recipient_name)'), 'like', "%{$searchTerm}%")
@@ -67,10 +68,9 @@ class SearchModel extends Model
             $query->whereBetween('letter_date', [$inputData['received_from'], $inputData['received_to']]);
         }
 
-        $query = $query->whereIn('legacy', [true, false]);
-        $query->orderBy('letters.id', 'desc');
-
-        return $query->get();
+        return $query->whereIn('legacy', [true, false])
+            ->orderBy('letters.id', 'desc')
+            ->get();
     }
 
     public static function get_all_letter_categories()
@@ -82,7 +82,6 @@ class SearchModel extends Model
     {
         return DB::table('letter_sub_categories')->get();
     }
-
 
     public static function get_letter_full_movements($letterId)
     {
@@ -96,8 +95,9 @@ class SearchModel extends Model
             ->where('letters.id', $letterId)
             ->select(
                 'users.name as dept_user_name',
+                'user_departments.id as sender_id',
                 'letters.diary_date',
-                'letters.receipt',
+                'letters.issue_date',
                 'letters.letter_path',
                 'senders.sender_name',
                 'recipients.recipient_name'
@@ -106,16 +106,25 @@ class SearchModel extends Model
 
         if ($letter) {
 
-            $initialSender   = $letter->dept_user_name;
-            $initialReceiver = $letter->sender_name ?? $letter->recipient_name ?? 'N/A';
+            $initialSender = $letter->dept_user_name;
+
+            if (!empty($letter->issue_date)) {
+                $initialReceiver = $letter->sender_name ?? $letter->recipient_name ?? 'N/A';
+            } else {
+                $initialReceiver = '';
+            }
+
+            $initialStatus = !empty($letter->issue_date) ? 'Completed' : 'Pending';
 
             $movements[] = (object)[
                 'sender_name'        => $initialSender ?? 'N/A',
-                'receiver_name'      => $initialReceiver ?? 'N/A',
+                'sender_id'          => $letter->sender_id ?? '',
+                'receiver_name'      => $initialReceiver,
+                'receiver_id'        => '',
                 'sent_on'            => $letter->diary_date,
                 'action_description' => 'Letter Diarized',
                 'action_remarks'     => 'Initial Entry',
-                'status_name'        => 'Pending',
+                'status_name'        => $initialStatus,
                 'attachments'        => !empty($letter->letter_path)
                     ? [(object)['response_attachment' => $letter->letter_path]]
                     : []
@@ -123,26 +132,60 @@ class SearchModel extends Model
         }
 
 
-        $forwards = DB::table('action_sents')
-
-            ->join('user_departments as sender_ud', 'action_sents.sender_id', '=', 'sender_ud.id')
+        $assignments = DB::table('letter_assigns')
+            ->join('user_departments as sender_ud', 'letter_assigns.user_id', '=', 'sender_ud.id')
             ->join('users as sender', 'sender_ud.user_id', '=', 'sender.id')
-
-            ->join('user_departments as receiver_ud', 'action_sents.receiver_id', '=', 'receiver_ud.id')
+            ->join('user_departments as receiver_ud', 'letter_assigns.receiver_id', '=', 'receiver_ud.id')
             ->join('users as receiver', 'receiver_ud.user_id', '=', 'receiver.id')
-
-            ->leftJoin('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
-            ->leftJoin('letter_actions', 'action_department_maps.letter_action_id', '=', 'letter_actions.id')
-
-            ->leftJoin('letter_action_responses', 'letter_action_responses.act_dept_map_id', '=', 'action_sents.act_dept_id')
-            ->leftJoin('action_statuses', 'letter_action_responses.action_status_id', '=', 'action_statuses.id')
-
-            ->where('action_sents.letter_id', $letterId)
-            ->orderBy('action_sents.id', 'ASC')
-
+            ->where('letter_assigns.letter_id', $letterId)
+            ->orderBy('letter_assigns.id', 'ASC')
             ->select(
                 'sender.name as sender_name',
                 'receiver.name as receiver_name',
+                'sender_ud.id as sender_id',
+                'receiver_ud.id as receiver_id',
+                'letter_assigns.created_at as sent_on',
+                'letter_assigns.remarks',
+                'letter_assigns.in_hand'
+            )
+            ->get();
+
+        foreach ($assignments as $assign) {
+
+            $status = !empty($letter->issue_date)
+                ? 'Completed'
+                : ($assign->in_hand ? 'In Process' : 'Sent');
+
+            $movements[] = (object)[
+                'sender_name'        => $assign->sender_name ?? 'N/A',
+                'sender_id'          => $assign->sender_id,
+                'receiver_name'      => $assign->receiver_name ?? 'N/A',
+                'receiver_id'        => $assign->receiver_id,
+                'sent_on'            => $assign->sent_on,
+                'action_description' => 'Letter Assigned',
+                'action_remarks'     => $assign->remarks ?? '',
+                'status_name'        => $status,
+                'attachments'        => []
+            ];
+        }
+
+
+        $forwards = DB::table('action_sents')
+            ->join('user_departments as sender_ud', 'action_sents.sender_id', '=', 'sender_ud.id')
+            ->join('users as sender', 'sender_ud.user_id', '=', 'sender.id')
+            ->join('user_departments as receiver_ud', 'action_sents.receiver_id', '=', 'receiver_ud.id')
+            ->join('users as receiver', 'receiver_ud.user_id', '=', 'receiver.id')
+            ->leftJoin('action_department_maps', 'action_sents.act_dept_id', '=', 'action_department_maps.id')
+            ->leftJoin('letter_actions', 'action_department_maps.letter_action_id', '=', 'letter_actions.id')
+            ->leftJoin('letter_action_responses', 'letter_action_responses.act_dept_map_id', '=', 'action_sents.act_dept_id')
+            ->leftJoin('action_statuses', 'letter_action_responses.action_status_id', '=', 'action_statuses.id')
+            ->where('action_sents.letter_id', $letterId)
+            ->orderBy('action_sents.id', 'ASC')
+            ->select(
+                'sender.name as sender_name',
+                'receiver.name as receiver_name',
+                'sender_ud.id as sender_id',
+                'receiver_ud.id as receiver_id',
                 'action_sents.created_at as sent_on',
                 'letter_actions.action_description',
                 'letter_action_responses.action_remarks',
@@ -151,26 +194,30 @@ class SearchModel extends Model
             )
             ->get();
 
-
         foreach ($forwards as $move) {
-
 
             $attachments = DB::table('letter_response_attachments')
                 ->where('response_id', $move->response_id)
                 ->where('is_forwarding', 0)
                 ->get();
 
+            $status = !empty($letter->issue_date)
+                ? 'Completed'
+                : ($move->status_name ?? 'Pending');
+
             $movements[] = (object)[
                 'sender_name'        => $move->sender_name ?? 'N/A',
+                'sender_id'          => $move->sender_id,
                 'receiver_name'      => $move->receiver_name ?? 'N/A',
+                'receiver_id'        => $move->receiver_id,
                 'sent_on'            => $move->sent_on,
                 'action_description' => $move->action_description ?? 'Forwarded',
                 'action_remarks'     => $move->action_remarks ?? '',
-                'status_name'        => $move->status_name ?? 'Pending',
+                'status_name'        => $status,
                 'attachments'        => $attachments
             ];
         }
 
-        return collect($movements);
+        return collect($movements)->sortBy('sent_on')->values();
     }
 }
