@@ -393,7 +393,6 @@ class LetterController extends Controller
     {
         $letter = Letter::findOrFail($id);
 
-
         $path = storage_path('app/' . $letter->letter_path);
 
         if (!file_exists($path)) {
@@ -401,10 +400,10 @@ class LetterController extends Controller
         }
 
         return response()->file($path, [
+            'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $letter->letter_no . '.pdf"'
         ]);
     }
-
 
     public function update(UpdateLetterRequest $request, Letter $letter)
     {

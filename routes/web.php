@@ -23,10 +23,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/edit_diarize/{letter}', [App\Http\Controllers\LetterController::class, 'editDiarized'])->name('edit_diarize');
     Route::post('/edit_letter/{letter}', [App\Http\Controllers\LetterController::class, 'update'])->name('edit_letter');
     Route::get('/letters/{legacy}/{tab?}', [App\Http\Controllers\LetterController::class, 'showLetters'])->name('letters');
+
     Route::get('/letter/download/{id}', [App\Http\Controllers\LetterController::class, 'download'])
         ->name('letter.download');
-    Route::get('/download/{id}', [App\Http\Controllers\LetterController::class, 'download'])
-        ->name('download');
+
+
 
 
 
@@ -59,7 +60,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home1', [App\Http\Controllers\HomeController::class, 'box'])->name('home1');
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard-data', [App\Http\Controllers\DashboardController::class, 'dashboard_data'])->name('dashboard-data');
-    Route::get('/receipt_box', [App\Http\Controllers\DashboardController::class, 'receipt_box'])->name('receipt_box');
     Route::get('/issue_box', [App\Http\Controllers\DashboardController::class, 'issue_box'])->name('issue_box');
     Route::get('/action_box', [App\Http\Controllers\DashboardController::class, 'action_box'])->name('action_box');
     Route::get('/action/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchActionByCategory'])->name('action_by_category');
@@ -78,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pdf_genarator/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF'])->name('pdf_genarator');
     Route::get('/pdf_downloadAll/{id}', [App\Http\Controllers\PDFController::class, 'downloadAll'])->name('pdf_downloadAll');
     Route::get('/view-pdf/{id}', [App\Http\Controllers\SearchController::class, 'viewPdf'])->name('pdf_view');
+    Route::get('/pdf-download/{id}', [App\Http\Controllers\SearchController::class, 'pdfDownloadAll'])->name('pdf_downloadAll');
     Route::get('/acknowledge_email/{id}', [App\Http\Controllers\AcknowledgeController::class, 'index'])->name('acknowledge_email');
     Route::get('/acknowledge_letter/{id}', [App\Http\Controllers\AcknowledgeController::class, 'ack_letter_generation'])->name('acknowledge_letter');
     Route::post('/acknowledge_letter', [App\Http\Controllers\AcknowledgeController::class, 'ack_letter_save'])->name('submit.ackLetter');
@@ -98,8 +99,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/change_password', [App\Http\Controllers\ChangePasswordController::class, 'changePassword'])->name('change_password');
     Route::post('/refer', [App\Http\Controllers\ReferenceController::class, 'store'])->name('refer');
     Route::get('/reference', [App\Http\Controllers\ReferenceController::class, 'getReferenceLetter'])->name('reference');
+    Route::get('/reference/download/{id}', [App\Http\Controllers\ReferenceController::class, 'download'])
+        ->name('reference.download');
 
     //merge pdf routes
+
 
     Route::get('/merge/{category}/{subcategory}/{year}', [App\Http\Controllers\MergePDFController::class, 'merge']);
     Route::get('/merge-month/{category}/{subcategory}/{year}/{month}', [App\Http\Controllers\MergePDFController::class, 'mergeByMonth']);
@@ -115,8 +119,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/merge-pdf/{category}/{subcategory}/{year}/receipt', [App\Http\Controllers\MergePDFController::class, 'merge'])->name('pdf.merge');
     Route::get('/merge-pdf/{category}/{subcategory}/{year}/issue', [App\Http\Controllers\MergePDFController::class, 'IssueByYearMerge'])->name('pdf.merge.Issue');
 
+
     // download month view
-    Route::get('/files/organize', [App\Http\Controllers\MonthwiseController::class, 'organizeLettersIntoFolders'])->name('files.organize');
     Route::get('/files/month-view', [App\Http\Controllers\MonthwiseController::class, 'viewLettersFolderWise'])->name('files.month-view');
     Route::get('/merge-pdf/{category}/{subcategory}/{year}/{month}/receipt', [App\Http\Controllers\MergePDFController::class, 'mergeByMonth'])->name('pdf.merge.month');
     Route::get('/merge-pdf/{category}/{subcategory}/{year}/{month}/issue', [App\Http\Controllers\MergePDFController::class, 'IssueMergeByMonth'])->name('pdf.merge.month.Issue');
@@ -141,12 +145,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/letters/filter/year/{year}/month/{month}', [App\Http\Controllers\DashboardController::class, 'filterByMonth']);
 
     // Letter Reports
-    Route::get('/files/organize', [App\Http\Controllers\LetterReportController::class, 'organizeLettersIntoFolders'])->name('files.organize');
     Route::get('/files/letter-report', [App\Http\Controllers\LetterReportController::class, 'viewLettersFolderWise'])->name('files.letter-report');
     // Route::get('/merge-pdf/{category}/{subcategory}/{year}/{month}', [App\Http\Controllers\MergePDFController::class, 'mergeByMonth'])->name('pdf.merge.month');
 
     // Letter Reports-Received Letter
-    Route::get('/files/organize', [App\Http\Controllers\ReceivedLetterReportController::class, 'organizeLettersIntoFolders'])->name('files.organize');
+
     Route::get('/received-letter-report', [App\Http\Controllers\ReceivedLetterReportController::class, 'viewLettersFolderWise'])->name('files.received-letter-report');
 
     // Action Taken Reports
@@ -155,10 +158,9 @@ Route::middleware(['auth'])->group(function () {
         ->name('letter.details');
 
     // New Diarized Letters For HOD Account
-
-    Route::get('/letter/download/{id}', [App\Http\Controllers\NewLetterController::class, 'download'])->name('letter.download');
+    Route::get('/new/letter/download/{id}', [App\Http\Controllers\NewLetterController::class, 'download'])
+        ->name('new.letter.download');
     Route::get('/new/letters/diarized', [App\Http\Controllers\NewLetterController::class, 'diarized'])->name('new.letters.diarized');
-    Route::get('/new/letter/download/{id}', [App\Http\Controllers\NewLetterController::class, 'download'])->name('new.letter.download');
     Route::post('/new/assign-letter', [App\Http\Controllers\NewLetterController::class, 'assignLetter'])->name('new.assign_letter');
     Route::post('/new/letter/refer', [App\Http\Controllers\NewLetterController::class, 'refer'])->name('new.refer');
     Route::get('/new/letter/reference', [App\Http\Controllers\NewLetterController::class, 'reference'])->name('new.reference');

@@ -449,6 +449,18 @@
                                                                     class="dropdown-item d-flex justify-content-between">
                                                                     Correspondences <i class="fas fa-file-alt ml-1"></i>
                                                                 </a>
+                                                                <a href="" class="assign-link" data-toggle="modal"
+                                                                    data-target=".bd-example-modal-lg"
+                                                                    data-letter="{{ $value['letter_id'] }}"
+                                                                    data-letter_path="{{ storageUrl($value['letter_path']) }}">
+                                                                    <span
+                                                                        class="btn btn-sm w-100 d-flex align-items-center justify-content-center"
+                                                                        title="Assign Letter"
+                                                                        style="min-height: 30px; font-size: 12px;">
+                                                                        Send for Forwarding
+                                                                        <i class="fas fa-forward ml-1"></i>
+                                                                    </span>
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -1467,11 +1479,24 @@
         $(document).on('click', '.letter-link', function() {
 
             let letterId = $(this).data('letter');
+
             let url = "/letter/download/" + letterId;
 
             $('#letter-view').attr('src', url);
+
+        });
+        $(document).on('click', '.refer-letter-link', function(e) {
+
+            e.preventDefault();
+
+            $('#refer-letter-div').removeAttr("hidden");
+            $('#refer-letter-div').show();
+
+            $('#refer-letter-view').attr('src', $(this).data('refer_letter_path'));
+
         });
     </script>
+
     <script>
         $(function() {
             $("#archive-table").DataTable({

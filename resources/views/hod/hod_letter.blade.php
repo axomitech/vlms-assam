@@ -53,8 +53,10 @@
 
                                                 <a href="javascript:void(0)" class="letter-link" data-toggle="modal"
                                                     data-target=".bd-example-modal-lg" data-letter="{{ $value->id }}"
-                                                    data-letter_path="{{ route('letter.download', $value->id) }}">
+                                                    data-letter_path="{{ route('new.letter.download', $value->id) }}">
+
                                                     {{ $value->crn }}
+
                                                 </a>
 
 
@@ -232,9 +234,11 @@
         $(document).on('click', '.letter-link', function() {
 
             let letterId = $(this).data('letter');
-            let url = "/letter/download/" + letterId;
+
+            let url = "/new/letter/download/" + letterId;
 
             $('#letter-view').attr('src', url);
+
         });
     </script>
     <script>
