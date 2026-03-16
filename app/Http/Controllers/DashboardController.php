@@ -176,6 +176,30 @@ class DashboardController extends Controller
         );
     }
 
+    public function getReceiptSummaryRange(Request $request)
+    {
+        $from = $request->from;
+        $to   = $request->to;
+        $departmentId = session('role_dept');
+
+        $query = DB::table('letters')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->select(
+                'letter_categories.id',
+                'letter_categories.category_name',
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('letters.receipt', true)
+            ->where('letters.department_id', $departmentId);
+
+        if ($from && $to) {
+            $query->whereBetween('letters.received_date', [$from, $to]);
+        }
+
+        return response()->json(
+            $query->groupBy('letter_categories.id', 'letter_categories.category_name')->get()
+        );
+    }
 
 
     public function getIssueSummary(Request $request)
@@ -207,6 +231,30 @@ class DashboardController extends Controller
         );
     }
 
+    public function getIssueSummaryRange(Request $request)
+    {
+        $from = $request->from;
+        $to   = $request->to;
+        $departmentId = session('role_dept');
+
+        $query = DB::table('letters')
+            ->join('letter_categories', 'letters.letter_category_id', '=', 'letter_categories.id')
+            ->select(
+                'letter_categories.id',
+                'letter_categories.category_name',
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('letters.receipt', false)
+            ->where('letters.department_id', $departmentId);
+
+        if ($from && $to) {
+            $query->whereBetween('letters.issue_date', [$from, $to]);
+        }
+
+        return response()->json(
+            $query->groupBy('letter_categories.id', 'letter_categories.category_name')->get()
+        );
+    }
 
 
     public function receipt_box()

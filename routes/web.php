@@ -68,6 +68,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/issue/{category_id}', [App\Http\Controllers\DashboardController::class, 'fetchIssueByCategory'])->name('issue_by_category');
     Route::get('/dashboard/receipt-summary', [App\Http\Controllers\DashboardController::class, 'getReceiptSummary']);
     Route::get('/dashboard/issue-summary', [App\Http\Controllers\DashboardController::class, 'getIssueSummary']);
+    Route::get('/dashboard/receipt-summary-range', [App\Http\Controllers\DashboardController::class, 'getReceiptSummaryRange']);
+    Route::get('/dashboard/issue-summary-range', [App\Http\Controllers\DashboardController::class, 'getIssueSummaryRange']);
 
     //Report Controller
     Route::get('/report', [App\Http\Controllers\ReportController::class, 'cat_wise_diarize_assign_forwarded'])->name('reports');
