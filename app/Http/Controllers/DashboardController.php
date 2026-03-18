@@ -297,33 +297,59 @@ class DashboardController extends Controller
 
     public function filterByYear($year)
     {
-        $letters = Letter::with('category')
-            ->whereYear('letter_date', $year)
+        $departmentId = session('role_dept');
+
+        $letters = Letter::with(['category', 'subCategory'])
+            ->where('department_id', $departmentId)
+            ->where(function ($query) use ($year) {
+
+                $query->whereYear('received_date', $year)
+                    ->orWhereYear('issue_date', $year);
+            })
+            ->orderByDesc('letter_date')
             ->get();
 
         return view('letter.filtered_list', [
             'letters' => $letters,
             'year' => $year,
-            'month' => null,
+            'month' => null
         ]);
     }
 
+
+
     public function filterByMonth($year, $month)
     {
-        $letters = Letter::with('category')
-            ->whereYear('letter_date', $year)
-            ->whereMonth('letter_date', $month)
+        $departmentId = session('role_dept');
+
+        $letters = Letter::with(['category', 'subCategory'])
+            ->where('department_id', $departmentId)
+            ->where(function ($query) use ($year, $month) {
+
+                $query->where(function ($q) use ($year, $month) {
+
+                    $q->whereYear('received_date', $year)
+                        ->whereMonth('received_date', $month);
+                })
+
+                    ->orWhere(function ($q) use ($year, $month) {
+
+                        $q->whereYear('issue_date', $year)
+                            ->whereMonth('issue_date', $month);
+                    });
+            })
+            ->orderByDesc('letter_date')
             ->get();
 
         session([
             'month' => $month,
-            'year'  => $year,
+            'year'  => $year
         ]);
 
         return view('letter.filtered_list', [
             'letters' => $letters,
             'year' => $year,
-            'month' => $month,
+            'month' => $month
         ]);
     }
 }
