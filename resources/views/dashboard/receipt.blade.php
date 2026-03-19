@@ -266,7 +266,7 @@
 
                     <div class="d-flex align-items-start mt-4">
 
-                        <div style="width:280px;height:280px;position:relative">
+                        <div style="width:310px;height:310px;position:relative">
 
                             <canvas id="myDonutChartRange"></canvas>
 
@@ -409,25 +409,56 @@
             if (donutChartRange) donutChartRange.destroy();
 
             const colors = [
-                '#dc3545', '#198754', '#0d6efd',
-                '#fd7e14', '#ffc107', '#6f42c1',
-                '#20c997', '#6610f2', '#0dcaf0', '#d63384'
+                '#ff6b6b', '#4dabf7', '#51cf66',
+                '#ffd43b', '#845ef7', '#ff922b',
+                '#20c997', '#f06595', '#339af0', '#94d82d'
             ];
 
             donutChartRange = new Chart(ctx, {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
                     labels,
                     datasets: [{
                         data,
-                        backgroundColor: colors
+                        backgroundColor: colors,
+                        borderColor: '#ffffff',
+                        borderWidth: 3,
+                        hoverOffset: 20
                     }]
                 },
                 options: {
-                    cutout: '70%',
+                    responsive: true,
+                    layout: {
+                        padding: 20
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1200,
+                        easing: 'easeOutQuart'
+                    },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#111',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percent = total ? ((value / total) * 100).toFixed(2) : 0;
+                                    return `${context.label}: ${value} (${percent}%)`;
+                                }
+                            }
                         }
                     }
                 }
@@ -446,17 +477,17 @@
                 const percent = total ? ((c.count / total) * 100).toFixed(2) : 0;
 
                 labelList.innerHTML += `
-        <li class="py-2 border-bottom">
-            <span style="display:inline-block;width:10px;height:10px;
-            background:${colors[i]};border-radius:50%;margin-right:8px"></span>
-            ${c.category_name}
-        </li>`;
+    <li class="py-2 border-bottom">
+        <span style="display:inline-block;width:10px;height:10px;
+        background:${colors[i]};border-radius:50%;margin-right:8px"></span>
+        ${c.category_name}
+    </li>`;
 
                 countList.innerHTML += `
-        <li class="py-2 border-bottom text-end">${c.count}</li>`;
+    <li class="py-2 border-bottom text-end">${c.count}</li>`;
 
                 percentList.innerHTML += `
-        <li class="py-2 border-bottom text-end">${percent}%</li>`;
+    <li class="py-2 border-bottom text-end">${percent}%</li>`;
             });
         }
     </script>
