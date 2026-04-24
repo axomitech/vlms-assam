@@ -1,0 +1,35 @@
+stages:
+  - deploy_staging
+
+deploy_staging:
+  stage: deploy_staging
+  tags:
+    - runner
+  script:
+    - |
+      deploy_staging() {
+        echo "Executing deploy_staging steps..."
+
+        cd /var/www/html/edak
+
+        echo "Pulling latest changes from main branch..."
+        git config pull.rebase true
+        git pull origin main
+
+        echo "Setting proper ownership..."
+        chown -R apache:apache /var/www/html/edak
+
+        
+      }
+
+      if [ "$USER" != "root" ]; then
+        echo "Switching to root user..."
+        sudo -u root bash -c "$(declare -f deploy_staging); deploy_staging"
+      else
+        echo "Root user detected, no need to switch."
+        deploy_staging
+      fi
+
+    - echo "Deployment successful for Staging!"
+  only:
+    - main
