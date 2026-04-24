@@ -8,7 +8,7 @@ deploy_staging:
   script:
     - |
       deploy_staging() {
-        echo "Executing deploy_staging steps..."
+        echo "Executing deploy_staging steps"
 
         cd /var/www/html/edak
 
